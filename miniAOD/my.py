@@ -61,7 +61,7 @@ process.tree = cms.EDAnalyzer(
     'TreeMaker',
     fillPUweightInfo_ = cms.bool(True),
     fillEventInfo_ = cms.bool(True),
-    fillGenInfo_   = cms.bool(False),
+    fillGenInfo_   = cms.bool(True),
     fillMuonInfo_  = cms.bool(True),
     fillElecInfo_  = cms.bool(True),
     fillJetInfo_   = cms.bool(True),
@@ -69,7 +69,9 @@ process.tree = cms.EDAnalyzer(
     fillTrigInfo_  = cms.bool(False),
     fillPhotInfo_  = cms.bool(False),
     fillTauInfo_   = cms.bool(True),
-#    genPartLabel=cms.InputTag("genParticles"),
+    genPartLabel=cms.InputTag("prunedGenParticles"),
+    genJetLabel=cms.InputTag("slimmedGenJets"),
+    maxNumGenPar  =  cms.uint32(40),
     patMuons=cms.InputTag("slimmedMuons"),
     patElectrons = cms.InputTag("slimmedElectrons"),
     PrunedJets=cms.InputTag("ak8PFJetsCHSPrunedLinks"),
@@ -102,7 +104,7 @@ process.analysis = cms.Path(process.leptonSequence +
 
 process.source = cms.Source("PoolSource",
                             fileNames =cms.untracked.vstring(
-        'file:'
+        'file:/afs/cern.ch/work/s/syu/public/miniAOD/RSGravToZZ_kMpl01_M-4500_Tune4C_13TeV-pythia8_Phys14DR.root'
         )
                             )
 

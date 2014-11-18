@@ -35,7 +35,8 @@ class genInfoTree : public baseTree{
   
   
   edm::InputTag genPartLabel_;
-  
+  edm::InputTag genJetLabel_;
+  UInt_t MAXNGENPAR_;
   
 
 

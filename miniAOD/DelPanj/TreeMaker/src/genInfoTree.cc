@@ -2,9 +2,11 @@
 #include "SimDataFormats/GeneratorProducts/interface/GenRunInfoProduct.h"
 
 genInfoTree::genInfoTree(std::string name, TTree* tree, const edm::ParameterSet& iConfig):
-  baseTree(name,tree)
+  baseTree(name,tree),
+  MAXNGENPAR_(iConfig.getParameter<UInt_t>("maxNumGenPar"))
 {
   genPartLabel_ = iConfig.getParameter<edm::InputTag>("genPartLabel");
+  genJetLabel_  = iConfig.getParameter<edm::InputTag>("genJetLabel");
   SetBranches();
 }
 
@@ -57,7 +59,7 @@ genInfoTree::Fill(const edm::Event& iEvent)
 
   // now loop
   reco::GenParticleCollection::const_iterator geni = genColl->begin();
-  for(; geni!=genColl->end() && genIndex < 30;geni++){
+  for(; geni!=genColl->end() && genIndex < MAXNGENPAR_ ;geni++){
     reco::GenParticle gen = *geni;
     
     genIndex++;
@@ -114,7 +116,7 @@ genInfoTree::Fill(const edm::Event& iEvent)
   }
 
   edm::Handle<reco::GenJetCollection> genJetsHandle;
-  if( not iEvent.getByLabel("ak5GenJets",genJetsHandle)){ 
+  if( not iEvent.getByLabel(genJetLabel_,genJetsHandle)){ 
     edm::LogInfo("GenAnalyzer") << "genJets not found, "
       "skipping event"; 
     return;
