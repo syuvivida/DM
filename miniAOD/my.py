@@ -11,7 +11,7 @@ process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.load("Configuration.StandardSequences.Services_cff")
 process.load('Configuration/StandardSequences/MagneticField_38T_cff')
 
-process.GlobalTag.globaltag = cms.string("GR_R_70_V2::All")
+process.GlobalTag.globaltag = cms.string("PHYS14_25_V1::All")
 
 option = 'RECO' # 'GEN' or 'RECO'
 
