@@ -3,13 +3,11 @@ import FWCore.ParameterSet.Config as cms
 process = cms.Process( "TEST" )
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 
-process.load("Configuration.StandardSequences.Geometry_cff")
-process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
-
+process.load("Configuration.Geometry.GeometryIdeal_cff")
 process.load("Configuration.StandardSequences.Services_cff")
-process.load('Configuration/StandardSequences/MagneticField_38T_cff')
+process.load('Configuration.StandardSequences.MagneticField_38T_cff')
 
 process.GlobalTag.globaltag = cms.string("PHYS14_25_V1::All")
 
