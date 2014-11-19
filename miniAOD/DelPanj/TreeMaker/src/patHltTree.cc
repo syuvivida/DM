@@ -31,11 +31,15 @@ patHltTree::Fill(const edm::Event& iEvent)
     {
       std::string trigName = trigNames.triggerName(i);
       size_t foundEle00=trigName.find("HLT_DoubleEle33");
-      size_t foundMuo00=trigName.find("HLT_Mu22_TkMu8");
+      size_t foundMuo00=trigName.find("HLT_Mu17_Mu8");
+      size_t foundMuo01=trigName.find("HLT_Mu17_TkMu8");
+      size_t foundMuo02=trigName.find("HLT_Mu30_TkMu11");
 
       if ( foundEle00==std::string::npos &&
- 	   foundMuo00==std::string::npos )
- 	continue;
+       	   foundMuo00==std::string::npos && 
+       	   foundMuo01==std::string::npos && 
+       	   foundMuo02==std::string::npos)
+       	continue;
 
       trigName_.push_back(trigName);
       int trigResult = trigResults->accept(i); //bool not to use
