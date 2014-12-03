@@ -7,7 +7,7 @@ https://twiki.cern.ch/twiki/bin/view/CMS/ExoDiBosonResonancesRun2#Instruction_to
 
 2. Check out our own code
 
-Under CMSSW_7_2_1_patch2/src
+Under CMSSW_7_2_2_patch1/src
 
 git clone git@github.com:syuvivida/DM.git DM
 
