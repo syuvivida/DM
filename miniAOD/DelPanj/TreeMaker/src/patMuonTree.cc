@@ -32,8 +32,30 @@ patMuonTree::Fill(const edm::Event& iEvent){
   pat::MuonCollection::const_iterator mu;
 
   for(mu=muColl.begin(); mu!=muColl.end(); mu++){
+
+    int muonIndex=-1;
+    int tempTrackIndex=-1;
+    int tempSegIndex=-1;
+    int nSegments=-1;
+    for(pat::MuonCollection::const_iterator jm=muColl.begin(); jm!=muColl.end(); jm++){
+
+      muonIndex++;
+
+      if(mu->innerTrack()==jm->innerTrack() && tempTrackIndex==-1)
+	tempTrackIndex=muonIndex;
+      if(jm->isTrackerMuon() && mu->isTrackerMuon() && 
+	 muon::sharedSegments(*jm,*mu)>0 &&  tempSegIndex==-1)
+	{
+	  tempSegIndex  =muonIndex;
+	  nSegments     =muon::sharedSegments(*jm,*mu);
+	}
+
+
+    } // loop over jmuon
     
     nMu_++;
+
+    patMuonType_.push_back(mu->type());
     patMuonPt_.push_back(mu->pt());
     patMuonEta_.push_back(mu->eta());
     patMuonPhi_.push_back(mu->phi());
@@ -42,14 +64,16 @@ patMuonTree::Fill(const edm::Event& iEvent){
     patMuonHcalIso_.push_back(mu->hcalIso());
     patMuonEcalIso_.push_back(mu->ecalIso());
     patMuonCharge_.push_back(mu->charge());
-
-
+    
     //--------------------------------------------------------//
     // new added variables
 
     isGlobalMuon_.push_back(mu->isGlobalMuon());
     isTrackerMuon_.push_back(mu->isTrackerMuon());
-
+    patMuonITrkIndex_.push_back(tempTrackIndex);
+    patMuonSegIndex_.push_back(tempSegIndex);
+    patMuonNSeg_.push_back(nSegments);
+    patMuonGood_.push_back(muon::isGoodMuon(*mu, muon::TrackerMuonArbitrated)? 1:0);
     // reco::TrackRef cktTrack = globalMuonID_.GetBestTrack(*mu);
     // patMuonPtErrx_.push_back(cktTrack->ptError()/cktTrack->pt());
     // patMuondxy_.push_back(cktTrack->dxy(myPv.position()));
@@ -117,6 +141,7 @@ void
 patMuonTree::SetBranches(){
 
   AddBranch(&nMu_,"nMu");
+  AddBranch(&patMuonType_, "muType");
   AddBranch(&patMuonPt_, "muPt");
   AddBranch(&patMuonEta_, "muEta");
   AddBranch(&patMuonPhi_, "muPhi");
@@ -144,7 +169,10 @@ patMuonTree::SetBranches(){
   AddBranch(&patMuonPixelHits_, "muPixelHits");
   AddBranch(&patMuonHits_, "muHits");
   AddBranch(&patMuonMatches_, "muMatches");
-
+  AddBranch(&patMuonITrkIndex_, "muITrkID");
+  AddBranch(&patMuonSegIndex_, "muSegID");
+  AddBranch(&patMuonNSeg_, "muNSegs");
+  AddBranch(&patMuonGood_, "muGood");
 }
 
 
@@ -152,6 +180,7 @@ void
 patMuonTree::Clear(){
 
   nMu_ =0;
+  patMuonType_.clear();
   patMuonPt_.clear();
   patMuonEta_.clear();
   patMuonPhi_.clear();
@@ -179,5 +208,9 @@ patMuonTree::Clear(){
   patMuonPixelHits_.clear();
   patMuonHits_.clear();
   patMuonMatches_.clear();
+  patMuonITrkIndex_.clear();
+  patMuonSegIndex_.clear();
+  patMuonNSeg_.clear();
+  patMuonGood_.clear();
 
 }

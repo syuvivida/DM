@@ -43,7 +43,7 @@ class patMuonTree : public baseTree {
   //px,py,pz etc.==>No need to store later
 
   Int_t nMu_;
-  std::vector<std::string> patMuonType_; 
+  std::vector<Int_t> patMuonType_; 
   std::vector<Float_t> patMuonPt_;
   std::vector<Float_t> patMuonEta_;
   std::vector<Float_t> patMuonPhi_;
@@ -71,6 +71,13 @@ class patMuonTree : public baseTree {
   std::vector<Int_t>   patMuonHits_;
   std::vector<Int_t>   patMuonMatches_;
 
+  // check if there's an overlap with other muons by checking the inner tracks
+  // if not, index = -1
+  std::vector<Int_t>   patMuonITrkIndex_;
+  // shared muon segments
+  std::vector<Int_t>   patMuonSegIndex_;
+  std::vector<Int_t>   patMuonNSeg_;
+  std::vector<Int_t>   patMuonGood_; 
 };
 
 #endif
