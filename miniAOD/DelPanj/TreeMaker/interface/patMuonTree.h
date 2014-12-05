@@ -38,7 +38,6 @@ class patMuonTree : public baseTree {
 
 
 
-  std::vector<Int_t> patMuonType;
  //pt, eta, phi, M : Enough to caluclate
   //px,py,pz etc.==>No need to store later
 
