@@ -24,6 +24,7 @@ mv DM/miniAOD/* .
 mv goodAK4Jets_cff.py ExoDiBosonResonances/EDBRCommon/python/.
 
 mv DM/prod/jec/ .
+mv DM/prod/xml/ .
 
 rm -rf DM
 
