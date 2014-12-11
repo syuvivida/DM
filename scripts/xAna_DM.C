@@ -15,7 +15,7 @@
 
 
 using namespace std;
-void xAna_DM(std::string inputFile){
+void xAna_DM(std::string inputFile, bool applyCut=false){
 
 
   standalone_LumiReWeighting LumiWeights_central(0);
@@ -25,12 +25,19 @@ void xAna_DM(std::string inputFile){
   bool isData=(data.GetInt("info_isData")==1);
 
   TH1F* hmbb= new TH1F("hmbb","M(b,#bar{b})", 50,60,260);
+  hmbb->Sumw2();
   TH1F* hmet= new TH1F("hmet","MET", 100,0,500);
-  TH1F* hdphibb = new TH1F("hdphi","#Delta#phi(MET,b#bar{b})",50,0,TMath::Pi());
+  hmet->Sumw2();
+  TH1F* hdphibb = new TH1F("hdphibb","#Delta#phi(MET,b#bar{b})",50,0,TMath::Pi());
+  hdphibb->Sumw2();
   TH1F* hdphij = new TH1F("hdphij","#Delta#phi(MET,j_{near})",50,0,TMath::Pi());
+  hdphij->Sumw2();
   TH1F* hnele = new TH1F("hnele","extra electrons",6,-0.5,5.5);
+  hnele->Sumw2();
   TH1F* hnmuo = new TH1F("hnmuo","extra muons",6,-0.5,5.5);
+  hnmuo->Sumw2();
   TH1F* hnjet = new TH1F("hnjet","extra AK5 jets",6,-0.5,5.5);
+  hnjet->Sumw2();
 
   
   //Event loop
@@ -91,7 +98,6 @@ void xAna_DM(std::string inputFile){
       // break;
     }
 
-    // if(hasEle)continue;
 
     Int_t    nMu      = data.GetInt("nMu"); 
     Int_t*   muPassID = data.GetPtrInt("muPassID");
@@ -108,7 +114,6 @@ void xAna_DM(std::string inputFile){
       myMuos.push_back(im);
       // break;
     }
-    // if(hasMuo)continue;
 
     // require a jet 
 
@@ -122,6 +127,8 @@ void xAna_DM(std::string inputFile){
 
     Float_t met     = data.GetFloat("pfMetCorrPt");
     Float_t metphi  = data.GetFloat("pfMetCorrPhi");
+
+    if(met<150 && applyCut)continue;
 
     TLorentzVector met_l4(0,0,0,0);
     met_l4.SetPtEtaPhiE(met,
@@ -190,10 +197,10 @@ void xAna_DM(std::string inputFile){
 
       extraJets++;
 
-      float thisdR = met_l4.DeltaPhi(jet_l4);
-      if(thisdR < dphiMin)
+      float thisdphi=fabs(met_l4.DeltaPhi(jet_l4));
+      if(thisdphi < dphiMin)
 	{
-	  dphiMin = thisdR;
+	  dphiMin = thisdphi;
 	  closestJetIndex = ij;
 	}
 
@@ -205,13 +212,20 @@ void xAna_DM(std::string inputFile){
 
     extraJets -= 2;
 
-    hnele->Fill(myEles.size(),PU_weight_central);
-    hnmuo->Fill(myMuos.size(),PU_weight_central);
+    if(extraJets>1 && applyCut)continue;
     hnjet->Fill(extraJets,PU_weight_central);
+
+    if(myEles.size()>0 && applyCut)continue;
+    hnele->Fill(myEles.size(),PU_weight_central);
+
+    if(myMuos.size()>0 && applyCut)continue;
+    hnmuo->Fill(myMuos.size(),PU_weight_central);
+
     hmet->Fill(met,PU_weight_central);
 
+    if(dphiMin<1.0 && applyCut)continue;
     if(closestJetIndex>=0)
-      hdphij->Fill(fabs(dphiMin),PU_weight_central);
+      hdphij->Fill(dphiMin,PU_weight_central);
 
 
     for(unsigned int ij=0; ij < myBs.size(); ij++){      
@@ -234,9 +248,13 @@ void xAna_DM(std::string inputFile){
 			     AK5jetE[index2]);
 
 	TLorentzVector h_l4 = jet1_l4+jet2_l4;
+	Float_t dphi= fabs(met_l4.DeltaPhi(h_l4));
+
+	if(dphi<2.5 && applyCut)continue;
+	hdphibb->Fill(dphi,PU_weight_central);	
+
+	if((h_l4.M()<100 || h_l4.M()>150) && applyCut)continue;
 	hmbb->Fill(h_l4.M(),PU_weight_central);
-	hdphibb->Fill(fabs(met_l4.DeltaPhi(h_l4)),PU_weight_central);
-	
       
       }
 
