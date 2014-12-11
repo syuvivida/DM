@@ -65,6 +65,7 @@ void plotAll(std::string histoName,std::string txtFile)
       h[i]->SetMarkerColor(COLOR[i%6]);
       h[i]->SetMarkerSize(1);
       h[i]->SetLineColor(COLOR[i%6]);
+      std::cout << fileNames[i].data() << ":" << h[i]->Integral() << std::endl; 
 
       if(h[i]->GetMaximum()>maxLumi)
 	maxLumi = h[i]->GetMaximum();
@@ -108,9 +109,9 @@ void plotAll(std::string histoName,std::string txtFile)
   gSystem->mkdir("DMfigures");
 
   std::string temp2="DMfigures/lumiNorm_" + histoName;
-  c1->Print(Form("%s.eps",temp2.data()));
-  c1->Print(Form("%s.gif",temp2.data()));
-  c1->Print(Form("%s.pdf",temp2.data()));
+  // c1->Print(Form("%s.eps",temp2.data()));
+  // c1->Print(Form("%s.gif",temp2.data()));
+  // c1->Print(Form("%s.pdf",temp2.data()));
 
   scaleh[0]->Draw("hist");
   for(int i=nFiles-1; i>=0; i--)

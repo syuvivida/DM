@@ -266,7 +266,7 @@ void xAna_DM(std::string inputFile, bool applyCut=false){
 
   //save output
   TString endfix=gSystem->GetFromPipe(Form("file=%s; echo \"${file##*/}\"",inputFile.data()));
-  TString outputFile = "DMHisto_" + endfix;
+  TString outputFile = applyCut? ("cutDMHisto_" + endfix): ("DMHisto_" + endfix);
 
   TFile* outFile = new TFile(outputFile.Data(),"recreate");
   hmbb     ->Write();
