@@ -24,20 +24,47 @@ void xAna_DM(std::string inputFile, bool applyCut=false){
 
   bool isData=(data.GetInt("info_isData")==1);
 
-  TH1F* hmbb= new TH1F("hmbb","M(b,#bar{b})", 50,60,260);
+  TH1F* hmass = new TH1F("hmass","", 50,0,1000);
+  hmass->Sumw2();
+
+  TH1F* hmzp= (TH1F*)hmass->Clone("hmzp");
+  hmzp->SetXTitle("M_{T}(#slash{p}_{T},b#bar{b}) [GeV]");
+
+  TH1F* hptzp = (TH1F*)hmass->Clone("hptzp");
+  hptzp->SetXTitle("p_{T}(X) [GeV]");
+
+  TH1F* hjetht= (TH1F*)hmass->Clone("hjetht");
+  hjetht->SetXTitle("#Sigma p_{T}(jet) [GeV]");
+
+  TH1F* hht= (TH1F*)hmass->Clone("hht");
+  hht->SetXTitle("#Sigma p_{T}^{jet} + #slash{p}_{T}, [GeV]");
+
+  TH1F* hpth = (TH1F*)hmass->Clone("hpth");
+  hpth->SetXTitle("p_{T}(b#bar{b}) [GeV]");
+
+
+  TH1F* hmbb= new TH1F("hmbb","", 50,60,260);
+  hmbb->SetXTitle("M(b,#bar{b}) [GeV]");
   hmbb->Sumw2();
-  TH1F* hmet= new TH1F("hmet","MET", 100,0,500);
+  TH1F* hmet= new TH1F("hmet","",  50,0,500);
+  hmet->SetXTitle("#slash{p}_{T}");
   hmet->Sumw2();
-  TH1F* hdphibb = new TH1F("hdphibb","#Delta#phi(MET,b#bar{b})",50,0,TMath::Pi());
-  hdphibb->Sumw2();
-  TH1F* hdphij = new TH1F("hdphij","#Delta#phi(MET,j_{near})",50,0,TMath::Pi());
-  hdphij->Sumw2();
-  TH1F* hnele = new TH1F("hnele","extra electrons",6,-0.5,5.5);
-  hnele->Sumw2();
-  TH1F* hnmuo = new TH1F("hnmuo","extra muons",6,-0.5,5.5);
-  hnmuo->Sumw2();
-  TH1F* hnjet = new TH1F("hnjet","extra AK5 jets",6,-0.5,5.5);
-  hnjet->Sumw2();
+
+  TH1F* hdphi = new TH1F("hdphi","",50,0,TMath::Pi());
+  hdphi->Sumw2();
+  TH1F* hdphibb = (TH1F*)hdphi->Clone("hdphibb");
+  hdphibb->SetXTitle("#Delta#phi(#slash{p}_{T},b#bar{b})");
+  TH1F* hdphij  = (TH1F*)hdphi->Clone("hdphij");
+  hdphij->SetXTitle("#Delta#phi(#slash{p}_{T},jet^{closest})");
+
+  TH1F* hn = new TH1F("hn","",6,-0.5,5.5);
+  hn->Sumw2();
+  TH1F* hnele = (TH1F*)hn->Clone("hnele");
+  hnele->SetXTitle("Number of extra electrons");
+  TH1F* hnmuo = (TH1F*)hn->Clone("hmuo");
+  hnele->SetXTitle("Number of extra muons");
+  TH1F* hnjet = (TH1F*)hn->Clone("hnjet");
+  hnjet->SetXTitle("Number of extra jets");
 
   
   //Event loop
@@ -115,15 +142,6 @@ void xAna_DM(std::string inputFile, bool applyCut=false){
       // break;
     }
 
-    // require a jet 
-
-    Int_t    nAK5jet     = data.GetInt("AK5nJet");
-    Float_t* AK5jetPt    = data.GetPtrFloat("AK5jetPt");
-    Float_t* AK5jetEta   = data.GetPtrFloat("AK5jetEta");
-    Float_t* AK5jetPhi   = data.GetPtrFloat("AK5jetPhi");
-    Float_t* AK5jetE     = data.GetPtrFloat("AK5jetEn");
-    Float_t* AK5jetCSV  = data.GetPtrFloat("AK5jetCSV");
-    Int_t*   AK5jetID    = data.GetPtrInt("AK5jetPassID");
 
     Float_t met     = data.GetFloat("pfMetCorrPt");
     Float_t metphi  = data.GetFloat("pfMetCorrPhi");
@@ -136,13 +154,26 @@ void xAna_DM(std::string inputFile, bool applyCut=false){
 			metphi,
 			met);
 
+
+    // require a jet 
+
+    Int_t    nAK5jet     = data.GetInt("AK5nJet");
+    Float_t* AK5jetPt    = data.GetPtrFloat("AK5jetPt");
+    Float_t* AK5jetEta   = data.GetPtrFloat("AK5jetEta");
+    Float_t* AK5jetPhi   = data.GetPtrFloat("AK5jetPhi");
+    Float_t* AK5jetE     = data.GetPtrFloat("AK5jetEn");
+    Float_t* AK5jetCSV  = data.GetPtrFloat("AK5jetCSV");
+    Int_t*   AK5jetID    = data.GetPtrInt("AK5jetPassID");
+
     if(nAK5jet<2)continue;
 
 
     std::vector<int> myBs;
-    unsigned int extraJets=0;
     Float_t dphiMin = 9999999;
     int closestJetIndex=-1;
+    Float_t sumJetPt=0;
+    unsigned int extraJets=0;
+
     for(int ij=0; ij < nAK5jet; ij++){
       
       if(AK5jetPt[ij]<30)continue;
@@ -195,7 +226,9 @@ void xAna_DM(std::string inputFile, bool applyCut=false){
       }
       if(overlap)continue;
 
+
       extraJets++;
+      sumJetPt += AK5jetPt[ij];
 
       float thisdphi=fabs(met_l4.DeltaPhi(jet_l4));
       if(thisdphi < dphiMin)
@@ -204,16 +237,19 @@ void xAna_DM(std::string inputFile, bool applyCut=false){
 	  closestJetIndex = ij;
 	}
 
-      if(AK5jetCSV[ij]<0.244)continue; // CSVL
-      
+
+      if(AK5jetCSV[ij]<0.244)continue;
       myBs.push_back(ij);
     }
     if(myBs.size()<2)continue;
 
+    // no extra objects
     extraJets -= 2;
 
     if(extraJets>1 && applyCut)continue;
     hnjet->Fill(extraJets,PU_weight_central);
+    hjetht->Fill(sumJetPt,PU_weight_central);
+    hht->Fill(met+sumJetPt,PU_weight_central);
 
     if(myEles.size()>0 && applyCut)continue;
     hnele->Fill(myEles.size(),PU_weight_central);
@@ -226,8 +262,10 @@ void xAna_DM(std::string inputFile, bool applyCut=false){
     if(dphiMin<1.0 && applyCut)continue;
     if(closestJetIndex>=0)
       hdphij->Fill(dphiMin,PU_weight_central);
+      
 
 
+    // look into bjets
     for(unsigned int ij=0; ij < myBs.size(); ij++){      
 
       TLorentzVector jet1_l4(0,0,0,0);      
@@ -248,6 +286,7 @@ void xAna_DM(std::string inputFile, bool applyCut=false){
 			     AK5jetE[index2]);
 
 	TLorentzVector h_l4 = jet1_l4+jet2_l4;
+
 	Float_t dphi= fabs(met_l4.DeltaPhi(h_l4));
 
 	if(dphi<2.5 && applyCut)continue;
@@ -255,10 +294,24 @@ void xAna_DM(std::string inputFile, bool applyCut=false){
 
 	if((h_l4.M()<100 || h_l4.M()>150) && applyCut)continue;
 	hmbb->Fill(h_l4.M(),PU_weight_central);
-      
-      }
 
-    } // end loop over bjets
+	hpth->Fill(h_l4.Pt());
+
+	TLorentzVector h_l4_tran(0,0,0,0);
+	h_l4_tran.SetPtEtaPhiM(
+			       h_l4.Pt(),
+			       0,
+			       h_l4.Phi(),
+			       125.0);
+	Float_t mT = (h_l4_tran+met_l4).M();
+	hmzp->Fill(mT);
+
+	Float_t xpt = (h_l4_tran+met_l4).Pt();
+	hptzp->Fill(xpt);
+
+      } // end loop of 2nd bjets
+
+    } // end loop over 1st bjets
 
   
   } // end of loop over entries
@@ -269,6 +322,11 @@ void xAna_DM(std::string inputFile, bool applyCut=false){
   TString outputFile = applyCut? ("cutDMHisto_" + endfix): ("DMHisto_" + endfix);
 
   TFile* outFile = new TFile(outputFile.Data(),"recreate");
+  hmzp     ->Write();
+  hptzp    ->Write();
+  hjetht   ->Write();
+  hht      ->Write();
+  hpth     ->Write();
   hmbb     ->Write();
   hmet     ->Write();
   hdphibb  ->Write();
