@@ -33,6 +33,10 @@ process.maxEvents = cms.untracked.PSet(
 )
 
 process.mix.input.nbPileupEvents.histoFileName =cms.untracked.string(options.mixHistFile)
+process.mix.input.fileNames = cms.untracked.vstring(
+    '/store/relval/CMSSW_5_3_6-START53_V14/RelValProdMinBias/GEN-SIM-RAW/v2/00000/4677049F-042A-E211-8525-0026189438E8.root',
+    '/store/relval/CMSSW_5_3_6-START53_V14/RelValProdMinBias/GEN-SIM-RAW/v2/00000/52000D8A-032A-E211-BC94-00304867BFA8.root'
+)
 
 # Input source
 process.source = cms.Source("PoolSource",
