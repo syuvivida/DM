@@ -53,15 +53,15 @@ void xAna_DM(std::string inputFile, bool applyCut=false){
   TH1F* hdphi = new TH1F("hdphi","",50,0,TMath::Pi());
   hdphi->Sumw2();
   TH1F* hdphibb = (TH1F*)hdphi->Clone("hdphibb");
-  hdphibb->SetXTitle("#Delta#phi(#slash{p}_{T},b#bar{b})");
+  hdphibb->SetXTitle("#Delta#phi(#vec{#slash{p}_{T}},b#bar{b})");
   TH1F* hdphij  = (TH1F*)hdphi->Clone("hdphij");
-  hdphij->SetXTitle("#Delta#phi(#slash{p}_{T},jet^{closest})");
+  hdphij->SetXTitle("#Delta#phi(#vec{#slash{p}_{T}},jet^{closest})");
 
   TH1F* hn = new TH1F("hn","",6,-0.5,5.5);
   hn->Sumw2();
   TH1F* hnele = (TH1F*)hn->Clone("hnele");
   hnele->SetXTitle("Number of extra electrons");
-  TH1F* hnmuo = (TH1F*)hn->Clone("hmuo");
+  TH1F* hnmuo = (TH1F*)hn->Clone("hnmuo");
   hnele->SetXTitle("Number of extra muons");
   TH1F* hnjet = (TH1F*)hn->Clone("hnjet");
   hnjet->SetXTitle("Number of extra jets");
