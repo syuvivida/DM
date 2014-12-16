@@ -35,7 +35,7 @@ scramv1 b clean
 
 scramv1 b 
 
-cmsRun my.py ## You need to replce input miniAOD files with your own
+cmsRun my.py ## You need to replace input miniAOD files with your own
 
 ### For commit later
 git add xxxx
