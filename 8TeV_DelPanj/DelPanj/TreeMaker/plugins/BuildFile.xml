@@ -1,0 +1,20 @@
+<use   name="FWCore/Framework"/>
+<use   name="FWCore/MessageLogger"/>
+<use   name="FWCore/ParameterSet"/>
+<use   name="FWCore/PluginManager"/>
+<use   name="FWCore/Utilities"/>
+<use   name="DQMServices/Core"/>
+<use   name="DataFormats/Math"/>
+<use   name="DataFormats/JetReco"/>
+<use   name="DataFormats/METReco"/>
+<use   name="DataFormats/PatCandidates"/>
+<use   name="DataFormats/Candidate"/>
+<use   name="HLTrigger/HLTcore"/>
+<use   name="PhysicsTools/PatAlgos"/>
+<use   name="PhysicsTools/PatUtils"/>
+<use   name="PhysicsTools/CandUtils"/>
+<use   name="PhysicsTools/UtilAlgos"/>
+<use   name="DelPanj/TreeMaker"/>
+<library   file="*.cc" name="DelPanjTreeMakerPlugins">
+  <flags   EDM_PLUGIN="1"/>
+</library>

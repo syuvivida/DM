@@ -1,0 +1,37 @@
+<use   name="FWCore/Framework"/>
+<use   name="FWCore/ParameterSet"/>
+<use   name="FWCore/Sources"/>
+<lib   name="ProofPlayer"/>
+<use   name="boost"/>
+<use   name="rootcore"/>
+<use   name="rootrflx"/>
+<use   name="DataFormats/FWLite"/>
+<use   name="DataFormats/JetReco"/>
+<use   name="DataFormats/METReco"/>
+<use   name="PhysicsTools/SelectorUtils"/>
+<use   name="PhysicsTools/FWLite"/>
+<use   name="DataFormats/ParticleFlowCandidate"/>
+<use   name="DataFormats/ParticleFlowReco"/>
+<use   name="DataFormats/Math"/>
+<use   name="DataFormats/TrackReco"/>
+<use   name="DataFormats/PatCandidates"/>
+<use   name="DataFormats/Candidate"/>
+<use   name="HLTrigger/HLTcore"/>
+<use   name="PhysicsTools/PatAlgos"/>
+<use   name="PhysicsTools/PatUtils"/>
+<use   name="PhysicsTools/CandUtils"/>
+<use   name="PhysicsTools/UtilAlgos"/>
+<use   name="CommonTools/Utils"/>
+<use   name="CondFormats/JetMETObjects"/>
+<use   name="JetMETCorrections/Objects"/>
+<use   name="PhysicsTools/TagAndProbe"/>
+<use   name="FWCore/MessageLogger"/>
+<use   name="FWCore/PluginManager"/>
+<use   name="DataFormats/EgammaReco"/>
+<use   name="DataFormats/RecoCandidate"/>
+<use   name="DataFormats/Common"/>
+<use   name="CondFormats/PhysicsToolsObjects"/>
+<use   name="PhysicsTools/Utilities"/>
+<export>
+  <lib   name="1"/>
+</export>
