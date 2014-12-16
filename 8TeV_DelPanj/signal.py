@@ -38,7 +38,6 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 10000
 
 ## Input files
 #from CMGTools.Production.datasetToSource import *
-process.source.duplicateCheckMode = cms.untracked.string('noDuplicateCheck')
 process.source = cms.Source("PoolSource",
                             fileNames =cms.untracked.vstring(
         'file:step3_zp_hA0_bbxx_run_1.root',
@@ -54,6 +53,7 @@ process.source = cms.Source("PoolSource",
         )
                             )
 
+process.source.duplicateCheckMode = cms.untracked.string('noDuplicateCheck')
 
 ## Maximal Number of Events
 
