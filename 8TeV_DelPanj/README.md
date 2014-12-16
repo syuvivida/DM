@@ -1,9 +1,14 @@
 
 cmsrel CMSSW_5_3_20
+
 cd CMSSW_5_3_20
+
 rm -rf src
+
 tar xvzf /afs/cern.ch/work/s/syu/public/forStudents/src.tgz
+
 cd src
+
 rm -rf DelPanj
 
 
