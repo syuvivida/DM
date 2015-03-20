@@ -77,11 +77,11 @@ process.tree = cms.EDAnalyzer(
     tauLabel_ = cms.untracked.InputTag("slimmedTaus"),
     rhoSrc = cms.InputTag('kt6PFJets','rho'),
     ### CA8Jet
-    CA8Jets=cms.InputTag("jetsWithTau"),
+    CA8Jets=cms.InputTag("cleanJets"),
     CA8jecPayloadNames = cms.vstring( CA8jecLevels ),
     CA8jecUncName = cms.string(CA8jecUnc),    
     ### AK5Jet
-    AK5Jets=cms.InputTag("jetsAK4WithTau"),
+    AK5Jets=cms.InputTag("cleanAK4Jets"),
     AK5jecPayloadNames = cms.vstring( AK5jecLevels ),
     AK5jecUncName = cms.string(AK5jecUnc),    
     patMetRaw=cms.InputTag("slimmedMETs"),

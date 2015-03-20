@@ -24,9 +24,5 @@ cleanAK4Jets.checkOverlaps.taus = cms.PSet()
 cleanAK4Jets.checkOverlaps.tkIsoElectrons = cms.PSet()
 cleanAK4Jets.finalCut = "pt > 20 & abs(eta) < 2.4"
 
-jetsAK4WithTau = cms.EDProducer("EDBRNJettinessAdder",
-                                src = cms.InputTag("cleanAK4Jets"),
-                                cone = cms.double(0.4)
-                                )
 
-ak4JetsSequence = cms.Sequence(goodAK4Jets + cleanAK4Jets + jetsAK4WithTau)
+ak4JetsSequence = cms.Sequence(goodAK4Jets + cleanAK4Jets)
