@@ -1,5 +1,5 @@
 #include "DelPanj/TreeMaker/interface/patMetTree.h"
-
+#include "DataFormats/METReco/interface/PFMETCollection.h"
 patMetTree::patMetTree(std::string name, TTree* tree, const edm::ParameterSet& iConfig):
   baseTree(name,tree)
 {
@@ -34,6 +34,7 @@ patMetTree::Fill(const edm::Event& iEvent){
   patMetCorrSumEt_ = met->sumEt();
   patMetCorrSig_   = met->significance() < 1.e10 ? met->significance() : 0;
 
+
   // corrected distributions
   pat::METCollection::const_iterator metraw=patMetRawHandle.product()->begin();
   
@@ -44,8 +45,31 @@ patMetTree::Fill(const edm::Event& iEvent){
   patMetRawCov01_ = metraw->getSignificanceMatrix()(0,1);
   patMetRawCov10_ = metraw->getSignificanceMatrix()(1,0);
   patMetRawCov11_ = metraw->getSignificanceMatrix()(1,1);
-
   
+  // adding mva met to the tree
+  edm::Handle<vector<reco::PFMET> > recomethandle;
+  if(not iEvent.getByLabel("pfMVAMEt",recomethandle)){
+    std::cout<<"FATAL EXCEPTION: "<<"Following Not Found: pfMVAMEt"
+             <<std::endl; exit(0);}
+  
+  reco::PFMETCollection::const_iterator recmet=recomethandle.product()->begin();
+  std::cout<<" -------------------- MVA MET = "<<recmet->et()<<std::endl;
+  
+  mvaMetPt_ = recmet->et();
+  mvaMetPhi_ = recmet->phi();
+  mvaMetSumEt_   = recmet->sumEt();
+  mvaMetSig_   = recmet->significance() < 1.e10 ? recmet->significance() : 0;
+  // adding of mva met ends here 
+
+
+  std::cout<<"met = "<<met->et()
+	   <<" phit = "<<met->phi()
+	   <<" sum pt = "<<met->sumEt()
+	   <<" raw met = "<<metraw->et()
+	   << "raw phi = "<<metraw->phi()
+	   <<std::endl;
+  
+
 
 } 
 
@@ -66,6 +90,10 @@ patMetTree::SetBranches(){
   AddBranch(&patMetRawCov10_, "MetRawCov10");
   AddBranch(&patMetRawCov11_, "MetRawCov11");
 
+  AddBranch(&mvaMetPt_,     "mvaMetPt_");
+  AddBranch(&mvaMetPhi_,    "mvaMetPhi_");
+  AddBranch(&mvaMetSumEt_,  "mvaMetSumEt_");
+  AddBranch(&mvaMetSig_,    "mvaMetSig_");
 }
 
 
@@ -84,6 +112,11 @@ patMetTree::Clear(){
   patMetRawCov01_= dummy;
   patMetRawCov10_= dummy;
   patMetRawCov11_= dummy;
+
+  mvaMetPt_     = dummy ;
+  mvaMetPhi_    = dummy ;
+  mvaMetSumEt_  = dummy ;
+  mvaMetSig_    = dummy ;
 
 
 }

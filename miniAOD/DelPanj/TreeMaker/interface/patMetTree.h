@@ -56,6 +56,11 @@ class patMetTree : public baseTree{
   Float_t patMetRawCov11_;
 
 
+  Float_t mvaMetPt_;
+  Float_t mvaMetPhi_;
+  Float_t mvaMetSumEt_;
+  Float_t mvaMetSig_;
+  
 
 };
 
