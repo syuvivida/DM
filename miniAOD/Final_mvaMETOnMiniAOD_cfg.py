@@ -1,9 +1,8 @@
 import FWCore.ParameterSet.Config as cms
 
 process = cms.Process('MVAMET')
-
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
-# import of standard configurations
+
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
 process.load('FWCore.MessageService.MessageLogger_cfi')
@@ -14,6 +13,10 @@ process.load('Configuration.StandardSequences.MagneticField_38T_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 
+
+
+
+process.GlobalTag.globaltag = cms.string("PHYS14_25_V1::All")
 
 option = 'RECO' # 'GEN' or 'RECO'
 
@@ -68,39 +71,18 @@ process.maxEvents = cms.untracked.PSet(
 
 # Input source
 process.source = cms.Source("PoolSource",
-    secondaryFileNames = cms.untracked.vstring(),
+                            secondaryFileNames = cms.untracked.vstring(),
                             fileNames = cms.untracked.vstring(
-        'file:../../../CSA14/CMSSW_7_2_3_patch1/src/E6E81FBF-5769-E411-AD3B-001E6739801B.root'
+        #'file:../../../CSA14/CMSSW_7_2_3_patch1/src/E6E81FBF-5769-E411-AD3B-001E6739801B.root'
+        'file:/afs/cern.ch/work/s/syu/public/miniAOD/RSGravToZZ_kMpl01_M-4500_Tune4C_13TeV-pythia8_Phys14DR.root'
         #'root://eoscms//eos/cms/store/relval/CMSSW_7_2_1/RelValZEE_13/MINIAODSIM/PU25ns_PHYS14_25_V1_Phys14-v1/00000/C6B792AB-D15E-E411-A787-02163E00F4FB.root'
         ),
                             skipEvents = cms.untracked.uint32(0)         
-)
+                            )
 
 
 process.options = cms.untracked.PSet(
     allowUnscheduled = cms.untracked.bool(True)
-)
-
-
-# Output definition
-
-process.MINIAODSIMoutput = cms.OutputModule("PoolOutputModule",
-    compressionLevel = cms.untracked.int32(4),
-    compressionAlgorithm = cms.untracked.string('LZMA'),
-    eventAutoFlushCompressedSize = cms.untracked.int32(15728640),
-    outputCommands = cms.untracked.vstring( "keep *_ak4PFJets_*_MVAMET",
-                                            "keep *_pfMVAMEt_*_MVAMET",
-                                            "keep recoMET_*_*_*",
-                                            "keep patMETs_*_*_*",
-                                           ),
-    fileName = cms.untracked.string('miniAODMVAMET.root'),
-    dataset = cms.untracked.PSet(
-        filterName = cms.untracked.string(''),
-        dataTier = cms.untracked.string('')
-    ),
-    dropMetaData = cms.untracked.string('ALL'),
-    fastCloning = cms.untracked.bool(False),
-    overrideInputFileSplitLevels = cms.untracked.bool(True)
 )
 
 
@@ -133,7 +115,7 @@ process.tree = cms.EDAnalyzer(
     fillGenInfo_   = cms.bool(True),
     fillMuonInfo_  = cms.bool(True),
     fillElecInfo_  = cms.bool(True),
-    fillJetInfo_   = cms.bool(False), ## Raman switched it off
+    fillJetInfo_   = cms.bool(True), ## Raman switched it off
     fillMetInfo_   = cms.bool(True),
     fillTrigInfo_  = cms.bool(True),
     fillPhotInfo_  = cms.bool(False),
@@ -148,11 +130,11 @@ process.tree = cms.EDAnalyzer(
     tauLabel_ = cms.untracked.InputTag("slimmedTaus"),
     rhoSrc = cms.InputTag('kt6PFJets','rho'),
     ### CA8Jet
-    CA8Jets=cms.InputTag("jetsWithTau"),
+    CA8Jets=cms.InputTag("cleanJets"),
     CA8jecPayloadNames = cms.vstring( CA8jecLevels ),
     CA8jecUncName = cms.string(CA8jecUnc),    
     ### AK5Jet
-    AK5Jets=cms.InputTag("jetsAK4WithTau"),
+    AK5Jets=cms.InputTag("cleanAK4Jets"),
     AK5jecPayloadNames = cms.vstring( AK5jecLevels ),
     AK5jecUncName = cms.string(AK5jecUnc),    
     patMetRaw=cms.InputTag("slimmedMETs"),
@@ -168,9 +150,10 @@ process.TFileService = cms.Service("TFileService",
 
 
 
-process.analysis = cms.Path(process.pfMVAMEtSequence+
-                            process.leptonSequence+
-                            process.jetSequence+
-                            process.tree)
+process.analysis = cms.Path(process.leptonSequence+
+                            process.jetSequence+                            
+                            process.pfMVAMEtSequence+
+                            process.tree
+                            )
 
 
