@@ -39,8 +39,7 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig)
   fillTrigInfo_  = iConfig.getParameter<Bool_t>("fillTrigInfo_");
   fillPhotInfo_  = iConfig.getParameter<Bool_t>("fillPhotInfo_");
   fillTauInfo_   = iConfig.getParameter<Bool_t>("fillTauInfo_");
-  
-  
+
   edm::Service<TFileService> fs;
 
   //file = new TFile(outFileName_.c_str(),"recreate");
@@ -57,14 +56,10 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig)
   if( fillMetInfo_)   patMetTree_= new patMetTree("pf",tree_,iConfig);
   if( fillJetInfo_)   CA8jetTree_=new jetTree("CA8",tree_,iConfig);
   if( fillJetInfo_)   AK5jetTree_=new jetTree("AK5",tree_,iConfig);
-  
-  if( true)           genjetTree_=new genjetTree("genjet",tree_,iConfig);
-  
   if( fillTrigInfo_)  patHltTree_ = new patHltTree("hlt_",tree_); 
   if( fillPhotInfo_)  photonTree_ = new photonTree("", tree_, iConfig); 
   
   if(fillTauInfo_)    tauTree_ = new hpstauInfo("",tree_, false, iConfig);
-  
 }
 
 
@@ -85,9 +80,6 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   if( fillMuonInfo_)  patMuTree_   ->Fill(iEvent);
   if( fillJetInfo_)   CA8jetTree_  ->Fill(iEvent, iSetup);
   if( fillJetInfo_)   AK5jetTree_  ->Fill(iEvent, iSetup);
-  
-  genjetTree_->Fill(iEvent,iSetup);
-  
   if( fillMetInfo_)   patMetTree_  ->Fill(iEvent);
   if( fillTrigInfo_)  patHltTree_  ->Fill(iEvent);
   if( fillPhotInfo_)  photonTree_  ->Fill(iEvent);

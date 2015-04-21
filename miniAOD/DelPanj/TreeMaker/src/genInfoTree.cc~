@@ -133,8 +133,8 @@ genInfoTree::Fill(const edm::Event& iEvent)
     genJetPt_.push_back(gjet.pt());
     genJetEta_.push_back(gjet.eta());
     genJetPhi_.push_back(gjet.phi());
-    //genJetEM_.push_back(gjet.emEnergy());
-    //genJetHAD_.push_back(gjet.hadEnergy());
+    genJetEM_.push_back(gjet.emEnergy());
+    genJetHAD_.push_back(gjet.hadEnergy());
     
   }
    

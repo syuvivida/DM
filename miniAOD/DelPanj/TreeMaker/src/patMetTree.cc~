@@ -16,17 +16,10 @@ patMetTree::~patMetTree(){
 void
 patMetTree::Fill(const edm::Event& iEvent){
   Clear();
-  /*  edm::Handle<pat::METCollection> patMetRawHandle;
+  edm::Handle<pat::METCollection> patMetRawHandle;
   if(not iEvent.getByLabel(patMetRawLabel_,patMetRawHandle)){
     std::cout<<"FATAL EXCEPTION: "<<"Following Not Found: "
 	     <<patMetRawLabel_<<std::endl; exit(0);}
-  */
-  
-  edm::Handle<reco::PFMETCollection> patMetRawHandle;
-  if(not iEvent.getByLabel(patMetRawLabel_,patMetRawHandle)){
-    std::cout<<"FATAL EXCEPTION: "<<"Following Not Found: "
-	     <<patMetRawLabel_<<std::endl; exit(0);}
-
   edm::Handle<pat::METCollection> patMetHandle;
   if(not iEvent.getByLabel(patMetLabel_,patMetHandle)){
     std::cout<<"FATAL EXCEPTION: "<<"Following Not Found: "
@@ -43,7 +36,7 @@ patMetTree::Fill(const edm::Event& iEvent){
 
 
   // corrected distributions
-  auto metraw=patMetRawHandle.product()->begin();
+  pat::METCollection::const_iterator metraw=patMetRawHandle.product()->begin();
   patMetRawPt_ = metraw->et();
   patMetRawPhi_ = metraw->phi();
   patMetRawSumEt_ = metraw->sumEt();

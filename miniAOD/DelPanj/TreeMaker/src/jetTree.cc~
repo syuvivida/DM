@@ -1,4 +1,3 @@
-
 // This class need a new version
 // Take care of gen Jets from configuation 
 // take care of subjets
@@ -225,10 +224,10 @@ jetTree::Fill(const edm::Event& iEvent, edm::EventSetup const& iSetup){
     //jetPrunedM_.push_back(jet->userFloat("ak8PFJetsCHSPrunedLinks"));
     //jetPrunedM_.push_back(jet->userFloat("ak8PFJetsCHSPrunedMass"));
     //std::cout<<" pruned mass = "<<jet->userFloat("ak8PFJetsCHSPrunedMass")
-    //	     <<" taus1 "<< jet->userFloat("NjettinessAK8:tau1")
-    //	     <<" taus2 "<< jet->userFloat("NjettinessAK8:tau2")
-    //	     <<" taus3 "<< jet->userFloat("NjettinessAK8:tau3")
-    //	     <<std::endl;
+	     <<" taus1 "<< jet->userFloat("NjettinessAK8:tau1")
+	     <<" taus2 "<< jet->userFloat("NjettinessAK8:tau2")
+	     <<" taus3 "<< jet->userFloat("NjettinessAK8:tau3")
+	     <<std::endl;
     
     //std::cout<<" number of daughters = "<<jet->numberOfDaughters()<<std::endl;
     

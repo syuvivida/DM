@@ -89,7 +89,6 @@ class jetTree  : public baseTree{
   // btag information
   std::vector<Float_t> jetSSV_;
   std::vector<Float_t> jetCSV_;
-  std::vector<Float_t> jetSSVHE_;
   std::vector<Float_t> jetCISVV2_;
   std::vector<Float_t> jetTCHP_;
   std::vector<Float_t> jetTCHE_;
