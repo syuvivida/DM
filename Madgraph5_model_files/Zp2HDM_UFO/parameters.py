@@ -374,7 +374,7 @@ vu = Parameter(name = 'vu',
 gz = Parameter(name = 'gz',
                nature = 'internal',
                type = 'real',
-               value = '0.03*(gw/(cw*Sb**2))*(1000**2 - MZ**2)**0.5/MZ',
+               value = '0.03*(gw/(cw*Sb**2))*(MZp**2 - MZ**2)**0.5/MZ',
                texname = '\\text{gz}',
                lhablock = 'ZpINPUTS',
                lhacode = [ 3 ])
