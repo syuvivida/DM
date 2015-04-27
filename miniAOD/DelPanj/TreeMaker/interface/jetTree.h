@@ -2,9 +2,6 @@
 #define __JET_TREE_H_
 
 
-
-
-
 #include <memory>
 #include <string>
 #include <iostream>
