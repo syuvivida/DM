@@ -1,8 +1,8 @@
-
+///DataFormats/PatCandidates/interface/Jet.h
 // This class need a new version
 // Take care of gen Jets from configuation 
 // take care of subjets
-// take care of tau variables : access using new methods. 
+// Tau variables now Fixed
 // add additional info related to soft drop (??) 
 // remove branches which are not needed. 
 // Replace pt, eta, phi, E, px. py, pz by TLorentzVector to check size of the tuple. :: do this for all the classes. 
@@ -80,35 +80,36 @@ jetTree::Fill(const edm::Event& iEvent, edm::EventSetup const& iSetup){
   if(not iEvent.getByLabel(JetLabel_,JetHandle)){
     std::cout<<"FATAL EXCEPTION: in beginging "<<"Following Not Found: "
 	     <<JetLabel_<<std::endl; exit(0);}
+  /*
+  edm::Handle<std::vector<pat::Jet> > PrunedJetHandle;
+  iEvent.getByLabel(PrunedJetLabel_,PrunedJetHandle);
 
-  //edm::Handle<std::vector<pat::Jet> > PrunedJetHandle;
-  //iEvent.getByLabel(PrunedJetLabel_,PrunedJetHandle);
-
-  //if(not iEvent.getByLabel(PrunedJetLabel_,PrunedJetHandle)){
-  // std::cout<<"FATAL EXCEPTION: "<<"Following Not Found: "
-  //	     <<PrunedJetLabel_<<std::endl; exit(0);}
-
+  if(not iEvent.getByLabel(PrunedJetLabel_,PrunedJetHandle)){
+    std::cout<<"FATAL EXCEPTION: in begining "<<"Following Not Found: "
+  	     <<PrunedJetLabel_<<std::endl; exit(0);}
+  */
   pat::JetCollection jets(*(JetHandle.product()));
   std::sort(jets.begin(),jets.end(),PtGreater());
 
   std::vector<pat::Jet>::const_iterator jet =jets.begin();   
-
+  std::cout<<" njets = "<<jets.size()
+	   <<" running with "<<JetLabel_
+	   <<std::endl;
   for(;jet!=jets.end();jet++){
     nJet_++;
+    
     //Stuff common for all jets.
-
-    jetTau1_.push_back(jet->userFloat("tau1"));
-    jetTau2_.push_back(jet->userFloat("tau2"));
-    jetTau3_.push_back(jet->userFloat("tau3"));
-    jetTau4_.push_back(jet->userFloat("tau4"));
-    
-    // this is old way and not correct now 
-    std::cout<<" tau variables = "<<jet->userFloat("tau1")
-	     <<", "<<jet->userFloat("tau2")
-	     <<", "<<jet->userFloat("tau3")
-	     <<", "<<jet->userFloat("tau4")
+    jetTau1_.push_back(jet->userFloat("NjettinessAK8:tau1"));
+    jetTau2_.push_back(jet->userFloat("NjettinessAK8:tau2"));
+    jetTau3_.push_back(jet->userFloat("NjettinessAK8:tau3"));
+    jetTau4_.push_back(jet->userFloat("NjettinessAK8:tau2")/jet->userFloat("NjettinessAK8:tau1"));
+    std::cout<<" i jet = "<< nJet_
 	     <<std::endl;
-    
+    std::cout<<" tau 1 = "<<jet->userFloat("NjettinessAK8:tau1")
+	     <<" tau 2 = "<<jet->userFloat("NjettinessAK8:tau2")
+	     <<" tau 3 = "<<jet->userFloat("NjettinessAK8:tau3")
+	     <<" nsubjets= "<<jet->nSubjetCollections()
+	     <<std::endl;
     // now making correction of jet energy
     // reco::Candidate::LorentzVector uncorrJet;
     // uncorrJet = jet->correctedP4(0);
@@ -181,6 +182,7 @@ jetTree::Fill(const edm::Event& iEvent, edm::EventSetup const& iSetup){
       genjetPz_.push_back(-999.9);
       genjetEn_.push_back(-999.9);
     }
+    jetRawFactor_.push_back(jet->jecFactor("Uncorrected"));
     jetPt_.push_back(jet->pt());
     jetEta_.push_back(jet->eta());
     jetPhi_.push_back(jet->phi());
@@ -203,14 +205,14 @@ jetTree::Fill(const edm::Event& iEvent, edm::EventSetup const& iSetup){
     jetJBP_.push_back(jet->bDiscriminator("jetBProbabilityBJetTags"));
     jetCISVV2_.push_back(jet->bDiscriminator("combinedInclusiveSecondaryVertexV2BJetTags"));
     
-    std::cout<<" pt of jet = "<<jet->pt()
-	     <<" csv  = "<<jet->bDiscriminator("combinedSecondaryVertexBJetTags")
-	     <<"simpleSecondaryVertexHighPurBJetTags "<<jet->bDiscriminator("simpleSecondaryVertexHighPurBJetTags")
-	     <<" trackCountingHighPurBJetTags = "<<jet->bDiscriminator("combinedSecondaryVertexBJetTags")
-	     <<" simpleSecondaryVertexHighEffBJetTags = "<<jet->bDiscriminator("simpleSecondaryVertexHighEffBJetTags")
-	     <<" combinedInclusiveSecondaryVertexV2BJetTags = "<<jet->bDiscriminator("combinedInclusiveSecondaryVertexV2BJetTags")
-	     <<" CombinedSecondaryVertexIVFV2 = "<<jet->bDiscriminator("combinedSecondaryVertexIVFV2")
-	     <<std::endl;
+    if(false) std::cout<<" pt of jet = "<<jet->pt()
+		       <<" csv  = "<<jet->bDiscriminator("combinedSecondaryVertexBJetTags")
+		       <<"simpleSecondaryVertexHighPurBJetTags "<<jet->bDiscriminator("simpleSecondaryVertexHighPurBJetTags")
+		       <<" trackCountingHighPurBJetTags = "<<jet->bDiscriminator("combinedSecondaryVertexBJetTags")
+		       <<" simpleSecondaryVertexHighEffBJetTags = "<<jet->bDiscriminator("simpleSecondaryVertexHighEffBJetTags")
+		       <<" combinedInclusiveSecondaryVertexV2BJetTags = "<<jet->bDiscriminator("combinedInclusiveSecondaryVertexV2BJetTags")
+		       <<" CombinedSecondaryVertexIVFV2 = "<<jet->bDiscriminator("combinedSecondaryVertexIVFV2")
+		       <<std::endl;
     
     
     jetMuEF_.push_back(jet->muonEnergyFraction());
@@ -221,16 +223,43 @@ jetTree::Fill(const edm::Event& iEvent, edm::EventSetup const& iSetup){
     jetNHadEF_.push_back(jet->neutralHadronEnergyFraction());
     jetCMulti_.push_back(jet->chargedMultiplicity());
     
+    if(false) std::cout<<"jetHFHadEF_ = "<<(jet->HFHadronEnergyFraction())
+	     <<"  jetHFEMEF_ = "<<(jet->HFEMEnergyFraction())
+	     <<"  jetCHHadMultiplicity_ = "<<(jet->chargedHadronMultiplicity())
+	     <<"  jetNHadMulplicity_ = "<<(jet->neutralHadronMultiplicity())
+	     <<"  jetPhMultiplicity_ = "<<(jet->photonMultiplicity())
+	     <<"  jetEleMultiplicity_ = "<<(jet->electronMultiplicity())
+	     <<"  jetHFHadMultiplicity_ = "<<(jet->HFHadronMultiplicity())
+	     <<"  jetHFEMMultiplicity_ = "<<(jet->HFEMMultiplicity())
+	     <<"  jetChMuEF_ = "<<(jet->chargedMuEnergyFraction())
+	     <<"  jetNMultiplicity_ = "<<(jet->neutralMultiplicity())
+	     <<"  jetHOEnergy_ = "<<(jet->hoEnergy())
+	     <<"  jetHOEF_ = "<<(jet->hoEnergyFraction())
+	     <<std::endl;
+
+
+    jetHFHadEF_.push_back(jet->HFHadronEnergyFraction());
+    jetHFEMEF_.push_back(jet->HFEMEnergyFraction());
+    jetCHHadMultiplicity_.push_back(jet->chargedHadronMultiplicity());
+    jetNHadMulplicity_.push_back(jet->neutralHadronMultiplicity());
+    jetPhMultiplicity_.push_back(jet->photonMultiplicity());
+    jetEleMultiplicity_.push_back(jet->electronMultiplicity());
+    jetHFHadMultiplicity_.push_back(jet->HFHadronMultiplicity());
+    jetHFEMMultiplicity_.push_back(jet->HFEMMultiplicity());
+    jetChMuEF_.push_back(jet->chargedMuEnergyFraction());
+    jetNMultiplicity_.push_back(jet->neutralMultiplicity());
+    jetHOEnergy_.push_back(jet->hoEnergy());
+    jetHOEF_.push_back(jet->hoEnergyFraction());
+
     // Raman Testing starts 
     //jetPrunedM_.push_back(jet->userFloat("ak8PFJetsCHSPrunedLinks"));
     //jetPrunedM_.push_back(jet->userFloat("ak8PFJetsCHSPrunedMass"));
-    //std::cout<<" pruned mass = "<<jet->userFloat("ak8PFJetsCHSPrunedMass")
-    //	     <<" taus1 "<< jet->userFloat("NjettinessAK8:tau1")
-    //	     <<" taus2 "<< jet->userFloat("NjettinessAK8:tau2")
-    //	     <<" taus3 "<< jet->userFloat("NjettinessAK8:tau3")
-    //	     <<std::endl;
+    std::cout<<" pruned mass = "<<jet->userFloat("ak8PFJetsCHSPrunedMass")
+      	     <<std::endl;
     
-    //std::cout<<" number of daughters = "<<jet->numberOfDaughters()<<std::endl;
+    //const pat::Jet* subjet = dynamic_cast<const pat::Jet*>(jet->daughter(0));                                                                                                        
+
+    std::cout<<" number of daughters = "<<jet->numberOfDaughters()<<std::endl;
     
 
     // Raman testing ends
@@ -372,6 +401,7 @@ void
 jetTree::SetBranches(){
   
   AddBranch(&nJet_, "nJet");
+  AddBranch(&jetRawFactor_,"jetRawFactor");
   AddBranch(&jetPt_, "jetPt");
   AddBranch(&jetEta_, "jetEta");
   AddBranch(&jetPhi_, "jetPhi");
@@ -417,7 +447,22 @@ jetTree::SetBranches(){
   AddBranch(&jetNHadEF_, "jetNHadEF");
   AddBranch(&jetCMulti_, "jetCMulti");
   
-  if(isCA8Jet_){
+  
+  AddBranch(&jetHFHadEF_,"jetHFHadEF");
+  AddBranch(&jetHFEMEF_,"jetHFEMEF");
+  AddBranch(&jetCHHadMultiplicity_,"jetCHHadMultiplicity");
+  AddBranch(&jetNHadMulplicity_,"jetNHadMulplicity");
+  AddBranch(&jetPhMultiplicity_,"jetPhMultiplicity");
+  AddBranch(&jetEleMultiplicity_,"jetEleMultiplicity");
+  AddBranch(&jetHFHadMultiplicity_,"jetHFHadMultiplicity");
+  AddBranch(&jetHFEMMultiplicity_,"jetHFEMMultiplicity");
+  AddBranch(&jetChMuEF_,"jetChMuEF");
+  AddBranch(&jetNMultiplicity_,"jetNMultiplicity");
+  AddBranch(&jetHOEnergy_,"jetHOEnergy");
+  AddBranch(&jetHOEF_,"jetHOEF");
+
+
+ if(isCA8Jet_){
     AddBranch(&jetPrunedPt_, "jetPrunedPt");
     AddBranch(&jetPrunedEta_, "jetPrunedEta");
     AddBranch(&jetPrunedPhi_, "jetPrunedPhi");
@@ -462,6 +507,7 @@ jetTree::SetBranches(){
 void
 jetTree::Clear(){
   nJet_ = 0;
+  jetRawFactor_.clear();
   jetPt_.clear();
   jetEta_.clear();
   jetPhi_.clear();
@@ -506,7 +552,24 @@ jetTree::Clear(){
   jetNEmEF_.clear();
   jetNHadEF_.clear();
   jetCMulti_.clear();
+  
 
+  jetHFHadEF_.clear();
+  jetHFEMEF_.clear();
+  jetCHHadMultiplicity_.clear();
+  jetNHadMulplicity_.clear();
+  jetPhMultiplicity_.clear();
+  jetEleMultiplicity_.clear();
+  jetHFHadMultiplicity_.clear();
+  jetHFEMMultiplicity_.clear();
+  jetChMuEF_.clear();
+  jetNMultiplicity_.clear();
+  jetHOEnergy_.clear();
+  jetHOEF_.clear();
+
+
+  
+  
   jetPrunedPt_.clear();
   jetPrunedEta_.clear();
   jetPrunedPhi_.clear();
