@@ -18,7 +18,8 @@ Anil Singh: Empty template created.
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "DelPanj/TreeMaker/interface/utils.h"
 #include "DelPanj/TreeMaker/interface/baseTree.h"
-
+#include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
+#include "DataFormats/EgammaCandidates/interface/Photon.h"
 using namespace std;
 using namespace edm;
 
@@ -34,13 +35,24 @@ class photonTree : public baseTree{
  private:
   photonTree(){};
   Bool_t usePFObjects_;
-  edm::InputTag photonLabel_;
+  edm::InputTag photonTreeLabel_;
+  edm::InputTag rho25C;
+
 
   //variables which would become branches
   Int_t nPho_;
+  double rho25_;
   std::vector<Float_t> photonPt_;
   std::vector<Float_t> photonEta_;
   std::vector<Float_t> photonPhi_;
+  std::vector<double> photonSigmaIetaIeta_;
+  std::vector<double> photonhadronicOverEm_;
+  std::vector<double> photonecalRecHitSumEtConeDR04_;
+  std::vector<double> photonhcalTowerSumEtConeDR04_;
+  std::vector<double> photontrkSumPtHollowConeDR04_;
+
+
+
 
 };
 
