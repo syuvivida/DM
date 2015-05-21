@@ -1,11 +1,11 @@
 #!/bin/bash
 
 scriptname=`basename $0`
-EXPECTED_ARGS=3
+EXPECTED_ARGS=2
 if [ $# -ne $EXPECTED_ARGS ]
 then
 echo "Usage: $scriptname script queue"
-echo "Example: ./$scriptname tarballRun.sh 1nw path_of_gridpack_directory"
+echo "Example: ./$scriptname runStep1.sh 1nw"
 exit 1
 fi
 
@@ -16,11 +16,11 @@ fi
 
 export iteration=0
 lastfile=50
-mkdir lhefile_test
+          
 while [ $iteration -lt $lastfile ]; 
 do
   iteration=$(( iteration + 1 ))
   echo $iteration
-  bsub -q $2 $PWD/$1 $PWD $3
+  bsub -q $2 -C 0 -R "rusage[mem=30000]" $PWD/$1 $PWD
 
 done
