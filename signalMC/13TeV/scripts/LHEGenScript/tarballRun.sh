@@ -17,8 +17,6 @@ echo $z
 
 ./runcmsgrid.sh 1000 $z 1
 
-cp events_presys.lhe ../lhefile_test
-cd $1
-rm -rf tarball_$iteration
-cd lhefile_test/
 mv events_presys.lhe events_presys_$iteration.lhe
+cp events_presys_$iteration.lhe ../step1Storage
+cd $1
