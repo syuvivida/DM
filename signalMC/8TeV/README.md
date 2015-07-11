@@ -7,7 +7,19 @@ Use runcmsgrid.sh with different seeds when you generate these files
 
 Give each LHE file a name like: ZpAbb_1.lhe, ZpAbb_2.lhe, ZpAbb_3.lhe ...
 
-2) Once you have the LHE files, you could submit jobs to lxplus 
+2) You need to modify the format of LHE files via 
+reformat.sh 
+
+ ./reformat.sh ZppAbb_1.lhe
+
+ If there are many LHE files, do 
+
+ foreach file(Zpp*lhe)
+ foreach? ./reformat.sh $file
+ foreach? end
+
+
+3) Once you have the LHE files, you could submit jobs to lxplus 
  system via loop.bash and runJob.sh
 
 For step1 and 50 LHE files, there is no need for modification.
@@ -22,11 +34,11 @@ voms-proxy-init --voms cms
 Check if you do have a grid.proxy at $HOME/private
 
 
-3) Submit step1 jobs
+4) Submit step1 jobs
 
  ./loop.bash ZppAbb
 
 
-4) Once step1 is finished, you could modify runJob.sh to run step2, and step3.
+5) Once step1 is finished, you could modify runJob.sh to run step2, and step3.
 
-5) If you only want to try on one LHE file, modify lastfile in loop.bash
+6) If you only want to try on one LHE file, modify lastfile in loop.bash
