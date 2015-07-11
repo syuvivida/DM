@@ -2,7 +2,7 @@
 
 
 iteration=0
-lastfile=10
+lastfile=50
 while [ $iteration -lt $lastfile ]; 
 do
   iteration=$(( iteration + 1 ))
