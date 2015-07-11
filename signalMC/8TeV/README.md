@@ -12,11 +12,14 @@ reformat.sh
 
  ./reformat.sh ZppAbb_1.lhe
 
- If there are many LHE files, do 
+ If there are many LHE files, do:
 
  foreach file(Zpp*lhe)
+
  foreach? ./reformat.sh $file
+
  foreach? end
+
 
 
 3) Once you have the LHE files, you could submit jobs to lxplus 
@@ -25,7 +28,7 @@ reformat.sh
 For step1 and 50 LHE files, there is no need for modification.
 
 
-But before running, you need to save your grid certificate somewhere.
+But before running, you need to save your grid certificate somewhere:
 
 setenv X509_USER_PROXY $HOME/private/grid.proxy
 
