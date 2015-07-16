@@ -93,6 +93,7 @@ class TreeReader {
    // TTree/TChain initializers
    TreeReader(TTree* tree);
    TreeReader(const char* path);
+   TreeReader(const char* path, bool useTChain);
    TreeReader(const char** paths, int npaths);
    TreeReader(std::vector<std::string> paths);
 
@@ -205,6 +206,35 @@ TreeReader::TreeReader(const char* path) :
 
    InitSingleTTree(path);
 }
+
+//______________________________________________________________________________
+TreeReader::TreeReader(const char* path, bool useTChain) :
+   fFile(0),
+   fTree(0),
+   fTreeNum(-1),
+   fkMC(kFALSE),
+   fEntry(-1)
+{
+  if(!useTChain)
+    InitSingleTTree(path);
+  else   
+    {
+      delete fTree;
+      fTree = new TChain("tree/treeMaker");
+      if (! ((TChain*)fTree)->Add(path) ) 
+	{  
+	  FATAL("TTree or files not found");
+	  return;
+	}
+      std::cout << "number of entries  = " << fTree->GetEntries() << std::endl;
+    }
+  // find out availability of MC truth info (check existence of "nMC" branch)
+  fkMC = fTree->GetBranch("nMC") ? kTRUE : kFALSE;
+
+  return;
+
+}
+
 
 //______________________________________________________________________________
 TreeReader::TreeReader(const char** paths, int npaths) :
@@ -484,7 +514,7 @@ void TreeReader::InitSingleTTree(const char* path)
    else gDirectory = 0;
 
    // get tree's tree
-   fTree = dynamic_cast<TTree*>(fFile->Get("tree/tree"));
+   fTree = dynamic_cast<TTree*>(fFile->Get("tree/treeMaker"));
    if (!fTree)
      fTree = dynamic_cast<TTree*>(fFile->Get("tree"));
    if (!fTree)   
@@ -492,7 +522,7 @@ void TreeReader::InitSingleTTree(const char* path)
 
    // be 100% sure: check explicitly object's class
    if (((TObject*)fTree)->IsA() != TTree::Class())
-      FATAL("tree/tree is not a TTree");
+      FATAL("tree/treeMaker is not a TTree");
 
    // find out availability of MC truth info (check existence of "nMC" branch)
    fkMC = fTree->GetBranch("nMC") ? kTRUE : kFALSE;
@@ -514,7 +544,7 @@ void TreeReader::InitTChain(const char** paths, int npaths)
       return;
    }
 
-   fTree = new TChain("tree/tree");
+   fTree = new TChain("tree/treeMaker");
 
    // add root files with TTrees, reading the number of entries in each file
    bool differentTree=false;
@@ -530,7 +560,7 @@ void TreeReader::InitTChain(const char** paths, int npaths)
    else
      {
        delete fTree;
-       fTree = new TChain("tree/tree");
+       fTree = new TChain("tree/treeMaker");
      }
 
    for (int i = 0; i < npaths; i++)
