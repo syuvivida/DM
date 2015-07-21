@@ -1,4 +1,4 @@
-/* Reader of tree's TTrees.
+/* Reader of ggNtuplizer's and other TTrees.
  *
  * Works both with old as well as with new ntuples. In particular, for tree
  * branches containing vector<...> objects of elementary data types as well as
@@ -20,7 +20,7 @@
  *   1. Int_t instead of int;
  *   2. UInt_t instead of unsigned int;
  *   3. Long64_t instead of long;
- *   4. ULong64_t instead of unsigned long.
+ *   4. ULong64_t instead of unsigned long, etc.
  *
  * For instance, it is suggested to use
  *   Int_t nEle = reader.GetInt("nEle");
@@ -32,7 +32,7 @@
  *
  * Some notes:
  * 1. In-place modifications of arrays (within array boundaries) are allowed and
- *    encouragAed.
+ *    encouraged.
  * 2. The code loads only requested tree branches. Therefore, in general, an
  *    analysis will run much faster.
  * 3. Branch contents are accessed directly by accessing leafs. Thus, it is
@@ -52,50 +52,68 @@
 #include <TFile.h>
 #include <TChain.h>
 #include <TLeafF.h>
+#include <TLeafD.h>
+#include <TLeafB.h>
+#include <TLeafS.h>
 #include <TLeafI.h>
 #include <TLeafL.h>
 #include <TLeafO.h>
 #include <TSystem.h>
+#include <TLeafObject.h>
 #include <TLeafElement.h>
 
 // prints a message and exits gracefully
+#ifndef FATAL
 #define FATAL(msg) do { fprintf(stderr, "FATAL: %s\n", msg); gSystem->Exit(1); } while (0)
+#endif
 
 class TreeReader {
 
  public:
 
    // types of branch/leaf contents
-   // NOTE: some types (e.g. char, short, double) are not currently necessary
+   // NOTE: some unsigned types may not be supported
    enum ETypes {
       kBool,            // single 1-byte boolean (TLeafO)
+      kChar,            // single 1-byte integer (TLeafB)
+      kShort,           // single 2-byte integer (TLeafS)
       kInt,             // single 4-byte integer (TLeafI)
       kFloat,           // single 4-byte float (TLeafF)
+      kDouble,          // single 8-byte float (TLeafD)
       kLong64,          // single 8-byte integer (TLeafL)
       kArrBool,         // array of 1-byte booleans (TLeafO only)
+      kArrChar,         // array of 1-byte integers (TLeafB or vector<char>)
+      kArrCharTLeaf,    // array of 1-byte integers (TLeafB)
+      kArrCharVector,   // array of 1-byte integers (vector<char>); NOTE: char=signed char is assumed
+      kArrUCharVector,  // array of 1-byte unsigned integers (vector<unsigned char>)
+      kArrShort,        // array of 2-byte integers (TLeafS or vector<short>)
+      kArrShortTLeaf,   // array of 2-byte integers (TLeafS)
+      kArrShortVector,  // array of 2-byte integers (vector<short>)
+      kArrUShortVector, // array of 2-byte unsigned integers (vector<unsigned short>)
       kArrInt,          // array of 4-byte integers (TLeafI or vector<int>)
       kArrIntTLeaf,     // array of 4-byte integers (TLeafI)
       kArrIntVector,    // array of 4-byte integers (vector<int>)
+      kArrUIntVector,   // array of 4-byte unsigned integers (vector<unsigned int>)
       kArrFloat,        // array of 4-byte floats (TLeafF or vector<float>)
       kArrFloatTLeaf,   // array of 4-byte floats (TLeafF)
       kArrFloatVector,  // array of 4-byte floats (vector<float>)
       kArrLong64,       // array of 8-byte integers (TLeafL or vector<long>)
       kArrLong64TLeaf,  // array of 8-byte integers (TLeafL)
       kArrLong64Vector, // array of 8-byte integers (vector<long>)
-      kArrULong64,      // array of 8-byte unsigned integers (vector<unsigned long>)
+      kArrULong64Vector,// array of 8-byte unsigned integers (vector<unsigned long>)
       kArrVectInt,      // array of vector<int> (vector<vector<int> >)
       kArrVectFloat,    // array of vector<float> (vector<vector<float> >)
       kArrString,       // array of string 
       kArrStringVector, // array of string (vector<string>)
+      kTObject,         // general object inherited from TObject
       kVoidPtr          // all other data types
    };
 
    // TTree/TChain initializers
    TreeReader(TTree* tree);
-   TreeReader(const char* path);
-   TreeReader(const char* path, bool useTChain);
-   TreeReader(const char** paths, int npaths);
-   TreeReader(std::vector<std::string> paths);
+   TreeReader(const char* path, const char* treename = "tree/treeMaker");
+   TreeReader(const char** paths, int npaths, const char* treename = "tree/treeMaker");
+   TreeReader(std::vector<std::string> paths, const char* treename = "tree/treeMaker");
 
    virtual ~TreeReader();
 
@@ -114,22 +132,30 @@ class TreeReader {
    // array or a pointer to an unprocessed object.
    void* GetPtr(const char* branch_name, ETypes cktype = kVoidPtr, Int_t* nsize = NULL);
 
-   // specializations of the call above
-   Int_t*     GetPtrInt(const char* bname) { return (Int_t*) GetPtr(bname, kArrInt); }
-   Float_t*   GetPtrFloat(const char* bname) { return (Float_t*) GetPtr(bname, kArrFloat); }
-   Long64_t*  GetPtrLong64(const char* bname) { return (Long64_t*) GetPtr(bname, kArrLong64); }
-   ULong64_t* GetPtrULong64(const char* bname) { return (ULong64_t*) GetPtr(bname, kArrULong64); }
-   std::string* GetPtrString(const char* bname) { return (std::string*) GetPtr(bname, kArrString); }
-   Int_t GetPtrStringSize(){return fStringVectorSize;}
+   // specializations of the call above;
+   // NOTE: use same methods with type casting for unsigned data types
+   Char_t*    GetPtrChar   (const char* bname) { return (Char_t*)    GetPtr(bname, kArrChar);    }
+   Short_t*   GetPtrShort  (const char* bname) { return (Short_t*)   GetPtr(bname, kArrShort);   }
+   Int_t*     GetPtrInt    (const char* bname) { return (Int_t*)     GetPtr(bname, kArrInt);     }
+   Float_t*   GetPtrFloat  (const char* bname) { return (Float_t*)   GetPtr(bname, kArrFloat);   }
+   Long64_t*  GetPtrLong64 (const char* bname) { return (Long64_t*)  GetPtr(bname, kArrLong64);  }
+   TObject*   GetPtrTObject(const char* bname) { return (TObject*)   GetPtr(bname, kTObject);    }
 
    // NOTE: this works only for old ntuples
    Bool_t*    GetPtrBool(const char* bname) { return (Bool_t*) GetPtr(bname, kArrBool); }
 
    // return branch values for elementary types
-   Bool_t   GetBool(const char* bname) { return ((Bool_t*) GetPtr(bname, kBool))[0]; }
-   Int_t    GetInt(const char* bname) { return ((Int_t*) GetPtr(bname, kInt))[0]; }
-   Float_t  GetFloat(const char* bname) { return ((Float_t*) GetPtr(bname, kFloat))[0]; }
+   Bool_t   GetBool  (const char* bname) { return ((Bool_t*)   GetPtr(bname, kBool))  [0]; }
+   Char_t   GetChar  (const char* bname) { return ((Char_t*)   GetPtr(bname, kChar))  [0]; }
+   Short_t  GetShort (const char* bname) { return ((Short_t*)  GetPtr(bname, kShort)) [0]; }
+   Int_t    GetInt   (const char* bname) { return ((Int_t*)    GetPtr(bname, kInt))   [0]; }
+   Float_t  GetFloat (const char* bname) { return ((Float_t*)  GetPtr(bname, kFloat)) [0]; }
+   Double_t GetDouble(const char* bname) { return ((Double_t*) GetPtr(bname, kDouble))[0]; }
    Long64_t GetLong64(const char* bname) { return ((Long64_t*) GetPtr(bname, kLong64))[0]; }
+
+   std::string* GetPtrString(const char* bname) { return (std::string*) GetPtr(bname, kArrString); }
+   Int_t GetPtrStringSize(){return fStringVectorSize;}
+
 
    // vector<vector<float> > and vector<vector<int> > tree branches
    std::vector<Float_t>* GetPtrVectorFloat(const char* bname, Int_t &nsize) {
@@ -147,8 +173,8 @@ class TreeReader {
 
  protected:
 
-   void  InitSingleTTree(const char* path);
-   void  InitTChain(const char** paths, int npaths);
+   void  InitSingleTTree(const char* path, const char* treename);
+   void  InitTChain(const char** paths, int npaths, const char* treename);
    void  FindLeaf(const char* bname);
 
    TFile*   fFile;     // file handle associated with fTree
@@ -156,8 +182,7 @@ class TreeReader {
    Int_t    fTreeNum;  // (for TChain) current tree number in list of TTrees
    Bool_t   fkMC;      // if kTRUE, MC truth info is available
    Long64_t fEntry;    // fTree entry number to read with Get*() methods
-
-   Int_t     fStringVectorSize; 
+   Int_t    fStringVectorSize; 
 
    // caching
    std::map<std::string,int> fLeafIdx; // leaf name => index in arrays below
@@ -192,7 +217,7 @@ TreeReader::TreeReader(TTree* tree) :
 }
 
 //______________________________________________________________________________
-TreeReader::TreeReader(const char* path) :
+TreeReader::TreeReader(const char* path, const char* treename) :
    fFile(0),
    fTree(0),
    fTreeNum(-1),
@@ -204,40 +229,11 @@ TreeReader::TreeReader(const char* path) :
     * path = any root-supported path to a file with TTree.
     */
 
-   InitSingleTTree(path);
+   InitSingleTTree(path, treename);
 }
 
 //______________________________________________________________________________
-TreeReader::TreeReader(const char* path, bool useTChain) :
-   fFile(0),
-   fTree(0),
-   fTreeNum(-1),
-   fkMC(kFALSE),
-   fEntry(-1)
-{
-  if(!useTChain)
-    InitSingleTTree(path);
-  else   
-    {
-      delete fTree;
-      fTree = new TChain("tree/treeMaker");
-      if (! ((TChain*)fTree)->Add(path) ) 
-	{  
-	  FATAL("TTree or files not found");
-	  return;
-	}
-      std::cout << "number of entries  = " << fTree->GetEntries() << std::endl;
-    }
-  // find out availability of MC truth info (check existence of "nMC" branch)
-  fkMC = fTree->GetBranch("nMC") ? kTRUE : kFALSE;
-
-  return;
-
-}
-
-
-//______________________________________________________________________________
-TreeReader::TreeReader(const char** paths, int npaths) :
+TreeReader::TreeReader(const char** paths, int npaths, const char* treename) :
    fFile(0),
    fTree(0),
    fTreeNum(-1),
@@ -250,11 +246,11 @@ TreeReader::TreeReader(const char** paths, int npaths) :
     * npaths = number of elements in the array above.
     */
 
-   InitTChain(paths, npaths);
+   InitTChain(paths, npaths, treename);
 }
 
 //______________________________________________________________________________
-TreeReader::TreeReader(std::vector<std::string> paths) :
+TreeReader::TreeReader(std::vector<std::string> paths, const char* treename) :
    fFile(0),
    fTree(0),
    fTreeNum(-1),
@@ -273,7 +269,7 @@ TreeReader::TreeReader(std::vector<std::string> paths) :
    for (int i = 0; i < npaths; i++)
        paths2[i] = paths[i].c_str();
 
-   InitTChain(paths2, npaths);
+   InitTChain(paths2, npaths, treename);
 }
 
 //______________________________________________________________________________
@@ -317,20 +313,37 @@ void TreeReader::Print()
          std::string descr(leaf->GetBranch()->GetClassName());
 
          // known one- and two-dimensional vector<...> arrays
-         // NOTE: only necessary data types are listed
          // NOTE: force showing data types of well-defined sizes
          const char* types[] = {
-            "float", "int", "unsigned int", "long", "unsigned long",
-            "vector<float> ", "vector<int> ", "vector<std::string> "};
+            "float", "Float_t", "char", "Char_t", "signed char", "unsigned char", "UChar_t",
+            "short", "short int", "signed short", "signed short int", "Short_t",
+            "unsigned short", "unsigned short int", "UShort_t",
+            "int", "signed", "signed int", "Int_t", "unsigned int", "unsigned", "UInt_t",
+            "long", "long int", "signed long", "signed long int", "Long64_t", "Long_t",
+            "unsigned long", "unsigned long int", "ULong64_t", "ULong_t",
+            "vector<float> ", "vector<int> ","vector<std::string> "};
          const char* type_descr[] = {
-            "Float_t", "Int_t", "UInt_t", "Long64_t", "ULong64_t",
-            "vector<Float_t>", "vector<Int_t>", "vector<std::string>"};
+            "float", "float", "Char_t", "Char_t", "Char_t", "UChar_t", "UChar_t",
+            "Short_t", "Short_t", "Short_t", "Short_t", "Short_t",
+            "UShort_t", "UShort_t", "UShort_t",
+            "Int_t", "Int_t", "Int_t", "Int_t", "UInt_t", "UInt_t", "UInt_t",
+            "Long64_t", "Long64_t", "Long64_t", "Long64_t", "Long64_t", "Long64_t",
+            "ULong64_t", "ULong64_t", "ULong64_t", "Long64_t",
+            "vector<float>", "vector<Int_t>", "vector<std::string>"};
 
-         for (int c = 0; c < 8; c++)
+         for (int c = 0; c < 34; c++)
             if (descr.compare(Form("vector<%s>", types[c])) == 0) {
                descr = Form("%s*", type_descr[c]);
                break;
             }
+
+         Printf("  %-36s: %s", leaf->GetName(), descr.data());
+      }
+
+      // objects inherited from TObject
+      else if (leaf->IsA() == TLeafObject::Class()) {
+         // content descriptor
+         std::string descr(leaf->GetBranch()->GetClassName());
 
          Printf("  %-36s: %s", leaf->GetName(), descr.data());
       }
@@ -348,6 +361,12 @@ void TreeReader::Print()
             descr = "Long64_t";
          else if (leaf->IsA() == TLeafO::Class())
             descr = "Bool_t";
+         else if (leaf->IsA() == TLeafD::Class())
+            descr = "Double_t";
+         else if (leaf->IsA() == TLeafB::Class())
+            descr = "Char_t";
+         else if (leaf->IsA() == TLeafS::Class())
+            descr = "Short_t";
          else
             FATAL(Form("unsupported leaf of class %s", leaf->ClassName()));
 
@@ -371,29 +390,31 @@ void TreeReader::Print()
 //______________________________________________________________________________
 void TreeReader::GetEntry(Long64_t entry)
 {
-  if (fTree->IsA() != TChain::Class())
-    fEntry = entry;
-  // TChain requires special treatment
-  else {
-    fEntry = ((TChain*)fTree)->LoadTree(entry);
-    
-    // reset caches on switching to new TTree
-    if (fTreeNum != ((TChain*)fTree)->GetTreeNumber()) {
-      fLeafIdx.clear();
-      fLeafType.clear();
-      fLeafAddr.clear();
-      fLeafValue.clear();
-      
-      fTreeNum = ((TChain*)fTree)->GetTreeNumber();
-    }
-  }
+   /* Sets event number to retrieve next time TreeReader::Get*() called.
+    */
 
-  // reset cache of addresses to leaf payloads
-  for (size_t i = 0; i < fLeafValue.size(); i++)
-    fLeafValue[i] = NULL;
+   if (fTree->IsA() != TChain::Class())
+      fEntry = entry;
+
+   // TChain requires special treatment
+   else {
+      fEntry = ((TChain*)fTree)->LoadTree(entry);
+
+      // reset caches on switching to new TTree
+      if (fTreeNum != ((TChain*)fTree)->GetTreeNumber()) {
+         fLeafIdx.clear();
+         fLeafType.clear();
+         fLeafAddr.clear();
+         fLeafValue.clear();
+
+         fTreeNum = ((TChain*)fTree)->GetTreeNumber();
+      }
+   }
+
+   // reset cache of addresses to leaf payloads
+   for (size_t i = 0; i < fLeafValue.size(); i++)
+      fLeafValue[i] = NULL;
 }
-
-
 
 //______________________________________________________________________________
 void* TreeReader::GetPtr(const char* branch_name, ETypes cktype, Int_t* nsize)
@@ -432,17 +453,31 @@ void* TreeReader::GetPtr(const char* branch_name, ETypes cktype, Int_t* nsize)
          if (fLeafType[i] != kArrFloatTLeaf && fLeafType[i] != kArrFloatVector)
             FATAL(Form("branch is not of type Float_t*: %s", branch_name));
       } else if (cktype == kArrInt) {
-         if (fLeafType[i] != kArrIntTLeaf && fLeafType[i] != kArrIntVector)
-            FATAL(Form("branch is not of type Int_t*: %s", branch_name));
+         if (fLeafType[i] != kArrIntTLeaf && fLeafType[i] != kArrIntVector &&
+             fLeafType[i] != kArrUIntVector)
+            FATAL(Form("branch is not of type (U)Int_t*: %s", branch_name));
+      } else if (cktype == kArrChar) {
+         if (fLeafType[i] != kArrCharTLeaf && fLeafType[i] != kArrCharVector &&
+             fLeafType[i] != kArrUCharVector)
+            FATAL(Form("branch is not of type (U)Char_t*: %s", branch_name));
+      } else if (cktype == kArrShort) {
+         if (fLeafType[i] != kArrShortTLeaf && fLeafType[i] != kArrShortVector &&
+             fLeafType[i] != kArrUShortVector)
+            FATAL(Form("branch is not of type (U)Short_t*: %s", branch_name));
       } else if (cktype == kArrLong64) {
-         if (fLeafType[i] != kArrLong64TLeaf && fLeafType[i] != kArrLong64Vector)
-            FATAL(Form("branch is not of type Long64_t*: %s", branch_name));
+         if (fLeafType[i] != kArrLong64TLeaf && fLeafType[i] != kArrLong64Vector &&
+             fLeafType[i] != kArrULong64Vector)
+            FATAL(Form("branch is not of type (U)Long64_t*: %s", branch_name));
+      } else if (cktype == kTObject) {
+         if (fLeafType[i] != kTObject)
+            FATAL(Form("branch content is not inherited from TObject: %s", branch_name));
       } 
       else if (cktype == kArrString) {
 	if (fLeafType[i] != kArrStringVector)
 	   FATAL(Form("branch is not of type string*: %s", branch_name));
-      }
-      else if (cktype != fLeafType[i])
+      }      
+      else
+         if (cktype != fLeafType[i])
             FATAL(Form("invalid branch type requested: %s", branch_name));
    }
 
@@ -457,15 +492,27 @@ void* TreeReader::GetPtr(const char* branch_name, ETypes cktype, Int_t* nsize)
 
       // pointer to actual leaf payload
       void* ptr = fLeafAddr[i]->GetValuePointer();
+      if (fLeafType[i] == kTObject)
+         ptr = *((void**)ptr);
 
       // cache address to payload
       if (fLeafType[i] == kArrFloatVector)
          fLeafValue[i] = &((std::vector<float>*)ptr)->front();
       else if (fLeafType[i] == kArrIntVector)
          fLeafValue[i] = &((std::vector<int>*)ptr)->front();
+      else if (fLeafType[i] == kArrUIntVector)
+         fLeafValue[i] = &((std::vector<unsigned int>*)ptr)->front();
+      else if (fLeafType[i] == kArrCharVector)
+         fLeafValue[i] = &((std::vector<char>*)ptr)->front();
+      else if (fLeafType[i] == kArrUCharVector)
+         fLeafValue[i] = &((std::vector<unsigned char>*)ptr)->front();
+      else if (fLeafType[i] == kArrShortVector)
+         fLeafValue[i] = &((std::vector<short>*)ptr)->front();
+      else if (fLeafType[i] == kArrUShortVector)
+         fLeafValue[i] = &((std::vector<unsigned short>*)ptr)->front();
       else if (fLeafType[i] == kArrLong64Vector)
-         fLeafValue[i] = &((std::vector<long>*)ptr)->front(); 
-      else if (fLeafType[i] == kArrULong64)
+         fLeafValue[i] = &((std::vector<long>*)ptr)->front();
+      else if (fLeafType[i] == kArrULong64Vector)
          fLeafValue[i] = &((std::vector<unsigned long>*)ptr)->front();
       else if (fLeafType[i] == kArrStringVector)
 	{
@@ -492,7 +539,7 @@ void* TreeReader::GetPtr(const char* branch_name, ETypes cktype, Int_t* nsize)
 }
 
 //______________________________________________________________________________
-void TreeReader::InitSingleTTree(const char* path)
+void TreeReader::InitSingleTTree(const char* path, const char* treename)
 {
    /* Common code for the class constructors: open single TTree.
     */
@@ -513,61 +560,41 @@ void TreeReader::InitSingleTTree(const char* path)
    if (wd) wd->cd();
    else gDirectory = 0;
 
-   // get tree's tree
-   fTree = dynamic_cast<TTree*>(fFile->Get("tree/treeMaker"));
+   // get tree
+   fTree = dynamic_cast<TTree*>(fFile->Get(treename));
    if (!fTree)
-     fTree = dynamic_cast<TTree*>(fFile->Get("tree"));
-   if (!fTree)   
-      FATAL("TTree not found");
+      FATAL(Form("TTree \"%s\" not found:", treename));
 
    // be 100% sure: check explicitly object's class
    if (((TObject*)fTree)->IsA() != TTree::Class())
-      FATAL("tree/treeMaker is not a TTree");
+      FATAL(Form("\"%s\" is not a TTree", treename));
 
    // find out availability of MC truth info (check existence of "nMC" branch)
    fkMC = fTree->GetBranch("nMC") ? kTRUE : kFALSE;
 }
 
 //______________________________________________________________________________
-void TreeReader::InitTChain(const char** paths, int npaths)
+void TreeReader::InitTChain(const char** paths, int npaths, const char* treename)
 {
    /* Common code for the class constructors: make TChain of several TTrees.
     */
 
    // verify sizes of elementary data types
-   if (sizeof(int) != 4 || sizeof(long) != 8 || sizeof(float) != 4)
-      FATAL("int/long/float of unsupported size");
+   if (sizeof(short) != 2 || sizeof(int) != 4 || sizeof(long) != 8 || sizeof(float) != 4)
+      FATAL("short/int/long/float of unsupported size");
 
    // be smart
    if (npaths == 1) {
-      InitSingleTTree(paths[0]);
+      InitSingleTTree(paths[0], treename);
       return;
    }
 
-   fTree = new TChain("tree/treeMaker");
+   fTree = new TChain(treename);
 
    // add root files with TTrees, reading the number of entries in each file
-   bool differentTree=false;
-   if (((TChain*)fTree)->AddFile(paths[0], 0) != 1)
-     differentTree=true;
-
-   if(differentTree)
-     {
-       std::cout << "Try tree instead" << std::endl;
-       delete fTree;
-       fTree = new TChain("tree");
-     }
-   else
-     {
-       delete fTree;
-       fTree = new TChain("tree/treeMaker");
-     }
-
    for (int i = 0; i < npaths; i++)
-     {
       if (((TChain*)fTree)->AddFile(paths[i], 0) != 1)
          FATAL("TChain::AddFile() failed");
-     }
 
    // find out availability of MC truth info (check existence of "nMC" branch)
    fkMC = fTree->GetBranch("nMC") ? kTRUE : kFALSE;
@@ -592,23 +619,63 @@ void TreeReader::FindLeaf(const char* bname)
    if (leaf->IsA() == TLeafElement::Class()) {
       std::string descr(leaf->GetBranch()->GetClassName());
 
-      if (descr.compare("vector<float>") == 0)
+      if (descr.compare("vector<float>") == 0 ||
+          descr.compare("vector<Float_t>") == 0)
          type = kArrFloatVector;
-      else if (descr.compare("vector<int>") == 0)
+      else if (descr.compare("vector<int>") == 0 ||
+               descr.compare("vector<signed>") == 0 ||
+               descr.compare("vector<signed int>") == 0 ||
+               descr.compare("vector<Int_t>") == 0)
          type = kArrIntVector;
-      else if (descr.compare("vector<long>") == 0)
+      else if (descr.compare("vector<unsigned>") == 0 ||
+               descr.compare("vector<unsigned int>") == 0 ||
+               descr.compare("vector<UInt_t>") == 0)
+         type = kArrUIntVector;
+      else if (descr.compare("vector<char>") == 0 ||
+               descr.compare("vector<Char_t>") == 0)
+         type = kArrCharVector;
+      else if (descr.compare("vector<unsigned char>") == 0 ||
+               descr.compare("vector<UChar_t>") == 0)
+         type = kArrUCharVector;
+      else if (descr.compare("vector<short>") == 0 ||
+               descr.compare("vector<short int>") == 0 ||
+               descr.compare("vector<signed short>") == 0 ||
+               descr.compare("vector<signed short int>") == 0 ||
+               descr.compare("vector<Short_t>") == 0)
+         type = kArrShortVector;
+      else if (descr.compare("vector<unsigned short>") == 0 ||
+               descr.compare("vector<unsigned short int>") == 0 ||
+               descr.compare("vector<UShort_t>") == 0)
+         type = kArrUShortVector;
+      else if (descr.compare("vector<long>") == 0 ||
+               descr.compare("vector<long int>") == 0 ||
+               descr.compare("vector<signed long>") == 0 ||
+               descr.compare("vector<signed long int>") == 0 ||
+               descr.compare("vector<Long64_t>") == 0 ||
+               descr.compare("vector<Long>") == 0)
          type = kArrLong64Vector;
-      else if (descr.compare("vector<unsigned long>") == 0)
-         type = kArrULong64;
-      else if (descr.compare("vector<vector<float> >") == 0)
+      else if (descr.compare("vector<unsigned long>") == 0 ||
+               descr.compare("vector<unsigned long int>") == 0 ||
+               descr.compare("vector<ULong64_t>") == 0 ||
+               descr.compare("vector<ULong_t>") == 0)
+         type = kArrULong64Vector;
+      else if (descr.compare("vector<vector<float> >") == 0 ||
+               descr.compare("vector<vector<Float_t> >") == 0)
          type = kArrVectFloat;
-      else if (descr.compare("vector<vector<int> >") == 0)
+      else if (descr.compare("vector<vector<int> >") == 0 ||
+               descr.compare("vector<vector<signed> >") == 0 ||
+               descr.compare("vector<vector<signed int> >") == 0 ||
+               descr.compare("vector<vector<Int_t> >") == 0)
          type = kArrVectInt;
-      else if (descr.compare("vector<string>") == 0)
+     else if (descr.compare("vector<string>") == 0)
          type = kArrStringVector;
-      else
+     else
          type = kVoidPtr;
-   }
+   } // TLeafElement
+
+   // objects inherited from TObject
+   else if (leaf->IsA() == TLeafObject::Class())
+      type = kTObject;
 
    // fixed/variable length arrays of elementary data types
    else if (leaf->GetLeafCount() || leaf->GetLenStatic() > 1) {
@@ -616,6 +683,10 @@ void TreeReader::FindLeaf(const char* bname)
          type = kArrFloatTLeaf;
       else if (leaf->IsA() == TLeafI::Class())
          type = kArrIntTLeaf;
+      else if (leaf->IsA() == TLeafB::Class())
+         type = kArrCharTLeaf;
+      else if (leaf->IsA() == TLeafS::Class())
+         type = kArrShortTLeaf;
       else if (leaf->IsA() == TLeafL::Class())
          type = kArrLong64TLeaf;
       else if (leaf->IsA() == TLeafO::Class())
@@ -630,6 +701,12 @@ void TreeReader::FindLeaf(const char* bname)
          type = kFloat;
       else if (leaf->IsA() == TLeafI::Class())
          type = kInt;
+      else if (leaf->IsA() == TLeafB::Class())
+         type = kChar;
+      else if (leaf->IsA() == TLeafS::Class())
+         type = kShort;
+      else if (leaf->IsA() == TLeafD::Class())
+         type = kDouble;
       else if (leaf->IsA() == TLeafL::Class())
          type = kLong64;
       else if (leaf->IsA() == TLeafO::Class())
