@@ -23,4 +23,4 @@ echo "input file is" $filein
 fileout=step2_$2.root
 echo "output file is" $fileout
 rm -rf $fileout
-cmsRun step2_pileup25ns.py inputFiles=$filein outputFile=$fileout
+cmsRun step2_pileup25ns.py inputFiles=$filein outputFile=$fileout mixHistFile=histProbFunction_$2.root
