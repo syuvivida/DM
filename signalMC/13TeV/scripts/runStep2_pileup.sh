@@ -17,13 +17,10 @@ fi
 cd $1
 
 export SCRAM_ARCH=slc6_amd64_gcc491; eval `scramv1 runtime -sh`
-filein=step1_$2.root
+export X509_USER_PROXY=$HOME/private/grid.proxy
+filein=root://eoscms//eos/cms/store/user/khurana/MonoHStep1/step1_M600_$2.root
 echo "input file is" $filein
-if [ ! -e $1/$filein ]; then
- echo $1/$filein " does not exist!"
-exit 1
-fi
 fileout=step2_$2.root
 echo "output file is" $fileout
 rm -rf $fileout
-cmsRun step2.py inputFiles=file:$filein outputFile=$fileout
+cmsRun step2_pileup25ns.py inputFiles=$filein outputFile=$fileout
