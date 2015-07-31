@@ -17,6 +17,7 @@ fi
 cd $1
 
 export SCRAM_ARCH=slc6_amd64_gcc491; eval `scramv1 runtime -sh`
+export X509_USER_PROXY=$HOME/private/grid.proxy
 filein=step1_$2.root
 echo "input file is" $filein
 if [ ! -e $1/$filein ]; then
