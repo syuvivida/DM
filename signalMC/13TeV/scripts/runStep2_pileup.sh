@@ -8,8 +8,8 @@ echo "Example: ./$scriptname $PWD 1"
 exit 1
 fi
 
-if [ ! -e $1/step2.py ]; then
- echo $1/"step2.py does not exist!"
+if [ ! -e $1/step2_pileup25ns.py ]; then
+ echo $1/"step2_pileup25ns.py does not exist!"
 exit 1
 fi
 
