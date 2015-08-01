@@ -175,7 +175,7 @@ MX = Parameter(name = 'MX',
                value = 100,
                texname = '\\text{MX}',
                lhablock = 'MASS',
-               lhacode = [ 1000022 ])
+               lhacode = [ 18 ])
 
 WZ = Parameter(name = 'WZ',
                nature = 'external',

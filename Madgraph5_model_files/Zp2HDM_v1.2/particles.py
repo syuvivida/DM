@@ -519,7 +519,7 @@ G0p = Particle(pdg_code = 252,
                QZ = 0,
                Y = 0)
 
-n1 = Particle(pdg_code = 1000022,
+n1 = Particle(pdg_code = 18,
               name = 'n1',
               antiname = 'n1~',
               spin = 2,
