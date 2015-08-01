@@ -13,6 +13,8 @@ foldername=$PWD/${1%%_tarball.tar.xz}
 echo $foldername
 mkdir $foldername
 mkdir $foldername/temp
+cd /afs/cern.ch/work/s/syu/Big_Generators/MyPowHeg/v20/slc6_DMGG/CMSSW_7_1_17/src/
+export SCRAM_ARCH=slc6_amd64_gcc481; eval `scramv1 runtime -sh`
 cd $foldername/temp
 iteration=0
 lastfile=$2
