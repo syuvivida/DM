@@ -21,28 +21,50 @@ void xAna_ISRFSR(std::string inputFile){
   TreeReader data(inputFile.data());
   TH1F* h_njet=new TH1F("h_njet","",11,-0.5,10.5);
   TH1F* h_njet30=new TH1F("h_njet30","",11,-0.5,10.5);
-  TH1F* hdR_ISR=new TH1F("hdR_ISR","",30,0,6);
-  TH1F* hdR_FSR=new TH1F("hdR_FSR","",30,0,6);
+  
+  TH1F* h_dR=new TH1F("h_dR","",30,0,6);
+
+  TH1F* hdR_ISR[2];
+  TH1F* hdR_FSR[2];
+  TH1F* hdR_Other[2];
+  
+  std::string title[2]={"#Delta R with Z'",
+			"Closest #Delta R with b"};
+  for(int i=0; i<2; i++){
+    hdR_ISR[i] = (TH1F*)h_dR->Clone(Form("hdR_ISR%d",i));
+    hdR_ISR[i]->SetTitle(title[i].data());
+
+    hdR_FSR[i] = (TH1F*)h_dR->Clone(Form("hdR_FSR%d",i));
+    hdR_FSR[i]->SetTitle(title[i].data());
+
+    hdR_Other[i] = (TH1F*)h_dR->Clone(Form("hdR_Other%d",i));
+    hdR_Other[i]->SetTitle(title[i].data());
+
+  }
+
   TH1F* h_SD=new TH1F("h_SD","",100,0,200);
 
-
+ 
   TProfile* hptfr_ISR1=new TProfile("hptfr_ISR1","",100,0,500);
   TProfile* hptfr_FSR1=new TProfile("hptfr_FSR1","",100,0,500);
+  TProfile* hptfr_Other1=new TProfile("hptfr_Other1","",100,0,500);
 
   TProfile* hptfr_ISR=new TProfile("hptfr_ISR","",100,0,500);
   TProfile* hptfr_FSR=new TProfile("hptfr_FSR","",100,0,500);
+  TProfile* hptfr_Other=new TProfile("hptfr_Other","",100,0,500);
 
   TProfile* hetafr_ISR1=new TProfile("hetafr_ISR1","",30,0,3.0);
   TProfile* hetafr_FSR1=new TProfile("hetafr_FSR1","",30,0,3.0);
+  TProfile* hetafr_Other1=new TProfile("hetafr_Other1","",30,0,3.0);
 
   TProfile* hetafr_ISR=new TProfile("hetafr_ISR","",30,0,3.0);
   TProfile* hetafr_FSR=new TProfile("hetafr_FSR","",30,0,3.0);
+  TProfile* hetafr_Other=new TProfile("hetafr_Other","",30,0,3.0);
 
   Long64_t nTotal=0;
   Long64_t nPass[20]={0};
   //Event loop
   for(Long64_t jEntry=0; jEntry<data.GetEntriesFast() ;jEntry++){
-  // for(Long64_t jEntry=0; jEntry<10 ;jEntry++){
 
     if (jEntry % 50000 == 0)
       fprintf(stderr, "Processing event %lli of %lli\n", jEntry + 1, data.GetEntriesFast());
@@ -204,18 +226,28 @@ void xAna_ISRFSR(std::string inputFile){
        	  if(st>40 && st<50)isISR=true;
        	  else isFSR=true;
        	}
+
+       float dR = sqrt(pow(thisJet->DeltaPhi(genZprime_l4),2)+
+		       pow(thisJet->Rapidity()-genZprime_l4.Rapidity(),2));
+
+       float dR1=thisJet->DeltaR(b_l4);
+       float dR2=thisJet->DeltaR(bbar_l4);
+       
+       float dRmin = (dR1>dR2)?dR2:dR1;
       
        if(isISR)
        	{
-	  float dR = sqrt(pow(thisJet->DeltaPhi(genZprime_l4),2)+
-			  pow(thisJet->Rapidity()-genZprime_l4.Rapidity(),2));
-	  hdR_ISR->Fill(dR);	
+	  hdR_ISR[0]->Fill(dR);	
+	  hdR_ISR[1]->Fill(dRmin);
 
        	  hptfr_ISR->Fill(thisJet->Pt(),1.0);
        	  hetafr_ISR->Fill(fabs(thisJet->Eta()),1.0);
 
        	  hptfr_FSR->Fill(thisJet->Pt(),0.0);
        	  hetafr_FSR->Fill(fabs(thisJet->Eta()),0.0);
+
+       	  hptfr_Other->Fill(thisJet->Pt(),0.0);
+       	  hetafr_Other->Fill(fabs(thisJet->Eta()),0.0);
 
        	  if(nExtra==1)
        	    {
@@ -224,23 +256,27 @@ void xAna_ISRFSR(std::string inputFile){
 
        	      hptfr_FSR1->Fill(thisJet->Pt(),0.0);
        	      hetafr_FSR1->Fill(fabs(thisJet->Eta()),0.0);
+
+       	      hptfr_Other1->Fill(thisJet->Pt(),0.0);
+       	      hetafr_Other1->Fill(fabs(thisJet->Eta()),0.0);
        	    }
          
        	}
        else if(isFSR)
        	{
-       	  float dR1=thisJet->DeltaR(b_l4);
-       	  float dR2=thisJet->DeltaR(bbar_l4);
-        
-       	  float dRmin = (dR1>dR2)?dR2:dR1;
 
-       	  hdR_FSR->Fill(dRmin);	
+       	  hdR_FSR[0]->Fill(dR);	
+       	  hdR_FSR[1]->Fill(dRmin);	
 
        	  hptfr_ISR->Fill(thisJet->Pt(),0.0);
        	  hetafr_ISR->Fill(fabs(thisJet->Eta()),0.0);
 
        	  hptfr_FSR->Fill(thisJet->Pt(),1.0);
        	  hetafr_FSR->Fill(fabs(thisJet->Eta()),1.0);
+
+       	  hptfr_Other->Fill(thisJet->Pt(),0.0);
+       	  hetafr_Other->Fill(fabs(thisJet->Eta()),0.0);
+
        	  if(nExtra==1)
        	    {
 
@@ -249,17 +285,28 @@ void xAna_ISRFSR(std::string inputFile){
 
        	      hptfr_FSR1->Fill(thisJet->Pt(),1.0);
        	      hetafr_FSR1->Fill(fabs(thisJet->Eta()),1.0);
+
+       	      hptfr_Other1->Fill(thisJet->Pt(),0.0);
+       	      hetafr_Other1->Fill(fabs(thisJet->Eta()),0.0);
+
        	    }
          
        	}
        else
        	{
 
+       	  hdR_Other[0]->Fill(dR);	
+       	  hdR_Other[1]->Fill(dRmin);	
+
        	  hptfr_ISR->Fill(thisJet->Pt(),0.0);
        	  hetafr_ISR->Fill(fabs(thisJet->Eta()),0.0);
 
        	  hptfr_FSR->Fill(thisJet->Pt(),0.0);
        	  hetafr_FSR->Fill(fabs(thisJet->Eta()),0.0);
+
+       	  hptfr_Other->Fill(thisJet->Pt(),1.0);
+       	  hetafr_Other->Fill(fabs(thisJet->Eta()),1.0);
+
        	  if(nExtra==1)
        	    {
 
@@ -268,6 +315,9 @@ void xAna_ISRFSR(std::string inputFile){
 
        	      hptfr_FSR1->Fill(thisJet->Pt(),0.0);
        	      hetafr_FSR1->Fill(fabs(thisJet->Eta()),0.0);
+
+       	      hptfr_Other1->Fill(thisJet->Pt(),1.0);
+       	      hetafr_Other1->Fill(fabs(thisJet->Eta()),1.0);
        	    }
 
 
@@ -290,20 +340,28 @@ void xAna_ISRFSR(std::string inputFile){
   h_njet->Write();
   h_njet30->Write();
 
-  hdR_ISR->Write();
-  hdR_FSR->Write();
+  for(int i=0; i<2; i++){
+    hdR_ISR[i]->Write();
+    hdR_FSR[i]->Write();
+    hdR_Other[i]->Write();
+
+  }
 
   hptfr_ISR1->Write();
   hptfr_FSR1->Write();
+  hptfr_Other1->Write();
 
   hptfr_ISR->Write();
   hptfr_FSR->Write();
+  hptfr_Other->Write();
 
   hetafr_ISR1->Write();
   hetafr_FSR1->Write();
+  hetafr_Other1->Write();
 
   hetafr_ISR->Write();
   hetafr_FSR->Write();
+  hetafr_Other->Write();
 
   outFile->Close();
 }
