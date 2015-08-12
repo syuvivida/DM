@@ -23,7 +23,7 @@ void xAna_ISRFSR(std::string inputFile){
   TH1F* h_njet30=new TH1F("h_njet30","",11,-0.5,10.5);
   
   TH1F* h_dR=new TH1F("h_dR","",30,0,6);
-
+  h_dR->SetXTitle("#Delta R");
   TH1F* hdR_ISR[2];
   TH1F* hdR_FSR[2];
   TH1F* hdR_Other[2];
@@ -43,24 +43,44 @@ void xAna_ISRFSR(std::string inputFile){
   }
 
   TH1F* h_SD=new TH1F("h_SD","",100,0,200);
+  TProfile* hpt=new TProfile("hpt","",100,0,500);
+  hpt->SetXTitle("p_{T} [GeV]");
+  hpt->SetYTitle("Fraction");
 
+  TProfile* heta=new TProfile("heta","",30,0,3.0);
+  heta->SetXTitle("|#eta|");
+  heta->SetYTitle("Fraction");
+
+  TProfile* hptfr_ISR[2];
+  TProfile* hptfr_FSR[2];
+  TProfile* hptfr_Other[2];
+
+  TProfile* hetafr_ISR[2];
+  TProfile* hetafr_FSR[2];
+  TProfile* hetafr_Other[2];
+
+  title[0]="All extra jets";
+  title[1]="Leading extra jets";
  
-  TProfile* hptfr_ISR1=new TProfile("hptfr_ISR1","",100,0,500);
-  TProfile* hptfr_FSR1=new TProfile("hptfr_FSR1","",100,0,500);
-  TProfile* hptfr_Other1=new TProfile("hptfr_Other1","",100,0,500);
+  for(int i=0; i<2;i++)
+    {
+      hptfr_ISR[i]=(TProfile*)hpt->Clone(Form("hptfr_ISR%d",i));
+      hptfr_FSR[i]=(TProfile*)hpt->Clone(Form("hptfr_FSR%d",i));
+      hptfr_Other[i]=(TProfile*)hpt->Clone(Form("hptfr_Other%d",i));
 
-  TProfile* hptfr_ISR=new TProfile("hptfr_ISR","",100,0,500);
-  TProfile* hptfr_FSR=new TProfile("hptfr_FSR","",100,0,500);
-  TProfile* hptfr_Other=new TProfile("hptfr_Other","",100,0,500);
+      hetafr_ISR[i]=(TProfile*)heta->Clone(Form("hetafr_ISR%d",i));
+      hetafr_FSR[i]=(TProfile*)heta->Clone(Form("hetafr_FSR%d",i));
+      hetafr_Other[i]=(TProfile*)heta->Clone(Form("hetafr_Other%d",i));
 
-  TProfile* hetafr_ISR1=new TProfile("hetafr_ISR1","",30,0,3.0);
-  TProfile* hetafr_FSR1=new TProfile("hetafr_FSR1","",30,0,3.0);
-  TProfile* hetafr_Other1=new TProfile("hetafr_Other1","",30,0,3.0);
+      hptfr_ISR[i]->SetTitle(title[i].data());
+      hptfr_FSR[i]->SetTitle(title[i].data());
+      hptfr_Other[i]->SetTitle(title[i].data());
 
-  TProfile* hetafr_ISR=new TProfile("hetafr_ISR","",30,0,3.0);
-  TProfile* hetafr_FSR=new TProfile("hetafr_FSR","",30,0,3.0);
-  TProfile* hetafr_Other=new TProfile("hetafr_Other","",30,0,3.0);
+      hetafr_ISR[i]->SetTitle(title[i].data());
+      hetafr_FSR[i]->SetTitle(title[i].data());
+      hetafr_Other[i]->SetTitle(title[i].data());
 
+    }
   Long64_t nTotal=0;
   Long64_t nPass[20]={0};
   //Event loop
@@ -240,25 +260,25 @@ void xAna_ISRFSR(std::string inputFile){
 	  hdR_ISR[0]->Fill(dR);	
 	  hdR_ISR[1]->Fill(dRmin);
 
-       	  hptfr_ISR->Fill(thisJet->Pt(),1.0);
-       	  hetafr_ISR->Fill(fabs(thisJet->Eta()),1.0);
+       	  hptfr_ISR[0]->Fill(thisJet->Pt(),1.0);
+       	  hetafr_ISR[0]->Fill(fabs(thisJet->Eta()),1.0);
 
-       	  hptfr_FSR->Fill(thisJet->Pt(),0.0);
-       	  hetafr_FSR->Fill(fabs(thisJet->Eta()),0.0);
+       	  hptfr_FSR[0]->Fill(thisJet->Pt(),0.0);
+       	  hetafr_FSR[0]->Fill(fabs(thisJet->Eta()),0.0);
 
-       	  hptfr_Other->Fill(thisJet->Pt(),0.0);
-       	  hetafr_Other->Fill(fabs(thisJet->Eta()),0.0);
+       	  hptfr_Other[0]->Fill(thisJet->Pt(),0.0);
+       	  hetafr_Other[0]->Fill(fabs(thisJet->Eta()),0.0);
 
        	  if(nExtra==1)
        	    {
-       	      hptfr_ISR1->Fill(thisJet->Pt(),1.0);
-       	      hetafr_ISR1->Fill(fabs(thisJet->Eta()),1.0);
+       	      hptfr_ISR[1]->Fill(thisJet->Pt(),1.0);
+       	      hetafr_ISR[1]->Fill(fabs(thisJet->Eta()),1.0);
 
-       	      hptfr_FSR1->Fill(thisJet->Pt(),0.0);
-       	      hetafr_FSR1->Fill(fabs(thisJet->Eta()),0.0);
+       	      hptfr_FSR[1]->Fill(thisJet->Pt(),0.0);
+       	      hetafr_FSR[1]->Fill(fabs(thisJet->Eta()),0.0);
 
-       	      hptfr_Other1->Fill(thisJet->Pt(),0.0);
-       	      hetafr_Other1->Fill(fabs(thisJet->Eta()),0.0);
+       	      hptfr_Other[1]->Fill(thisJet->Pt(),0.0);
+       	      hetafr_Other[1]->Fill(fabs(thisJet->Eta()),0.0);
        	    }
          
        	}
@@ -268,26 +288,26 @@ void xAna_ISRFSR(std::string inputFile){
        	  hdR_FSR[0]->Fill(dR);	
        	  hdR_FSR[1]->Fill(dRmin);	
 
-       	  hptfr_ISR->Fill(thisJet->Pt(),0.0);
-       	  hetafr_ISR->Fill(fabs(thisJet->Eta()),0.0);
+       	  hptfr_ISR[0]->Fill(thisJet->Pt(),0.0);
+       	  hetafr_ISR[0]->Fill(fabs(thisJet->Eta()),0.0);
 
-       	  hptfr_FSR->Fill(thisJet->Pt(),1.0);
-       	  hetafr_FSR->Fill(fabs(thisJet->Eta()),1.0);
+       	  hptfr_FSR[0]->Fill(thisJet->Pt(),1.0);
+       	  hetafr_FSR[0]->Fill(fabs(thisJet->Eta()),1.0);
 
-       	  hptfr_Other->Fill(thisJet->Pt(),0.0);
-       	  hetafr_Other->Fill(fabs(thisJet->Eta()),0.0);
+       	  hptfr_Other[0]->Fill(thisJet->Pt(),0.0);
+       	  hetafr_Other[0]->Fill(fabs(thisJet->Eta()),0.0);
 
        	  if(nExtra==1)
        	    {
 
-       	      hptfr_ISR1->Fill(thisJet->Pt(),0.0);
-       	      hetafr_ISR1->Fill(fabs(thisJet->Eta()),0.0);
+       	      hptfr_ISR[1]->Fill(thisJet->Pt(),0.0);
+       	      hetafr_ISR[1]->Fill(fabs(thisJet->Eta()),0.0);
 
-       	      hptfr_FSR1->Fill(thisJet->Pt(),1.0);
-       	      hetafr_FSR1->Fill(fabs(thisJet->Eta()),1.0);
+       	      hptfr_FSR[1]->Fill(thisJet->Pt(),1.0);
+       	      hetafr_FSR[1]->Fill(fabs(thisJet->Eta()),1.0);
 
-       	      hptfr_Other1->Fill(thisJet->Pt(),0.0);
-       	      hetafr_Other1->Fill(fabs(thisJet->Eta()),0.0);
+       	      hptfr_Other[1]->Fill(thisJet->Pt(),0.0);
+       	      hetafr_Other[1]->Fill(fabs(thisJet->Eta()),0.0);
 
        	    }
          
@@ -298,26 +318,26 @@ void xAna_ISRFSR(std::string inputFile){
        	  hdR_Other[0]->Fill(dR);	
        	  hdR_Other[1]->Fill(dRmin);	
 
-       	  hptfr_ISR->Fill(thisJet->Pt(),0.0);
-       	  hetafr_ISR->Fill(fabs(thisJet->Eta()),0.0);
+       	  hptfr_ISR[0]->Fill(thisJet->Pt(),0.0);
+       	  hetafr_ISR[0]->Fill(fabs(thisJet->Eta()),0.0);
 
-       	  hptfr_FSR->Fill(thisJet->Pt(),0.0);
-       	  hetafr_FSR->Fill(fabs(thisJet->Eta()),0.0);
+       	  hptfr_FSR[0]->Fill(thisJet->Pt(),0.0);
+       	  hetafr_FSR[0]->Fill(fabs(thisJet->Eta()),0.0);
 
-       	  hptfr_Other->Fill(thisJet->Pt(),1.0);
-       	  hetafr_Other->Fill(fabs(thisJet->Eta()),1.0);
+       	  hptfr_Other[0]->Fill(thisJet->Pt(),1.0);
+       	  hetafr_Other[0]->Fill(fabs(thisJet->Eta()),1.0);
 
        	  if(nExtra==1)
        	    {
 
-       	      hptfr_ISR1->Fill(thisJet->Pt(),0.0);
-       	      hetafr_ISR1->Fill(fabs(thisJet->Eta()),0.0);
+       	      hptfr_ISR[1]->Fill(thisJet->Pt(),0.0);
+       	      hetafr_ISR[1]->Fill(fabs(thisJet->Eta()),0.0);
 
-       	      hptfr_FSR1->Fill(thisJet->Pt(),0.0);
-       	      hetafr_FSR1->Fill(fabs(thisJet->Eta()),0.0);
+       	      hptfr_FSR[1]->Fill(thisJet->Pt(),0.0);
+       	      hetafr_FSR[1]->Fill(fabs(thisJet->Eta()),0.0);
 
-       	      hptfr_Other1->Fill(thisJet->Pt(),1.0);
-       	      hetafr_Other1->Fill(fabs(thisJet->Eta()),1.0);
+       	      hptfr_Other[1]->Fill(thisJet->Pt(),1.0);
+       	      hetafr_Other[1]->Fill(fabs(thisJet->Eta()),1.0);
        	    }
 
 
@@ -345,23 +365,16 @@ void xAna_ISRFSR(std::string inputFile){
     hdR_FSR[i]->Write();
     hdR_Other[i]->Write();
 
+    hptfr_ISR[i]->Write();
+    hptfr_FSR[i]->Write();
+    hptfr_Other[i]->Write();
+
+    hetafr_ISR[i]->Write();
+    hetafr_FSR[i]->Write();
+    hetafr_Other[i]->Write();
+
   }
 
-  hptfr_ISR1->Write();
-  hptfr_FSR1->Write();
-  hptfr_Other1->Write();
-
-  hptfr_ISR->Write();
-  hptfr_FSR->Write();
-  hptfr_Other->Write();
-
-  hetafr_ISR1->Write();
-  hetafr_FSR1->Write();
-  hetafr_Other1->Write();
-
-  hetafr_ISR->Write();
-  hetafr_FSR->Write();
-  hetafr_Other->Write();
 
   outFile->Close();
 }
