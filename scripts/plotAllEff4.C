@@ -4,13 +4,15 @@
 #include <TCanvas.h>
 using namespace std;
 
-void plotAllEff2(string inputFile)
+void plotAllEff4(string inputFile)
 {
 
   TFile* f;
   TFile *inf = new TFile(inputFile.data());
-  TEfficiency* fateff  =(TEfficiency*)inf->FindObjectAny("fatJetEff");
-  TEfficiency* thineff=(TEfficiency*)inf->FindObjectAny("thinJetEff");
+
+  TEfficiency* fateff  =(TEfficiency*)inf->FindObjectAny("fatJetTotalEff");
+  TEfficiency* thineff=(TEfficiency*)inf->FindObjectAny("thinJetTotalEff");
+
 
   fateff->SetLineColor(1);
   fateff->SetFillColor(1);
@@ -25,15 +27,15 @@ void plotAllEff2(string inputFile)
   thineff->SetMarkerColor(2);
   thineff->SetMarkerStyle(8);
   thineff->SetMarkerSize(0.5);
-  fateff->SetTitle(";Generator-level Higgs p_{T} [GeV];Efficiency;");
+  fateff->SetTitle(";Generator-level Higgs p_{T} [GeV];Total Efficiency;");
 
   fateff->Draw("e2");
   thineff->Draw("e2Same");
 
-  float x1NDC = 0.503;
-  float y1NDC = 0.359;
-  float x2NDC = 0.706;
-  float y2NDC = 0.684;
+  float x1NDC = 0.417;
+  float y1NDC = 0.203;
+  float x2NDC = 0.619;
+  float y2NDC = 0.590;
 
   TLegend* leg = new TLegend(x1NDC,y1NDC,x2NDC,y2NDC);
   
@@ -41,15 +43,17 @@ void plotAllEff2(string inputFile)
   leg->SetFillStyle(0);
   leg->SetTextSize(0.04);
   leg->SetBorderSize(0);
-  leg->AddEntry(fateff, "merged jet efficiency","f");
+  leg->AddEntry(fateff, "merged jet + CSV efficiency","f");
   leg->AddEntry((TObject*)0, "single Anti-Kt R=0.8 jet","");
   leg->AddEntry((TObject*)0, "pt > 30 GeV, |#eta|<2.5","");
+  leg->AddEntry((TObject*)0, "CISVV2>0.605","");
   leg->AddEntry((TObject*)0, "#Delta R(b/#bar{b},jet)<0.8","");
-  //  leg->AddEntry((TObject*)0, "#Delta R(H,jet)<0.1","");
+  // leg->AddEntry((TObject*)0, "#Delta R(H,jet)<0.1","");
   leg->AddEntry((TObject*)0, "","");
-  leg->AddEntry(thineff, "resolved jet efficiency","f");
+  leg->AddEntry(thineff, "resolved jet + CSV efficiency","f");
   leg->AddEntry((TObject*)0, "two Anti-Kt R=0.4 jets","");
   leg->AddEntry((TObject*)0, "pt > 30 GeV, |#eta|<2.5","");
+  leg->AddEntry((TObject*)0, "CISVV2>0.605","");
   leg->AddEntry((TObject*)0, "#Delta R(b,jet)<0.4","");
   // leg->AddEntry((TObject*)0, "#Delta R(b,jet)<0.1","");
   leg->Draw("same");

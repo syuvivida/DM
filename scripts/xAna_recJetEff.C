@@ -16,22 +16,23 @@
 #include <TGraphAsymmErrors.h>
 
 using namespace std;
-void xAna_recJetEff(std::string inputFile){
+void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 
   std::vector<string> infiles;
   bool readOneFile=true;
   TString outputFile;
+  TString myName=myDefinition? "myDefinition":"JETMET";
   if(inputFile.find(".txt")!= std::string::npos)
     {
       readOneFile=false;
       TString endfix=gSystem->GetFromPipe(Form("file=%s; test=${file##*/}; echo \"${test%%.txt*}\"",inputFile.data()));
-      outputFile = "eff_all.root";
+      outputFile = "eff_" + myName + "_all.root";
     }
 
   if(readOneFile)
     {
       infiles.push_back(inputFile);
-      outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*/}; echo \"eff_${test}\"",inputFile.data()));
+      outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*/}; echo \"eff_%s_${test}\"",inputFile.data(),myName.Data()));
     }
   else{
     FILE *fTable = fopen(inputFile.data(),"r");
@@ -65,6 +66,8 @@ void xAna_recJetEff(std::string inputFile){
   TH1F* h_deno=(TH1F*)h_pt->Clone("h_deno");
   TH1F* h_numrFAT=(TH1F*)h_pt->Clone("h_numrFAT");
   TH1F* h_numrTHIN=(TH1F*)h_pt->Clone("h_numrTHIN");
+  TH1F* h_numrFATCSV=(TH1F*)h_pt->Clone("h_numrFATCSV");
+  TH1F* h_numrTHINCSV=(TH1F*)h_pt->Clone("h_numrTHINCSV");
 
   //Event loop
   for(Long64_t jEntry=0; jEntry<data.GetEntriesFast() ;jEntry++){
@@ -127,12 +130,16 @@ void xAna_recJetEff(std::string inputFile){
 
     // for(int i=0;i<2;i++)
     //   std::cout << "b index " << i <<  " = " << bindex[i] << endl;
+
+    //// FAT Jet
      
     Int_t nFATJet         = data.GetInt("FATnJet");
     TClonesArray* fatjetP4 = (TClonesArray*) data.GetPtrTObject("FATjetP4");
+    Float_t*  fatjetCISVV2 = data.GetPtrFloat("FATjetCISVV2");
 
-    float dRMax=0.8;
+    const float dRFATMax=0.8;
     bool findAFATJet=false;
+    bool findAFATBJet=false;
 
     for(int ij=0; ij<nFATJet; ij++)
       {
@@ -141,14 +148,20 @@ void xAna_recJetEff(std::string inputFile){
 	if(thisJet->Pt()<30)continue;
 	if(fabs(thisJet->Eta())>2.5)continue;
 	
-	if(thisJet->DeltaR(*b_p4[0]) > dRMax)continue;
-	if(thisJet->DeltaR(*b_p4[1]) > dRMax)continue;
+	if(thisJet->DeltaR(*b_p4[0]) > dRFATMax && myDefinition)continue;
+	if(thisJet->DeltaR(*b_p4[1]) > dRFATMax && myDefinition)continue;
 
-	// if(thisJet->DeltaR(*higgs_p4) > dRMax)continue;
+	if(thisJet->DeltaR(*higgs_p4) > 0.1 && !myDefinition)continue;
 
 	findAFATJet=true;
 
-	if(findAFATJet)break;
+	if(fatjetCISVV2[ij] < 0.605)continue;
+	if(fatjetCISVV2[ij] < 0)continue;
+	if(fatjetCISVV2[ij] > 1)continue;
+
+	findAFATBJet=true;
+
+	if(findAFATJet && findAFATBJet)break;
 	
       }
     
@@ -156,14 +169,24 @@ void xAna_recJetEff(std::string inputFile){
       {
 	h_numrFAT->Fill(higgs_p4->Pt());
 	nPass[1]++;
+
+	if(findAFATBJet)
+	  {
+	    h_numrFATCSV->Fill(higgs_p4->Pt());
+	    nPass[2]++;
+	  }
+
       }
 
- 
+    //// THIN Jet
     Int_t nTHINJet         = data.GetInt("THINnJet");
     TClonesArray* thinjetP4 = (TClonesArray*) data.GetPtrTObject("THINjetP4");
+    Float_t*  thinjetCISVV2 = data.GetPtrFloat("THINjetCISVV2");
 
     bool findATHINJet[2]={false,false};
-    dRMax=0.4;
+    bool findATHINB[2]={false,false};
+    const float dRTHINMax=myDefinition? 0.4 : 0.1;
+    int bjetindex[2]={-1,-1};
     for(int ij=0; ij<nTHINJet; ij++)
       {
     	
@@ -172,22 +195,47 @@ void xAna_recJetEff(std::string inputFile){
 	if(fabs(thisJet->Eta())>2.5)continue;
 	
 	// exclude when the jet is matched to both
-	if(thisJet->DeltaR(*b_p4[0]) < dRMax && thisJet->DeltaR(*b_p4[1]) < dRMax)continue;
-	else if(thisJet->DeltaR(*b_p4[0]) < dRMax && thisJet->DeltaR(*b_p4[1]) > dRMax)
-	  findATHINJet[0]=true;
+	if(thisJet->DeltaR(*b_p4[0]) < dRTHINMax && thisJet->DeltaR(*b_p4[1]) < dRTHINMax)continue;
+	else if(thisJet->DeltaR(*b_p4[0]) < dRTHINMax && thisJet->DeltaR(*b_p4[1]) > dRTHINMax)
+	  {
+	    findATHINJet[0]=true;
+	    if(thinjetCISVV2[ij]>0.605 && thinjetCISVV2[ij]<1)
+	      findATHINB[0]=true;
+	    bjetindex[0] = ij;
+	  }
 
-	else if(thisJet->DeltaR(*b_p4[0]) > dRMax && thisJet->DeltaR(*b_p4[1]) < dRMax)
-	  findATHINJet[1]=true;
+	else if(thisJet->DeltaR(*b_p4[0]) > dRTHINMax && thisJet->DeltaR(*b_p4[1]) < dRTHINMax)
+	  {
+	    findATHINJet[1]=true;
+	    if(thinjetCISVV2[ij]>0.605 && thinjetCISVV2[ij]<1)
+	      findATHINB[1]=true;
+	    bjetindex[1] = ij;
+	  }
 	    
-	if(findATHINJet[0] && findATHINJet[1])break;
+	if(findATHINJet[0] && findATHINJet[1] && 
+	   findATHINB[0] && findATHINB[1])break;
 
 	
       }
+
+
     
     if(findATHINJet[0] && findATHINJet[1])
       {
+
+	// for(int i=0;i<2;i++)
+	//   std::cout << "b jet index " << i <<  " = " << bjetindex[i] << endl;
+
 	h_numrTHIN->Fill(higgs_p4->Pt());
-	nPass[2]++;
+	nPass[3]++;
+	if(findATHINB[0] && findATHINB[1])
+	  {
+	    // for(int i=0;i<2;i++)
+	    //   std::cout << "real b jet index " << i <<  " = " << bjetindex[i] << endl;
+
+	    h_numrTHINCSV->Fill(higgs_p4->Pt());
+	    nPass[4]++;
+	  }
       }
     
    
@@ -205,12 +253,38 @@ void xAna_recJetEff(std::string inputFile){
   TGraphAsymmErrors* graph_tEff=tEff->CreateGraph();
   graph_tEff->SetName("graph_tEff");
 
+  TEfficiency* fEffCSV = new TEfficiency(*h_numrFATCSV,*h_numrFAT);
+  fEffCSV->SetName("fatJetCSVEff");
+  fEffCSV->SetTitle("AK8 CSV efficiency; Higgs p_{T} [GeV]; Efficiency");
+
+  TEfficiency* tEffCSV = new TEfficiency(*h_numrTHINCSV,*h_numrTHIN);
+  tEffCSV->SetName("thinJetCSVEff");
+  tEffCSV->SetTitle("Two AK4 CSV efficiency; Higgs p_{T} [GeV]; Efficiency");
+
+  TEfficiency* fEffTotal = new TEfficiency(*h_numrFATCSV,*h_deno);
+  fEffTotal->SetName("fatJetTotalEff");
+  fEffTotal->SetTitle("AK8 total efficiency; Higgs p_{T} [GeV]; Efficiency");
+
+  TEfficiency* tEffTotal = new TEfficiency(*h_numrTHINCSV,*h_deno);
+  tEffTotal->SetName("thinJetTotalEff");
+  tEffTotal->SetTitle("Two AK4 total efficiency; Higgs p_{T} [GeV]; Efficiency");
+
   TFile* outFile = new TFile(outputFile.Data(),"recreate");
   h_deno->Write();
   h_numrFAT->Write();
   h_numrTHIN->Write();
+  h_numrFATCSV->Write();
+  h_numrTHINCSV->Write();
+
   fEff->Write();
   tEff->Write(); 
+
+  fEffTotal->Write();
+  tEffTotal->Write(); 
+
+  fEffCSV->Write();
+  tEffCSV->Write(); 
+
   graph_fEff->Write();
   graph_tEff->Write();
 
