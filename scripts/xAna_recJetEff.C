@@ -13,14 +13,49 @@
 #include <TClonesArray.h>
 #include <TLorentzVector.h>
 #include <TEfficiency.h>
+#include <TGraphAsymmErrors.h>
 
 using namespace std;
 void xAna_recJetEff(std::string inputFile){
 
-  TString outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*/}; echo \"eff_${test}\"",inputFile.data()));
+  std::vector<string> infiles;
+  bool readOneFile=true;
+  TString outputFile;
+  if(inputFile.find(".txt")!= std::string::npos)
+    {
+      readOneFile=false;
+      TString endfix=gSystem->GetFromPipe(Form("file=%s; test=${file##*/}; echo \"${test%%.txt*}\"",inputFile.data()));
+      outputFile = "eff_all.root";
+    }
+
+  if(readOneFile)
+    {
+      infiles.push_back(inputFile);
+      outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*/}; echo \"eff_${test}\"",inputFile.data()));
+    }
+  else{
+    FILE *fTable = fopen(inputFile.data(),"r");
+    int flag=1;
+    int nfile=0;
+
+    while (flag!=-1){
+      char filename[300];
+      flag=fscanf(fTable,"%s",filename);
+      // first reading input file
+      if(flag!=-1){
+	std::string tempFile = filename;    
+	infiles.push_back(tempFile);
+	nfile++;
+      }
+    }
+
+    cout << "nfiles = " << nfile << endl;
+  }
+  
+
   cout << "output file name = " << outputFile.Data() << endl;
   //get TTree from file ...
-  TreeReader data(inputFile.data());
+  TreeReader data(infiles);
   
   Long64_t nTotal=0;
   Long64_t nPass[20]={0};
@@ -109,6 +144,8 @@ void xAna_recJetEff(std::string inputFile){
 	if(thisJet->DeltaR(*b_p4[0]) > dRMax)continue;
 	if(thisJet->DeltaR(*b_p4[1]) > dRMax)continue;
 
+	// if(thisJet->DeltaR(*higgs_p4) > dRMax)continue;
+
 	findAFATJet=true;
 
 	if(findAFATJet)break;
@@ -125,9 +162,8 @@ void xAna_recJetEff(std::string inputFile){
     Int_t nTHINJet         = data.GetInt("THINnJet");
     TClonesArray* thinjetP4 = (TClonesArray*) data.GetPtrTObject("THINjetP4");
 
-    dRMax=0.4;
     bool findATHINJet[2]={false,false};
-
+    dRMax=0.4;
     for(int ij=0; ij<nTHINJet; ij++)
       {
     	
@@ -160,10 +196,14 @@ void xAna_recJetEff(std::string inputFile){
   TEfficiency* fEff = new TEfficiency(*h_numrFAT,*h_deno);
   fEff->SetName("fatJetEff");
   fEff->SetTitle("AK8 jet efficiency; Higgs p_{T} [GeV]; Efficiency");
+  TGraphAsymmErrors* graph_fEff=fEff->CreateGraph();
+  graph_fEff->SetName("graph_fEff");
 
   TEfficiency* tEff = new TEfficiency(*h_numrTHIN,*h_deno);
   tEff->SetName("thinJetEff");
   tEff->SetTitle("Two AK4 jet efficiency; Higgs p_{T} [GeV]; Efficiency");
+  TGraphAsymmErrors* graph_tEff=tEff->CreateGraph();
+  graph_tEff->SetName("graph_tEff");
 
   TFile* outFile = new TFile(outputFile.Data(),"recreate");
   h_deno->Write();
@@ -171,6 +211,8 @@ void xAna_recJetEff(std::string inputFile){
   h_numrTHIN->Write();
   fEff->Write();
   tEff->Write(); 
+  graph_fEff->Write();
+  graph_tEff->Write();
 
   outFile->Close();
   std::cout << "nTotal    = " << nTotal << std::endl;
