@@ -25,7 +25,7 @@ void plotAllEff2()
   thineff->SetMarkerColor(2);
   thineff->SetMarkerStyle(8);
   thineff->SetMarkerSize(0.5);
-  fateff->SetTitle(";Higgs p_{T} [GeV];Efficiency;");
+  fateff->SetTitle(";Generator-level Higgs p_{T} [GeV];Efficiency;");
 
   fateff->Draw("e2");
   thineff->Draw("e2Same");
@@ -44,13 +44,13 @@ void plotAllEff2()
   leg->AddEntry(fateff, "merged jet efficiency","f");
   leg->AddEntry((TObject*)0, "single Anti-Kt R=0.8 jet","");
   leg->AddEntry((TObject*)0, "pt > 30 GeV, |#eta|<2.5","");
-  //  leg->AddEntry((TObject*)0, "#Delta R(b/#bar{b},jet)<0.8","");
+  // leg->AddEntry((TObject*)0, "#Delta R(b/#bar{b},jet)<0.8","");
   leg->AddEntry((TObject*)0, "#Delta R(H,jet)<0.1","");
   leg->AddEntry((TObject*)0, "","");
   leg->AddEntry(thineff, "resolved jet efficiency","f");
   leg->AddEntry((TObject*)0, "two Anti-Kt R=0.4 jets","");
   leg->AddEntry((TObject*)0, "pt > 30 GeV, |#eta|<2.5","");
-  //  leg->AddEntry((TObject*)0, "#Delta R(b,jet)<0.4","");
+  // leg->AddEntry((TObject*)0, "#Delta R(b,jet)<0.4","");
   leg->AddEntry((TObject*)0, "#Delta R(b,jet)<0.1","");
   leg->Draw("same");
 
