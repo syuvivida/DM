@@ -141,7 +141,7 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
     TClonesArray* fatjetP4 = (TClonesArray*) data.GetPtrTObject("FATjetP4");
     Float_t*  fatjetCISVV2 = data.GetPtrFloat("FATjetCISVV2");
 
-    const float dRFATMax=myDefinition? 0.8: 0.1;
+    const float dRFATMax=0.8;
     bool findAFATJet=false;
     bool findAFATB=false;
 
@@ -153,14 +153,15 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 	if(fabs(thisJet->Eta())>2.5)continue;
 
 	
-	// if(thisJet->DeltaR(*b_p4[0]) > dRFATMax && myDefinition)continue;
-	// if(thisJet->DeltaR(*b_p4[1]) > dRFATMax && myDefinition)continue;
 
 	h_dR_H->Fill(thisJet->DeltaR(*higgs_p4));
 	h_dR_bb_fat->Fill(thisJet->DeltaR(*b_p4[0]));
 	h_dR_bb_fat->Fill(thisJet->DeltaR(*b_p4[1]));
 
-	if(thisJet->DeltaR(*higgs_p4) > dRFATMax)continue;
+	if(thisJet->DeltaR(*b_p4[0]) > dRFATMax && myDefinition)continue;
+	if(thisJet->DeltaR(*b_p4[1]) > dRFATMax && myDefinition)continue;
+
+	if(thisJet->DeltaR(*higgs_p4) > 0.1 && !myDefinition)continue;
 
 
 

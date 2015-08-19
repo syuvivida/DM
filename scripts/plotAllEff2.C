@@ -47,7 +47,7 @@ void plotAllEff2(string inputFile)
   if(JETMET)
     leg->AddEntry((TObject*)0, "#Delta R(H,jet)<0.1","");
   else
-    leg->AddEntry((TObject*)0, "#Delta R(H,jet)<0.8","");
+    leg->AddEntry((TObject*)0, "#Delta R(b/#bar{b},jet)<0.8","");
   leg->AddEntry((TObject*)0, "","");
   leg->AddEntry(thineff, "resolved jet efficiency","f");
   leg->AddEntry((TObject*)0, "two Anti-Kt R=0.4 jets","");
