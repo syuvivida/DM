@@ -7,6 +7,10 @@ using namespace std;
 void plotAllEff4(string inputFile)
 {
 
+  bool JETMET=false;
+  if(inputFile.find("JETMET")!= std::string::npos)
+    JETMET=true;
+
   TFile* f;
   TFile *inf = new TFile(inputFile.data());
 
@@ -29,12 +33,10 @@ void plotAllEff4(string inputFile)
   thineff->SetMarkerSize(0.5);
   fateff->SetTitle(";Generator-level Higgs p_{T} [GeV];Total Efficiency;");
 
-  fateff->Draw("e2");
-  thineff->Draw("e2Same");
 
-  float x1NDC = 0.417;
+  float x1NDC = 0.317;
   float y1NDC = 0.203;
-  float x2NDC = 0.619;
+  float x2NDC = 0.519;
   float y2NDC = 0.590;
 
   TLegend* leg = new TLegend(x1NDC,y1NDC,x2NDC,y2NDC);
@@ -47,22 +49,34 @@ void plotAllEff4(string inputFile)
   leg->AddEntry((TObject*)0, "single Anti-Kt R=0.8 jet","");
   leg->AddEntry((TObject*)0, "pt > 30 GeV, |#eta|<2.5","");
   leg->AddEntry((TObject*)0, "CISVV2>0.605","");
-  leg->AddEntry((TObject*)0, "#Delta R(b/#bar{b},jet)<0.8","");
-  // leg->AddEntry((TObject*)0, "#Delta R(H,jet)<0.1","");
+  if(JETMET)
+    leg->AddEntry((TObject*)0, "#Delta R(H,jet)<0.1","");
+  else
+    leg->AddEntry((TObject*)0, "#Delta R(H,jet)<0.8","");
   leg->AddEntry((TObject*)0, "","");
   leg->AddEntry(thineff, "resolved jet + CSV efficiency","f");
   leg->AddEntry((TObject*)0, "two Anti-Kt R=0.4 jets","");
   leg->AddEntry((TObject*)0, "pt > 30 GeV, |#eta|<2.5","");
   leg->AddEntry((TObject*)0, "CISVV2>0.605","");
-  leg->AddEntry((TObject*)0, "#Delta R(b,jet)<0.4","");
-  // leg->AddEntry((TObject*)0, "#Delta R(b,jet)<0.1","");
+  if(JETMET)
+    leg->AddEntry((TObject*)0, "#Delta R(b,jet)<0.1","");
+  else
+    leg->AddEntry((TObject*)0, "#Delta R(b,jet)<0.4","");
+
+  TCanvas* c1 = new TCanvas("c1","",500,500);
+
+  c1->SetGridx(1);
+  c1->SetGridy(1);
+
+  fateff->Draw("ae2");
+  thineff->Draw("e2Same");  
   leg->Draw("same");
 
-  // c1->SetGridx(1);
-  // c1->SetGridy(1);
+  std::string outputname = JETMET? "jeteff/effAll_smallMatchDeltaR": "jeteff/effAll_bigMatchDeltaR";
+  c1->Print(Form("%s.pdf",outputname.data()));
+  c1->Print(Form("%s.eps",outputname.data()));
+  c1->Print(Form("%s.C",outputname.data()));
 
-  // c1->Print("effall.pdf");
-  // c1->Print("effall.eps");
-  // c1->Print("effall.C");
+
 
 }

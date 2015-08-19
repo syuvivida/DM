@@ -13,7 +13,6 @@
 #include <TClonesArray.h>
 #include <TLorentzVector.h>
 #include <TEfficiency.h>
-#include <TGraphAsymmErrors.h>
 
 using namespace std;
 void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
@@ -63,11 +62,17 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
   TH1F* h_pt=new TH1F("h_pt","",125,0,2500);
   h_pt->SetXTitle("Higgs p_{T} [GeV]");
 
-  TH1F* h_deno=(TH1F*)h_pt->Clone("h_deno");
+  TH1F* h_deno=(TH1F*)h_pt->Clone("h_deno"); 
+  TH1F* h_numrNoMatch=(TH1F*)h_pt->Clone("h_numrNoMatch");
   TH1F* h_numrFAT=(TH1F*)h_pt->Clone("h_numrFAT");
   TH1F* h_numrTHIN=(TH1F*)h_pt->Clone("h_numrTHIN");
   TH1F* h_numrFATCSV=(TH1F*)h_pt->Clone("h_numrFATCSV");
   TH1F* h_numrTHINCSV=(TH1F*)h_pt->Clone("h_numrTHINCSV");
+
+  TH1F* h_dR=new TH1F("h_dR","",120,0,6);
+  TH1F* h_dR_H  = (TH1F*)h_dR->Clone("h_dR_H");
+  TH1F* h_dR_bb_fat = (TH1F*)h_dR->Clone("h_dR_bb_fat");
+  TH1F* h_dR_bb_thin = (TH1F*)h_dR->Clone("h_dR_bb_thin");
 
   //Event loop
   for(Long64_t jEntry=0; jEntry<data.GetEntriesFast() ;jEntry++){
@@ -81,7 +86,6 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
     // 0. check the generator-level information and make sure there is a Z->e+e-
     Int_t nGenPar        = data.GetInt("nGenPar");
     Int_t* genParId      = data.GetPtrInt("genParId");
-    // Int_t* genParSt      = data.GetPtrInt("genParSt");
     Int_t* genDa1      = data.GetPtrInt("genDa1");
     Int_t* genDa2      = data.GetPtrInt("genDa2");
 
@@ -137,9 +141,9 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
     TClonesArray* fatjetP4 = (TClonesArray*) data.GetPtrTObject("FATjetP4");
     Float_t*  fatjetCISVV2 = data.GetPtrFloat("FATjetCISVV2");
 
-    const float dRFATMax=0.8;
+    const float dRFATMax=myDefinition? 0.8: 0.1;
     bool findAFATJet=false;
-    bool findAFATBJet=false;
+    bool findAFATB=false;
 
     for(int ij=0; ij<nFATJet; ij++)
       {
@@ -147,21 +151,27 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
      	TLorentzVector* thisJet = (TLorentzVector*)fatjetP4->At(ij);
 	if(thisJet->Pt()<30)continue;
 	if(fabs(thisJet->Eta())>2.5)continue;
-	
-	if(thisJet->DeltaR(*b_p4[0]) > dRFATMax && myDefinition)continue;
-	if(thisJet->DeltaR(*b_p4[1]) > dRFATMax && myDefinition)continue;
 
-	if(thisJet->DeltaR(*higgs_p4) > 0.1 && !myDefinition)continue;
+	
+	// if(thisJet->DeltaR(*b_p4[0]) > dRFATMax && myDefinition)continue;
+	// if(thisJet->DeltaR(*b_p4[1]) > dRFATMax && myDefinition)continue;
+
+	h_dR_H->Fill(thisJet->DeltaR(*higgs_p4));
+	h_dR_bb_fat->Fill(thisJet->DeltaR(*b_p4[0]));
+	h_dR_bb_fat->Fill(thisJet->DeltaR(*b_p4[1]));
+
+	if(thisJet->DeltaR(*higgs_p4) > dRFATMax)continue;
+
+
 
 	findAFATJet=true;
 
 	if(fatjetCISVV2[ij] < 0.605)continue;
-	if(fatjetCISVV2[ij] < 0)continue;
 	if(fatjetCISVV2[ij] > 1)continue;
 
-	findAFATBJet=true;
+	findAFATB=true;
 
-	if(findAFATJet && findAFATBJet)break;
+	if(findAFATJet && findAFATB)break;
 	
       }
     
@@ -170,7 +180,7 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 	h_numrFAT->Fill(higgs_p4->Pt());
 	nPass[1]++;
 
-	if(findAFATBJet)
+	if(findAFATB)
 	  {
 	    h_numrFATCSV->Fill(higgs_p4->Pt());
 	    nPass[2]++;
@@ -193,6 +203,10 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
      	TLorentzVector* thisJet = (TLorentzVector*)thinjetP4->At(ij);
 	if(thisJet->Pt()<30)continue;
 	if(fabs(thisJet->Eta())>2.5)continue;
+
+	h_dR_bb_thin->Fill(thisJet->DeltaR(*b_p4[0]));
+	h_dR_bb_thin->Fill(thisJet->DeltaR(*b_p4[1]));
+
 	
 	// exclude when the jet is matched to both
 	if(thisJet->DeltaR(*b_p4[0]) < dRTHINMax && thisJet->DeltaR(*b_p4[1]) < dRTHINMax)continue;
@@ -200,16 +214,20 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 	  {
 	    findATHINJet[0]=true;
 	    if(thinjetCISVV2[ij]>0.605 && thinjetCISVV2[ij]<1)
-	      findATHINB[0]=true;
-	    bjetindex[0] = ij;
+	      {
+		findATHINB[0]=true;
+		bjetindex[0] = ij;
+	      }
 	  }
 
 	else if(thisJet->DeltaR(*b_p4[0]) > dRTHINMax && thisJet->DeltaR(*b_p4[1]) < dRTHINMax)
 	  {
 	    findATHINJet[1]=true;
 	    if(thinjetCISVV2[ij]>0.605 && thinjetCISVV2[ij]<1)
-	      findATHINB[1]=true;
-	    bjetindex[1] = ij;
+	      {
+		findATHINB[1]=true;
+		bjetindex[1] = ij;
+	      }
 	  }
 	    
 	if(findATHINJet[0] && findATHINJet[1] && 
@@ -238,20 +256,25 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 	  }
       }
     
+
+    if( !findAFATJet && !(findATHINJet[0] && findATHINJet[1]))
+      h_numrNoMatch->Fill(higgs_p4->Pt());
+
    
 
   } // end of loop over entries
+
+  TEfficiency* nEff = new TEfficiency(*h_numrNoMatch,*h_deno);
+  nEff->SetName("noJetEff");
+  nEff->SetTitle("no match efficiency; Higgs p_{T} [GeV]; Efficiency");
+
   TEfficiency* fEff = new TEfficiency(*h_numrFAT,*h_deno);
   fEff->SetName("fatJetEff");
   fEff->SetTitle("AK8 jet efficiency; Higgs p_{T} [GeV]; Efficiency");
-  TGraphAsymmErrors* graph_fEff=fEff->CreateGraph();
-  graph_fEff->SetName("graph_fEff");
 
   TEfficiency* tEff = new TEfficiency(*h_numrTHIN,*h_deno);
   tEff->SetName("thinJetEff");
   tEff->SetTitle("Two AK4 jet efficiency; Higgs p_{T} [GeV]; Efficiency");
-  TGraphAsymmErrors* graph_tEff=tEff->CreateGraph();
-  graph_tEff->SetName("graph_tEff");
 
   TEfficiency* fEffCSV = new TEfficiency(*h_numrFATCSV,*h_numrFAT);
   fEffCSV->SetName("fatJetCSVEff");
@@ -270,11 +293,19 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
   tEffTotal->SetTitle("Two AK4 total efficiency; Higgs p_{T} [GeV]; Efficiency");
 
   TFile* outFile = new TFile(outputFile.Data(),"recreate");
+
+  h_dR_H       ->Write();
+  h_dR_bb_fat  ->Write();
+  h_dR_bb_thin ->Write();
+
   h_deno->Write();
+  h_numrNoMatch->Write();
   h_numrFAT->Write();
   h_numrTHIN->Write();
   h_numrFATCSV->Write();
   h_numrTHINCSV->Write();
+
+  nEff->Write();
 
   fEff->Write();
   tEff->Write(); 
@@ -285,8 +316,6 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
   fEffCSV->Write();
   tEffCSV->Write(); 
 
-  graph_fEff->Write();
-  graph_tEff->Write();
 
   outFile->Close();
   std::cout << "nTotal    = " << nTotal << std::endl;
