@@ -15,6 +15,8 @@
 #include <TSystemDirectory.h>
 #include <TList.h>
 
+#define DEBUG 0
+
 using namespace std;
 void xAna_metzmm(std::string inputFile){
 
@@ -62,10 +64,18 @@ void xAna_metzmm(std::string inputFile){
 
   Long64_t nTotal=0;
   Long64_t nPass[20]={0};
+  TH1F* h_pt = new TH1F("h_pt","",100,0,1000);
+  h_pt->SetXTitle("#slash{E}_{T} [GeV]");
 
-  TH1F* h_pt = new TH1F("h_pt","",50,0,500);
+  TH1F* h_genmet = (TH1F*)h_pt->Clone("h_genmet");
+  h_genmet->SetTitle("Generator-level before selections");
+
   TH1F* h_metold = (TH1F*)h_pt->Clone("h_metold");
-  TH1F* h_met = (TH1F*)h_pt->Clone("h_met");
+  h_metold->SetTitle("Reconstruction-level without muon contribution");
+
+  TH1F* h_met     = (TH1F*)h_pt->Clone("h_met");
+  h_met->SetTitle("Reconstruction-level Z momentum + residue missing momentum");
+
   TH1F* h_mz = new TH1F("h_mz","",50,50,150);
   TH1F* h_lpt[2];
   for(int i=0; i<2; i++){
@@ -74,6 +84,7 @@ void xAna_metzmm(std::string inputFile){
 
   //Event loop
   for(Long64_t jEntry=0; jEntry<data.GetEntriesFast() ;jEntry++){
+  
 
     if (jEntry % 50000 == 0)
       fprintf(stderr, "Processing event %lli of %lli\n", jEntry + 1, data.GetEntriesFast());
@@ -86,36 +97,87 @@ void xAna_metzmm(std::string inputFile){
     Int_t* genParId      = data.GetPtrInt("genParId");
     Int_t* genParSt      = data.GetPtrInt("genParSt");
     Int_t* genMomParId   = data.GetPtrInt("genMomParId");
-    Int_t* genDa1      = data.GetPtrInt("genDa1");
-    Int_t* genDa2      = data.GetPtrInt("genDa2");
 
-
-    bool hasLepton=false;
+    
+    int muIndex[2]={-1,-1};
 
     // look for muon events first
     for(int ig=0; ig < nGenPar; ig++){
 
-      if(genParSt[ig]>30)continue;
+      if(genParSt[ig]!=1)continue;
 
       if(abs(genParId[ig])!=13)continue;
 
       if(genMomParId[ig]!=23 &&
 	 genMomParId[ig]!=genParId[ig])continue;
 
-      hasLepton=true;
-      if(hasLepton)break;
+      if(muIndex[0]==-1)	
+	muIndex[0]=ig;
+      else if(muIndex[1]==-1)
+	muIndex[1]=ig;
+
+      if(muIndex[0]>-1 && muIndex[1]>-1)
+	break;
 
     }
 
-    if(!hasLepton)continue;
-
-
+    if(muIndex[0]==-1 || muIndex[1]==-1)continue;
     nPass[0]++;
+
+    
+    TClonesArray* genParP4 = (TClonesArray*) data.GetPtrTObject("genParP4");
+    TLorentzVector mu_l4[2];
+
+    for(int i=0; i<2; i++)
+      mu_l4[i] = *((TLorentzVector*)genParP4->At(muIndex[i]));
+   
+
+    if(DEBUG)
+      for(int i=0; i<2; i++)
+	mu_l4[i].Print();
+ 
+
+    TLorentzVector z_l4=mu_l4[0]+mu_l4[1];
+    h_genmet->Fill(z_l4.Pt());
+
+
+
+    float met        = data.GetFloat("pfMetRawPt");
+    float metphi     = data.GetFloat("pfMetRawPhi");
+
+
+    //2. pass electron or muon trigger
+    std::string* trigName = data.GetPtrString("hlt_trigName");
+    vector<bool> &trigResult = *((vector<bool>*) data.GetPtr("hlt_trigResult"));
+    const Int_t nsize = data.GetPtrStringSize();
+
+    bool passTrigger=false;
+    for(int it=0; it< nsize; it++)
+      {
+ 	std::string thisTrig= trigName[it];
+ 	bool results = trigResult[it];
+
+	// std::cout << thisTrig << " : " << results << std::endl;
+	
+ 	if( 
+	   (thisTrig.find("HLT_Mu45")!= std::string::npos && results==1)
+	    )
+ 	  {
+ 	    passTrigger=true;
+ 	    break;
+ 	  }
+	
+
+      }
+
+
+    if(!passTrigger)continue;
+    nPass[1]++;
 
     //3. has a good vertex
     Int_t nVtx        = data.GetInt("nVtx");
     if(nVtx<1)continue;
-    nPass[1]++;
+    nPass[2]++;
 
     //4. look for mymuons first
     Int_t nMu          = data.GetInt("nMu");
@@ -171,11 +233,15 @@ void xAna_metzmm(std::string inputFile){
 	    h_mz->Fill(mll);
 	    
 	    if(mll<70 || mll>110)continue;
+
+	    float ptmax =  TMath::Max(thisMu->Pt(),thatMu->Pt());
+	    float ptmin =  TMath::Min(thisMu->Pt(),thatMu->Pt());
+
+	    // leading pt must be larger than 50 GeV
+	    if(ptmax<50)continue;
+
 	    if(!findMPair){
 	      l4_Z=(*thisMu+*thatMu);
-
-	      float ptmax =  TMath::Max(thisMu->Pt(),thatMu->Pt());
-	      float ptmin =  TMath::Min(thisMu->Pt(),thatMu->Pt());
 
 	      h_lpt[0]->Fill(ptmax);
 	      h_lpt[1]->Fill(ptmin);
@@ -187,10 +253,8 @@ void xAna_metzmm(std::string inputFile){
 
     if(!findMPair)
       continue;
-    nPass[2]++;
+    nPass[3]++;
 
-    float met        = data.GetFloat("pfMetRawPt");
-    float metphi     = data.GetFloat("pfMetRawPhi");
 
     float metx = met*TMath::Cos(metphi);
     float mety = met*TMath::Sin(metphi);
@@ -211,6 +275,7 @@ void xAna_metzmm(std::string inputFile){
       std::cout << "nPass[" << i << "]= " << nPass[i] << std::endl;
 
   TFile* outFile = new TFile(outputFile.Data(),"recreate");
+  h_genmet->Write();
   h_met->Write();
   h_metold->Write();
   h_mz->Write();
