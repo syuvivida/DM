@@ -24,7 +24,7 @@ if [ ! -e $1/$filein ]; then
 exit 1
 fi
 fileout=step1_$2.root
-skipevent=$(( 200 * ($2 - 1) ))
+skipevent=$(( 1000 * ($2 - 1) ))
 echo "output file is" $fileout
 echo "skiping " $skipevent " events"
 rm -rf $fileout
