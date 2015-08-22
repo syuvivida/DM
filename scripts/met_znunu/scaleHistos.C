@@ -41,7 +41,7 @@ void scaleHistos(std::string input, std::string output)
   cout << "There are " << nfile << " files " << endl;
   const int MAXNHISTOS=100;
   TH1* htotal[MAXNHISTOS];
-  int nPage=0;
+  unsigned int nPage=0;
 
   for(unsigned i=0; i < infiles.size(); i++){
 
