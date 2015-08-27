@@ -77,10 +77,10 @@ void xAna_metzmm(std::string inputFile){
   TH1F* h_dR=new TH1F("h_dR","",60,0,6);
 
   std::vector<float> xLow;
-  for(int i=0;i<=16;i++)
-    xLow.push_back(100+i*25);
+  for(int i=0;i<=14;i++)
+    xLow.push_back(150+i*25);
   for(int i=1;i<=10;i++)
-    xLow.push_back(xLow[16]+i*50);
+    xLow.push_back(xLow[14]+i*50);
   
   const int nbins = xLow.size()-1;
   float xBin[nbins+1];
@@ -90,16 +90,16 @@ void xAna_metzmm(std::string inputFile){
       xBin[i]=xLow[i];
     }
 
-  // TH2F* h_genrec= new TH2F("h_genrec","",nbins,xBin,nbins,xBin); 
-  TH2F* h_genrec= new TH2F("h_genrec","",17,150,1000,17,150,1000); 
+  TH2F* h_genrec= new TH2F("h_genrec","",nbins,xBin,nbins,xBin); 
+  //  TH2F* h_genrec= new TH2F("h_genrec","",17,150,1000,17,150,1000); 
   TH2F* h_genrec_deno= (TH2F*)h_genrec->Clone("h_genrec_deno");
   TH2F* h_genrec_numr= (TH2F*)h_genrec->Clone("h_genrec_numr");
 
   TH1F* h_pt0 = new TH1F("h_pt0","",100,0,1000);
   h_pt0->SetXTitle("#slash{E}_{T} [GeV]");
 
-  // TH1F* h_pt = new TH1F("h_pt","",nbins,xBin);
-  TH1F* h_pt = new TH1F("h_pt","", 17,150,1000);
+  TH1F* h_pt = new TH1F("h_pt","",nbins,xBin);
+  //  TH1F* h_pt = new TH1F("h_pt","", 17,150,1000);
   h_pt->SetXTitle("#slash{E}_{T} [GeV]");
 
   
