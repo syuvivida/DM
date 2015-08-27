@@ -26,47 +26,51 @@ void final(string znnfile, string zmmfile, string corrfile, string outputfile)
   TFile *inf2 = TFile::Open(zmmfile.data());
   TFile *inf3 = TFile::Open(corrfile.data());
 
-  inputmet = (TH1F*)inf2->FindObjectAny("h_recmet_after_split1_total");
+  inputmet = (TH1F*)inf2->FindObjectAny("h_recmet_after_split_data1_total"); //26 bins
   inputmet->SetName("inputmet");
 
-  corrmet1D = (TH1F*)inf3->FindObjectAny("final_corr");
+  corrmet1D = (TH1F*)inf3->FindObjectAny("final_corr"); // 26 mins
   // for comparison
-  genmet    = (TH1F*)inf2->FindObjectAny("h_genmet_pre_split1_total");
+  genmet    = (TH1F*)inf2->FindObjectAny("h_genmet_pre_split1_total"); //26 bins
   genmet->SetName("genmet");
-  compmet   = (TH1F*)inf->FindObjectAny("h_recmet_after_split1_total");
+  compmet   = (TH1F*)inf->FindObjectAny("h_recmet_after_split_data1_total"); //26 bins
   compmet->SetName("compmet");
 
   outputmet2D = (TH1F*) inputmet->Clone("outputmet2D");
   outputmet2D->Reset();
+  outputmet2D->Sumw2();
 
   outputmet1D = (TH1F*) inputmet->Clone("outputmet1D");
   outputmet1D->Reset();
+  outputmet1D->Sumw2();
 
   outputgenmet= (TH1F*) inputmet->Clone("outputgenmet");
   outputgenmet->Reset();
+  outputgenmet->Sumw2();
 
   outputrev= (TH1F*) inputmet->Clone("outputrev");
   outputrev->Reset();
+  outputrev->Sumw2();
 
 
-  const int nbins = inputmet->GetNbinsX();
+  const int nbins = inputmet->GetNbinsX()+2;
 
   // for debugging. check GenToRec matrix
-  TMatrixD* GenToRec = new TMatrixD(nbins,nbins);
+  TMatrixD* GenToRec = new TMatrixD(nbins,nbins); // 36 bins
   GenToRec = (TMatrixD*)inf3->FindObjectAny("ref_GenToRec");
 
   TVectorD ingenVector(nbins);
   for(int i=0;i<nbins;i++)
-    ingenVector(i)= genmet->GetBinContent(i+1);
+    ingenVector(i)= genmet->GetBinContent(i);
   TVectorD recVector = (*GenToRec)*ingenVector;
 
   for(int i=0;i<nbins;i++)
-    outputrev->SetBinContent(i+1,recVector(i));
+    outputrev->SetBinContent(i,recVector(i));
 
 
   TVectorD recmetVector(nbins);
   for(int i=0;i<nbins;i++)
-    recmetVector(i)= inputmet->GetBinContent(i+1);  
+    recmetVector(i)= inputmet->GetBinContent(i);  
   
   TMatrixD* corrRecToGen = new TMatrixD(nbins,nbins);
   corrRecToGen = (TMatrixD*)inf3->FindObjectAny("ref_RecToGen");
@@ -77,11 +81,11 @@ void final(string znnfile, string zmmfile, string corrfile, string outputfile)
   // first check genMet
   TVectorD genVector=(*corrRecToGen)*recmetVector;
   for(int i=0;i<nbins;i++)
-    outputgenmet->SetBinContent(i+1,genVector(i));
+    outputgenmet->SetBinContent(i,genVector(i));
   
   TVectorD outputVector=(*corrGenToRec)*genVector;
   for(int i=0;i<nbins;i++)
-    outputmet2D->SetBinContent(i+1,outputVector(i));
+    outputmet2D->SetBinContent(i,outputVector(i));
 
   const double brll = 3.366;
   const double brnn = 20.00;
@@ -97,6 +101,7 @@ void final(string znnfile, string zmmfile, string corrfile, string outputfile)
       double err2   = inputmet->GetBinError(i+1);
 
       double value  = value1* value2;
+      if(value ==0)continue;
       double err = sqrt ( err1*err1/TMath::Max(1e-7,value1*value1) + 
    			  err2*err2/TMath::Max(1e-7,value2*value2) )*value;
 
@@ -105,7 +110,6 @@ void final(string znnfile, string zmmfile, string corrfile, string outputfile)
 
     }
 
-  outputmet1D->Scale(brnn/brll);
 
   // write output
   TFile* outFile = new TFile(outputfile.data(),"recreate");

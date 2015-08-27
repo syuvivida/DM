@@ -28,7 +28,9 @@ void produceCorr(std::string znnfile, std::string zmmfile, std::string outputfil
 
   TFile *inf = TFile::Open(znnfile.data());
   genrec_nunu_deno = (TH2F*)inf->FindObjectAny("h_genrec_deno_split0_total");
+  genrec_nunu_deno ->SetName("genrec_nunu_deno");
   genrec_nunu_numr = (TH2F*)inf->FindObjectAny("h_genrec_numr_split0_total");
+  genrec_nunu_numr ->SetName("genrec_nunu_numr");
 
   effinput_nunu[0] = (TH1F*)inf->FindObjectAny("h_genmet_pre_split0_total");
   effinput_nunu[1] = (TH1F*)inf->FindObjectAny("h_trigmet_split0_total");
@@ -47,7 +49,9 @@ void produceCorr(std::string znnfile, std::string zmmfile, std::string outputfil
   TFile *inf2 = TFile::Open(zmmfile.data());
 
   genrec_ref_deno = (TH2F*)inf2->FindObjectAny("h_genrec_deno_split0_total");
+  genrec_ref_deno->SetName("genrec_ref_deno");
   genrec_ref_numr = (TH2F*)inf2->FindObjectAny("h_genrec_numr_split0_total");
+  genrec_ref_numr->SetName("genrec_ref_numr");
 
   effinput_ref[0] = (TH1F*)inf2->FindObjectAny("h_genmet_pre_split0_total");
   effinput_ref[1] = (TH1F*)inf2->FindObjectAny("h_trigmet_split0_total");
@@ -68,10 +72,10 @@ void produceCorr(std::string znnfile, std::string zmmfile, std::string outputfil
   final_corr =  (TH1F*)effinput_nunu[2]->Clone("final_corr");
   final_corr->Reset();
   final_corr->Sumw2();
-  final_corr->Divide(eff_nunu,eff_ref);
+  final_corr->Divide(effinput_nunu[2],effinput_ref[2]); // already include BR differencex
 
-  const int nbins=effinput_ref[0]->GetNbinsX();
-
+  const int histobins = genrec_ref_deno->GetNbinsX();
+  const int nbins=histobins + 2;
 
   // Z-> mu mu unfolding matrix
   TMatrixD ref_GenToRec(nbins,nbins);
@@ -79,9 +83,9 @@ void produceCorr(std::string znnfile, std::string zmmfile, std::string outputfil
   for(int i=0; i<nbins; i++)
     for(int j=0; j<nbins; j++)
       {// normalize to the split0_total number of events in the same genmet bin
-	float sum = genrec_ref_deno->Integral(j+1,j+1,0,nbins+1);
+	float sum = genrec_ref_deno->Integral(j,j,0,histobins+1);
 	ref_GenToRec(i,j)= sum >0?
-	  genrec_ref_numr->GetBinContent(j+1,i+1)/sum:0;
+	  genrec_ref_numr->GetBinContent(j,i)/sum:0;
       }
 
   //  ref_GenToRec.Print();
@@ -98,9 +102,9 @@ void produceCorr(std::string znnfile, std::string zmmfile, std::string outputfil
   for(int i=0; i<nbins; i++)
     for(int j=0; j<nbins; j++)
       {
-	float sum = genrec_nunu_deno->Integral(j+1,j+1,0,nbins+1);
+	float sum = genrec_nunu_deno->Integral(j,j,0,histobins+1);
 	nunu_GenToRec(i,j)=sum>0?
-	  genrec_nunu_numr->GetBinContent(j+1,i+1)/sum:0;
+	  genrec_nunu_numr->GetBinContent(j,i)/sum:0;
       }
   // // nunu_GenToRec.Print();
 
@@ -114,6 +118,12 @@ void produceCorr(std::string znnfile, std::string zmmfile, std::string outputfil
    eff_nunu->Write();
    eff_ref->Write();
    final_corr->Write();
+
+   genrec_ref_deno->Write();
+   genrec_ref_numr->Write();
+
+   genrec_nunu_deno->Write();
+   genrec_nunu_numr->Write();
 
    ref_RecToGen.Write("ref_RecToGen");
    ref_GenToRec.Write("ref_GenToRec");
