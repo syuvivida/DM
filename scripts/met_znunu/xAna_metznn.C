@@ -14,6 +14,8 @@
 #include <TLorentzVector.h>
 #include <TSystemDirectory.h>
 #include <TList.h>
+const int nvtxmin=1;
+const float recmetcut=150;
 
 using namespace std;
 #define DEBUG 0
@@ -63,7 +65,7 @@ void xAna_metznn(std::string inputFile){
   Long64_t nTotal=0;
   Long64_t nPass[20]={0};
 
-  TH2F* h_genrec= new TH2F("h_genrec","",30,100,1000,30,100,1000); // add two more bins for overflow and underflow                                                                  
+  TH2F* h_genrec= new TH2F("h_genrec","",36,100,1000,36,100,1000); // add two more bins for overflow and underflow                                                                  
   TH2F* h_genrec_deno= (TH2F*)h_genrec->Clone("h_genrec_deno");
   TH2F* h_genrec_numr= (TH2F*)h_genrec->Clone("h_genrec_numr");
 
@@ -71,7 +73,7 @@ void xAna_metznn(std::string inputFile){
   TH1F* h_pt0 = new TH1F("h_pt0","",100,0,1000);
   h_pt0->SetXTitle("#slash{E}_{T} [GeV]");
 
-  TH1F* h_pt = new TH1F("h_pt","",30,100,1000);
+  TH1F* h_pt = new TH1F("h_pt","",36,100,1000);
   h_pt->SetXTitle("#slash{E}_{T} [GeV]");
 
   TH1F* h_genmet = (TH1F*)h_pt0->Clone("h_genmet");
@@ -95,6 +97,9 @@ void xAna_metznn(std::string inputFile){
   TH1F* h_recmet_after = (TH1F*)h_pt->Clone("h_recmet_after");
   h_recmet_after->SetTitle("Reconstruction-level after all selections");
 
+  TH1F* h_recmet_after_data = (TH1F*)h_pt->Clone("h_recmet_after_data");
+  h_recmet_after_data->SetTitle("Reconstruction-level after all selections");
+
 
   TH2F* h_genrec_deno_split[2];
   TH2F* h_genrec_numr_split[2];
@@ -105,6 +110,7 @@ void xAna_metznn(std::string inputFile){
   TH1F* h_trigmet_split[2];
   TH1F* h_genmet_after_split[2];
   TH1F* h_recmet_after_split[2];
+  TH1F* h_recmet_after_split_data[2];
 
   for(int i=0;i<2;i++)
     {
@@ -119,6 +125,8 @@ void xAna_metznn(std::string inputFile){
       h_genmet_after_split[i]=(TH1F*)h_genmet_after->Clone(Form("h_genmet_after_split%d",i));
       h_recmet_after_split[i]=(TH1F*)h_recmet_after->Clone(Form("h_recmet_after_split%d",i));
 
+      h_recmet_after_split_data[i]=(TH1F*)h_recmet_after->Clone(Form("h_recmet_after_split_data%d",i));
+
     }
 
   //Event loop
@@ -132,85 +140,10 @@ void xAna_metznn(std::string inputFile){
     nTotal ++;
 
     // first obtain the Z-momentum at the generator-level
-
-    // 0. check the generator-level information and make sure there is a Z->nu nu
-    Int_t nGenPar        = data.GetInt("nGenPar");
-    Int_t* genParId      = data.GetPtrInt("genParId");
-    Int_t* genParSt      = data.GetPtrInt("genParSt");
-    Int_t* genMomParId   = data.GetPtrInt("genMomParId");
-
-    int nuIndex[2]={-1,-1};
-
-    // look for muon events first
-    for(int ig=0; ig < nGenPar; ig++){
-
-      if(genParSt[ig]!=1)continue;
-
-      // all flavors of neutrinos
-      if(abs(genParId[ig])!=12 && 
-	 abs(genParId[ig])!=14 && 
-	 abs(genParId[ig])!=16)continue;
-
-      if(genMomParId[ig]!=23 &&
-	 genMomParId[ig]!=genParId[ig])continue;
-
-      if(nuIndex[0]==-1)	
-	nuIndex[0]=ig;
-      else if(nuIndex[1]==-1)
-	nuIndex[1]=ig;
-
-      if(nuIndex[0]>-1 && nuIndex[1]>-1)
-	break;
-    }
-
-    if(nuIndex[0]==-1 || nuIndex[1]==-1)continue;
-    nPass[0]++;
-
-
-    TClonesArray* genParP4 = (TClonesArray*) data.GetPtrTObject("genParP4");
-    TLorentzVector nu_l4[2];
-
-    for(int i=0; i<2; i++)
-      nu_l4[i] = *((TLorentzVector*)genParP4->At(nuIndex[i]));
-   
-
-    if(DEBUG)
-      for(int i=0; i<2; i++)
-	nu_l4[i].Print();
-    
-
-    TLorentzVector z_l4=nu_l4[0]+nu_l4[1];
-    float genmet = z_l4.Pt();
-    h_genmet->Fill(genmet);
-    h_genmet_split[split]->Fill(genmet);
-
-    float met        = data.GetFloat("pfMetRawPt");
-    h_recmet->Fill(met);
-    h_recmet_split[split]->Fill(met);
-
-    if(genmet<100)continue;
-    nPass[1]++;
-
-    h_genrec_deno->Fill(genmet,met);
-    h_genrec_deno_split[split]->Fill(genmet,met);
-
-    h_genmet_pre->Fill(genmet);
-    h_recmet_pre->Fill(met);
-
-    h_genmet_pre_split[split]->Fill(genmet);
-    h_recmet_pre_split[split]->Fill(met);
-
+    bool isData     = data.GetBool("isData");
     //1. has a good vertex
     Int_t nVtx        = data.GetInt("nVtx");
-    if(nVtx<1)continue;
-    nPass[2]++;
-
-    //2. offline MET cut (not applied yet)
-
-    h_trigmet->Fill(met);
-
-    h_trigmet_split[split]->Fill(met);
-
+    float met        = data.GetFloat("pfMetRawPt");
     //1. pass MET trigger
     std::string* trigName = data.GetPtrString("hlt_trigName");
     vector<bool> &trigResult = *((vector<bool>*) data.GetPtr("hlt_trigResult"));
@@ -236,17 +169,111 @@ void xAna_metznn(std::string inputFile){
 
       }
 
+    // data-like histograms
+    if(nVtx>=nvtxmin && passTrigger && met>recmetcut)
+      {
+	nPass[10]++;
+	h_recmet_after_data->Fill(met);
+	h_recmet_after_split_data[split]->Fill(met);	
+      }
+    
+    int nuIndex[2]={-1,-1};
+    float genmet=999999.;
+    if(!isData){
+      // 0. check the generator-level information and make sure there is a Z->nu nu
+      Int_t nGenPar        = data.GetInt("nGenPar");
+      Int_t* genParId      = data.GetPtrInt("genParId");
+      Int_t* genParSt      = data.GetPtrInt("genParSt");
+      Int_t* genMomParId   = data.GetPtrInt("genMomParId");
+
+
+      // look for neutrino events first, a dummy check, 100% efficieincy
+      // meant to compute generator-level Z momentum
+
+      for(int ig=0; ig < nGenPar; ig++){
+
+	if(genParSt[ig]!=1)continue;
+
+	// all flavors of neutrinos
+	if(abs(genParId[ig])!=12 && 
+	   abs(genParId[ig])!=14 && 
+	   abs(genParId[ig])!=16)continue;
+
+	if(genMomParId[ig]!=23 &&
+	   genMomParId[ig]!=genParId[ig])continue;
+
+	if(nuIndex[0]==-1)	
+	  nuIndex[0]=ig;
+	else if(nuIndex[1]==-1)
+	  nuIndex[1]=ig;
+
+	if(nuIndex[0]>-1 && nuIndex[1]>-1)
+	  break;
+      }
+
+      if(nuIndex[0]==-1 || nuIndex[1]==-1)continue;
+      nPass[0]++;
+
+
+      TClonesArray* genParP4 = (TClonesArray*) data.GetPtrTObject("genParP4");
+      TLorentzVector nu_l4[2];
+
+      for(int i=0; i<2; i++)
+	nu_l4[i] = *((TLorentzVector*)genParP4->At(nuIndex[i]));
+   
+
+      if(DEBUG)
+	for(int i=0; i<2; i++)
+	  nu_l4[i].Print();
+    
+
+      TLorentzVector z_l4=nu_l4[0]+nu_l4[1];
+      genmet = z_l4.Pt();
+      h_genmet->Fill(genmet);
+      h_genmet_split[split]->Fill(genmet);
+    } // if is MC sample
+
+    h_recmet->Fill(met);
+    h_recmet_split[split]->Fill(met);
+
+    if(genmet<100)continue;
+    nPass[1]++;
+
+    if(!isData){
+      h_genrec_deno->Fill(genmet,met);
+      h_genrec_deno_split[split]->Fill(genmet,met);
+      h_genmet_pre->Fill(genmet);
+      h_genmet_pre_split[split]->Fill(genmet);
+    }
+
+    h_recmet_pre->Fill(met);
+    h_recmet_pre_split[split]->Fill(met);
+
+    if(nVtx<nvtxmin)continue;
+    nPass[2]++;
+
+    //2. offline MET cut (not applied yet)
+
+    h_trigmet->Fill(met);
+
+    h_trigmet_split[split]->Fill(met);
+
     if(!passTrigger)continue;
     nPass[3]++;
 
+    if(!isData){
+      h_genmet_after->Fill(genmet);    
+      h_genmet_after_split[split]->Fill(genmet);    
+      h_genrec_numr->Fill(genmet,met);
+      h_genrec_numr_split[split]->Fill(genmet,met);
+    }
 
-    h_genmet_after->Fill(genmet);    
+    if(met<recmetcut)continue;
+    nPass[4]++;
+
     h_recmet_after->Fill(met);
-    h_genrec_numr->Fill(genmet,met);
-
-    h_genmet_after_split[split]->Fill(genmet);    
     h_recmet_after_split[split]->Fill(met);
-    h_genrec_numr_split[split]->Fill(genmet,met);
+ 
 
   } // end of loop over entries
 
@@ -260,23 +287,26 @@ void xAna_metznn(std::string inputFile){
   h_genrec_deno->Write();
   h_genrec_numr->Write();
   h_genmet->Write();
-  h_recmet->Write();
   h_genmet_pre->Write();
+  h_genmet_after->Write();
+  h_recmet->Write();
   h_recmet_pre->Write();
   h_trigmet->Write();
-  h_genmet_after->Write();
   h_recmet_after->Write();
+  h_recmet_after_data->Write();
 
   for(int i=0;i<2;i++){
     h_genrec_deno_split[i]->Write();
     h_genrec_numr_split[i]->Write();
     h_genmet_split[i]->Write();
-    h_recmet_split[i]->Write();
     h_genmet_pre_split[i]->Write();
+    h_genmet_after_split[i]->Write();
+
+    h_recmet_split[i]->Write();
     h_recmet_pre_split[i]->Write();
     h_trigmet_split[i]->Write();
-    h_genmet_after_split[i]->Write();
     h_recmet_after_split[i]->Write();
+    h_recmet_after_split_data[i]->Write();
   }
 
   outFile->Close();

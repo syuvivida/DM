@@ -1,6 +1,5 @@
 // example code to run Bulk Graviton->ZZ->ZlepZhad selections on muon-channel
 
-
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -17,6 +16,15 @@
 #include <TList.h>
 
 #define DEBUG 0
+
+const float mzmin=70;
+const float mzmax=110;
+const float ptmaxcut=50;
+const float ptmincut=10;
+const float etamaxcut=2.1;
+const float miniisocut=0.1;
+const int nvtxmin=1;
+const float recmetcut=150;
 
 using namespace std;
 void xAna_metzmm(std::string inputFile){
@@ -61,24 +69,25 @@ void xAna_metzmm(std::string inputFile){
     }
   
   TreeReader data(infiles);
-
-
+  
 
   Long64_t nTotal=0;
   Long64_t nPass[20]={0};
 
   TH1F* h_dR=new TH1F("h_dR","",60,0,6);
 
-  TH2F* h_genrec= new TH2F("h_genrec","",30,100,1000,30,100,1000); 
+  TH2F* h_genrec= new TH2F("h_genrec","",36,100,1000,36,100,1000); 
   TH2F* h_genrec_deno= (TH2F*)h_genrec->Clone("h_genrec_deno");
   TH2F* h_genrec_numr= (TH2F*)h_genrec->Clone("h_genrec_numr");
 
   TH1F* h_pt0 = new TH1F("h_pt0","",100,0,1000);
   h_pt0->SetXTitle("#slash{E}_{T} [GeV]");
 
-  TH1F* h_pt = new TH1F("h_pt","",30,100,1000);
+  TH1F* h_pt = new TH1F("h_pt","",36,100,1000);
   h_pt->SetXTitle("#slash{E}_{T} [GeV]");
 
+  
+  // MC-like histograms
   TH1F* h_genmet = (TH1F*)h_pt0->Clone("h_genmet");
   h_genmet->SetTitle("Generator-level before selections");
 
@@ -98,8 +107,21 @@ void xAna_metzmm(std::string inputFile){
   h_genmet_after->SetTitle("Generator-level after selections");
 
   TH1F* h_mz = new TH1F("h_mz","",50,50,150);
+  h_mz->SetXTitle("M_{#ell#ell} [GeV]");
   TH1F* h_lpt[2];
 
+  // data-like-histograms
+  TH1F* h_metold_data = (TH1F*)h_metold->Clone("h_metold_data");
+  TH1F* h_recmet_after_data = (TH1F*)h_recmet_after->Clone("h_recmet_after_data");
+
+  TH1F* h_mz_data = (TH1F*)h_mz->Clone("h_mz_data");
+  TH1F* h_lpt_data[2];
+
+  TH1F* h_metold_split_data[2];
+  TH1F* h_recmet_after_split_data[2];
+  TH1F* h_mz_split_data[2];
+
+  // MC-like histograms
   TH2F* h_genrec_deno_split[2];
   TH2F* h_genrec_numr_split[2];
   TH1F* h_genmet_split[2];
@@ -112,6 +134,7 @@ void xAna_metzmm(std::string inputFile){
 
   for(int i=0; i<2; i++){
     h_lpt[i] = (TH1F*)h_pt0->Clone(Form("h_lpt%d",i));
+    h_lpt_data[i] = (TH1F*)h_pt0->Clone(Form("h_lpt_data%d",i));
 
     h_genrec_deno_split[i] = (TH2F*)h_genrec->Clone(Form("h_genrec_deno_split%d",i));
     h_genrec_numr_split[i] = (TH2F*)h_genrec->Clone(Form("h_genrec_numr_split%d",i));
@@ -122,6 +145,11 @@ void xAna_metzmm(std::string inputFile){
     h_recmet_after_split[i] = (TH1F*)h_recmet_after->Clone(Form("h_recmet_after_split%d",i));
     h_genmet_after_split[i] = (TH1F*)h_genmet_after->Clone(Form("h_genmet_after_split%d",i));
     h_mz_split[i] = (TH1F*)h_mz->Clone(Form("h_mz_split%d",i));
+
+    h_metold_split_data[i] = (TH1F*)h_metold->Clone(Form("h_metold_split_data%d",i));
+    h_recmet_after_split_data[i] = (TH1F*)h_recmet_after->Clone(Form("h_recmet_after_split_data%d",i));
+    h_mz_split_data[i] = (TH1F*)h_mz->Clone(Form("h_mz_split_data%d",i));
+
 
   }
 
@@ -138,171 +166,19 @@ void xAna_metzmm(std::string inputFile){
     data.GetEntry(jEntry);
     nTotal ++;
 
-    // 0. check the generator-level information and make sure there is a Z->mm
-    Int_t nGenPar        = data.GetInt("nGenPar");
-    Int_t* genParId      = data.GetPtrInt("genParId");
-    Int_t* genParSt      = data.GetPtrInt("genParSt");
-    Int_t* genMomParId   = data.GetPtrInt("genMomParId");
-
-    
-    int muIndex[2]={-1,-1};
-
-    // look for muon events first
-    for(int ig=0; ig < nGenPar; ig++){
-
-      if(genParSt[ig]!=1)continue;
-
-      if(abs(genParId[ig])!=13)continue;
-
-      if(genMomParId[ig]!=23 &&
-	 genMomParId[ig]!=genParId[ig])continue;
-
-      if(muIndex[0]==-1)	
-	muIndex[0]=ig;
-      else if(muIndex[1]==-1)
-	muIndex[1]=ig;
-
-      if(muIndex[0]>-1 && muIndex[1]>-1)
-	break;
-
-    }
-
-    if(muIndex[0]==-1 || muIndex[1]==-1)continue;
-    nPass[0]++;
-
-    
-    TClonesArray* genParP4 = (TClonesArray*) data.GetPtrTObject("genParP4");
-    TLorentzVector mu_l4[2];
-
-    for(int i=0; i<2; i++)
-      mu_l4[i] = *((TLorentzVector*)genParP4->At(muIndex[i]));
-   
-
-    if(DEBUG)
-      for(int i=0; i<2; i++)
-	mu_l4[i].Print();
- 
-
-    TLorentzVector z_l4=mu_l4[0]+mu_l4[1];
-    float genmet=z_l4.Pt();
-    h_genmet->Fill(genmet);
-    h_genmet_split[split]->Fill(genmet);
-
-    if(genmet<100)continue;
-    nPass[1]++;
-    h_genmet_pre->Fill(genmet);
-    h_genmet_pre_split[split]->Fill(genmet);
-
- 
-
-    // look for reco muons that are matched to gen-muons
-    Int_t nMu          = data.GetInt("nMu");
-    TClonesArray* muP4 = (TClonesArray*) data.GetPtrTObject("muP4");
-
-    int recmuIndex[2]={-1,-1};
-
-    for(int ip=0; ip<2; ip++){
-
-      float ptmax=-99999;
-      for(int im=0; im< nMu; im++)
-	{
-	  
-	  TLorentzVector* thisMu = (TLorentzVector*)muP4->At(im);
-	  float dR = thisMu->DeltaR(mu_l4[ip]);
-	  h_dR->Fill(dR);
-	  if(dR<0.2 && thisMu->Pt()>ptmax)
-	    {
-	      ptmax=thisMu->Pt();
-	      recmuIndex[ip]=im;
-	    }
-	}
-    }
-
-    if(recmuIndex[0]==-1 || recmuIndex[1]==-1)
-      {
-	h_genrec_deno->Fill(genmet,95);
-	h_genrec_deno_split[split]->Fill(genmet,95);
-	continue;
-      }
-    
-    nPass[2]++;
-
-    TLorentzVector recZ_l4(0,0,0,0);
-    TLorentzVector recMu_l4[2];
-    for(int ip=0;ip<2;ip++)
-      recMu_l4[ip]=(*(TLorentzVector*)muP4->At(recmuIndex[ip]));
-    recZ_l4 = recMu_l4[0]+recMu_l4[1];
-
+    // obtain data-like figures first; do not skip events in this part
+    // there will be many ugly curly braces
+    Int_t nVtx        = data.GetInt("nVtx");
     float met        = data.GetFloat("pfMetRawPt");
-    float metphi     = data.GetFloat("pfMetRawPhi");
-
+    float metphi     = data.GetFloat("pfMetRawPhi");    
     float metx = met*TMath::Cos(metphi);
     float mety = met*TMath::Sin(metphi);
-    
-    metx += recZ_l4.Px();
-    mety += recZ_l4.Py();
-
-    float llmet = sqrt(metx*metx + mety*mety);
-    h_genrec_deno->Fill(genmet,llmet);
-    h_genrec_deno_split[split]->Fill(genmet,llmet);
-
-    //3. has a good vertex
-    Int_t nVtx        = data.GetInt("nVtx");
-    if(nVtx<1)continue;
-    nPass[3]++;
-
-
-    // saving myMuons
+    Int_t nMu          = data.GetInt("nMu");
+    TClonesArray* muP4 = (TClonesArray*) data.GetPtrTObject("muP4");
     vector<bool> &isHighPtMuon = *((vector<bool>*) data.GetPtr("isHighPtMuon"));
     vector<bool> &isCustomTrackerMuon = *((vector<bool>*) data.GetPtr("isCustomTrackerMuon"));
     vector<bool> &isLooseMuon = *((vector<bool>*) data.GetPtr("isLooseMuon"));
     Float_t* muMiniIso       = data.GetPtrFloat("muMiniIso");
-    std::vector<int> myMuons;
-    for(int ip=0; ip< 2; ip++)
-      {
-	int im=recmuIndex[ip];
-    	TLorentzVector* thisMu = (TLorentzVector*)muP4->At(im);
-
-    	if(fabs(thisMu->Eta())>2.1)continue;
-
-    	if(thisMu->Pt() < 10)continue;
-
-    	if(!isLooseMuon[im])continue;
-    	
-    	if(muMiniIso[im]>0.1)continue;
-
-    	myMuons.push_back(im);
-      }
-
-    if(myMuons.size()<2)continue;
-    nPass[4]++;
-
-
-   //6. select a good Z boson
-
-    Float_t mll  = recZ_l4.M();
-
-    h_mz->Fill(mll);
-    h_mz_split[split]->Fill(mll);
-	    
-    if(mll<70 || mll>110)continue;
-
-    float ptmax =  TMath::Max(recMu_l4[0].Pt(),recMu_l4[1].Pt());
-    float ptmin =  TMath::Min(recMu_l4[0].Pt(),recMu_l4[1].Pt());
-
-    // leading pt must be larger than 50 GeV
-    if(ptmax<50)continue;
-
-    Float_t ptll = recZ_l4.Pt();
-    if(ptll<100)continue;
-
-    h_lpt[0]->Fill(ptmax);
-    h_lpt[1]->Fill(ptmin);
-
-    nPass[5]++;
-
-    h_trigmet->Fill(llmet);
-    h_trigmet_split[split]->Fill(llmet);
 
     //2. pass electron or muon trigger
     std::string* trigName = data.GetPtrString("hlt_trigName");
@@ -312,37 +188,273 @@ void xAna_metzmm(std::string inputFile){
     bool passTrigger=false;
     for(int it=0; it< nsize; it++)
       {
- 	std::string thisTrig= trigName[it];
- 	bool results = trigResult[it];
+	std::string thisTrig= trigName[it];
+	bool results = trigResult[it];
 
 	// std::cout << thisTrig << " : " << results << std::endl;
 	
- 	if( 
+	if( 
 	   (thisTrig.find("HLT_Mu45")!= std::string::npos && results==1)
 	    )
- 	  {
- 	    passTrigger=true;
- 	    break;
- 	  }
+	  {
+	    passTrigger=true;
+	    break;
+	  }
 	
 
       }
 
+
+    if(nVtx>=nvtxmin && passTrigger){
+      nPass[10]++;
+      std::vector<int> goodMuons;
+
+      for(int im=0; im< nMu; im++)
+	{
+
+	  TLorentzVector* thisMu = (TLorentzVector*)muP4->At(im);
+
+	  if(fabs(thisMu->Eta())>etamaxcut)continue;
+
+	  if(thisMu->Pt() < ptmincut)continue;
+
+	  if(!isLooseMuon[im])continue;
+    	
+	  if(muMiniIso[im]>miniisocut)continue;
+
+	  goodMuons.push_back(im);
+	}
+
+      bool findMPair=false;
+      TLorentzVector dataZ_l4(0,0,0,0);
+
+      for(unsigned int i=0; i< goodMuons.size(); i++)
+      {
+	int im = goodMuons[i];
+	TLorentzVector* thisMu = (TLorentzVector*)muP4->At(im);
+
+	for(unsigned int j=0; j< i; j++)
+	  {
+	    int jm= goodMuons[j];
+
+	    // if(muCharge[im]*muCharge[jm]>0)continue;
+
+	    TLorentzVector* thatMu = (TLorentzVector*)muP4->At(jm);
+
+	    Float_t mll  = (*thisMu+*thatMu).M();
+	    Float_t ptll = (*thisMu+*thatMu).Pt();
+
+	    h_mz_data->Fill(mll);
+	    h_mz_split_data[split]->Fill(mll);
+	    
+	    if(mll<mzmin || mll>mzmax)continue;
+
+	    float ptmax =  TMath::Max(thisMu->Pt(),thatMu->Pt());
+	    float ptmin =  TMath::Min(thisMu->Pt(),thatMu->Pt());
+
+	    // leading pt must be larger than 50 GeV
+	    if(ptmax< ptmaxcut)continue;
+
+	    if(!findMPair){
+	      dataZ_l4=(*thisMu+*thatMu);
+
+	      h_lpt_data[0]->Fill(ptmax);
+	      h_lpt_data[1]->Fill(ptmin);
+	    }
+
+	    findMPair=true;
+	  }	
+      } // end of double loop
+
+    if(findMPair)
+      {
+	nPass[11]++;
+
+	float llmet_data = sqrt( pow(metx+dataZ_l4.Px(),2) + 
+				 pow(mety+dataZ_l4.Py(),2));
+	
+	if(llmet_data>recmetcut){
+	  nPass[12]++;
+	  h_metold_data ->Fill(met);
+	  h_metold_split_data[split]->Fill(met);
+	  h_recmet_after_data->Fill(llmet_data);
+	  h_recmet_after_split_data[split]->Fill(llmet_data);
+	}
+
+      }
+
+    } //if nVtx>1
     
-    if(!passTrigger)continue;
-    nPass[6]++;
+
+    // first obtain the Z-momentum at the generator-level
+    bool isData     = data.GetBool("isData");
+
+    if(!isData){
+      // 0. check the generator-level information and make sure there is a Z->mm
+      Int_t nGenPar        = data.GetInt("nGenPar");
+      Int_t* genParId      = data.GetPtrInt("genParId");
+      Int_t* genParSt      = data.GetPtrInt("genParSt");
+      Int_t* genMomParId   = data.GetPtrInt("genMomParId");
+    
+      int muIndex[2]={-1,-1};
+
+      // look for muon events first
+      for(int ig=0; ig < nGenPar; ig++){
+
+	if(genParSt[ig]!=1)continue;
+
+	if(abs(genParId[ig])!=13)continue;
+
+	if(genMomParId[ig]!=23 &&
+	   genMomParId[ig]!=genParId[ig])continue;
+
+	if(muIndex[0]==-1)	
+	  muIndex[0]=ig;
+	else if(muIndex[1]==-1)
+	  muIndex[1]=ig;
+
+	if(muIndex[0]>-1 && muIndex[1]>-1)
+	  break;
+
+      }
+
+      if(muIndex[0]==-1 || muIndex[1]==-1)continue;
+      nPass[0]++;
 
     
-    h_genmet_after->Fill(genmet);
-    h_recmet_after->Fill(llmet);
-    h_metold->Fill(met);
-    h_genrec_numr->Fill(genmet,llmet);
+      TClonesArray* genParP4 = (TClonesArray*) data.GetPtrTObject("genParP4");
+      TLorentzVector mu_l4[2];
 
-    h_genmet_after_split[split]->Fill(genmet);
-    h_recmet_after_split[split]->Fill(llmet);
-    h_metold_split[split]->Fill(met);
-    h_genrec_numr_split[split]->Fill(genmet,llmet);
+      for(int i=0; i<2; i++)
+	mu_l4[i] = *((TLorentzVector*)genParP4->At(muIndex[i]));
+   
 
+      if(DEBUG)
+	for(int i=0; i<2; i++)
+	  mu_l4[i].Print();
+ 
+
+      TLorentzVector z_l4=mu_l4[0]+mu_l4[1];
+      float genmet=z_l4.Pt();
+      h_genmet->Fill(genmet);
+      h_genmet_split[split]->Fill(genmet);
+
+      if(genmet<100)continue;
+      nPass[1]++;
+
+      h_genmet_pre->Fill(genmet);
+      h_genmet_pre_split[split]->Fill(genmet);
+
+      // look for reco muons that are matched to gen-muons
+      int recmuIndex[2]={-1,-1};
+
+      for(int ip=0; ip<2; ip++){
+
+	float ptmax=-99999;
+	for(int im=0; im< nMu; im++)
+	  {
+	  
+	    TLorentzVector* thisMu = (TLorentzVector*)muP4->At(im);
+	    float dR = thisMu->DeltaR(mu_l4[ip]);
+	    h_dR->Fill(dR);
+	    if(dR<0.2 && thisMu->Pt()>ptmax)
+	      {
+		ptmax=thisMu->Pt();
+		recmuIndex[ip]=im;
+	      }
+	  }
+      }
+
+      if(recmuIndex[0]==-1 || recmuIndex[1]==-1)
+	{
+	  h_genrec_deno->Fill(genmet,95);
+	  h_genrec_deno_split[split]->Fill(genmet,95);
+	  continue;
+	}
+    
+      nPass[2]++;
+
+      TLorentzVector recZ_l4(0,0,0,0);
+      TLorentzVector recMu_l4[2];
+      for(int ip=0;ip<2;ip++)
+	recMu_l4[ip]=(*(TLorentzVector*)muP4->At(recmuIndex[ip]));
+      recZ_l4 = recMu_l4[0]+recMu_l4[1];
+
+      float llmet = sqrt( pow(metx+recZ_l4.Px(),2) + 
+			  pow(mety+recZ_l4.Py(),2));
+      h_genrec_deno->Fill(genmet,llmet);
+      h_genrec_deno_split[split]->Fill(genmet,llmet);
+
+      //3. has a good vertex
+      if(nVtx<1)continue;
+      nPass[3]++;
+
+
+      // saving myMuons
+      std::vector<int> myMuons;
+      for(int ip=0; ip< 2; ip++)
+	{
+	  int im=recmuIndex[ip];
+	  TLorentzVector* thisMu = (TLorentzVector*)muP4->At(im);
+
+	  if(fabs(thisMu->Eta())> etamaxcut)continue;
+
+	  if(thisMu->Pt() < ptmincut)continue;
+
+	  if(!isLooseMuon[im])continue;
+    	
+	  if(muMiniIso[im]>miniisocut)continue;
+
+	  myMuons.push_back(im);
+	}
+
+      if(myMuons.size()<2)continue;
+      nPass[4]++;
+
+
+      //6. select a good Z boson
+
+      Float_t mll  = recZ_l4.M();
+
+      h_mz->Fill(mll);
+      h_mz_split[split]->Fill(mll);
+	    
+      if(mll< mzmin || mll> mzmax)continue;
+      nPass[5]++;
+
+      float ptmax =  TMath::Max(recMu_l4[0].Pt(),recMu_l4[1].Pt());
+      float ptmin =  TMath::Min(recMu_l4[0].Pt(),recMu_l4[1].Pt());
+
+      // leading pt must be larger than 50 GeV
+      if(ptmax< ptmaxcut)continue;
+      nPass[6]++;
+
+      h_lpt[0]->Fill(ptmax);
+      h_lpt[1]->Fill(ptmin);
+
+      h_trigmet->Fill(llmet);
+      h_trigmet_split[split]->Fill(llmet);
+
+    
+      if(!passTrigger)continue;
+      nPass[7]++;
+
+
+      h_genrec_numr->Fill(genmet,llmet);
+      h_genrec_numr_split[split]->Fill(genmet,llmet);
+
+      h_metold->Fill(met);
+      h_metold_split[split]->Fill(met);
+
+      if(llmet< recmetcut)continue;
+      nPass[8]++;
+
+      h_genmet_after->Fill(genmet);
+      h_genmet_after_split[split]->Fill(genmet);
+
+      h_recmet_after->Fill(llmet);
+      h_recmet_after_split[split]->Fill(llmet);
+    }
 
   } // end of loop over entries
 
@@ -362,6 +474,11 @@ void xAna_metzmm(std::string inputFile){
   h_recmet_after->Write();
   h_metold->Write();
   h_mz->Write();
+
+  h_metold_data->Write();
+  h_recmet_after_data->Write();
+  h_mz_data->Write();
+
   for(int i=0;i<2;i++)
     {
       h_lpt[i]->Write();
@@ -374,6 +491,12 @@ void xAna_metzmm(std::string inputFile){
       h_recmet_after_split[i]->Write();
       h_genmet_after_split[i]->Write();
       h_mz_split[i]->Write();
+
+      h_lpt_data[i]->Write();
+      h_metold_split_data[i]->Write();
+      h_recmet_after_split_data[i]->Write();
+      h_mz_split_data[i]->Write();
+
     }
     
   outFile->Close();
