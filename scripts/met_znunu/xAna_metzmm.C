@@ -44,8 +44,12 @@ void xAna_metzmm(std::string inputFile){
     }
   else
     {
-      outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*DYJetsHTBins25nsSamples/}; test2=${test%%/crab*}; echo \"histo_${test2}_all.root\"",
-					   inputFile.data()));
+      // check if it's data first
+      if(inputFile.find("Run2015")!= std::string::npos)
+	outputFile="histo_singlemuon.root";
+      else
+	outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*DYJetsHTBins25nsSamples/}; test2=${test%%/crab*}; echo \"histo_${test2}_all.root\"",
+					     inputFile.data()));
       cout << "output file name = " << outputFile.Data() << endl;      
       TSystemDirectory *base = new TSystemDirectory("root","root");
 

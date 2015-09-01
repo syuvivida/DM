@@ -9,32 +9,39 @@
 #include <TMath.h>
 using namespace std;
 
-void final(string znnfile, string zmmfile, string corrfile, string outputfile)
+void final(string znnfile, string zmmfile, string corrfile, string datafile, string outputfile)
 {
 
   TH1F* inputmet;
   TH1F* corrmet1D;
   TH1F* genmet;
   TH1F* compmet;
+  TH1F* compmet_data;
 
   TH1F* outputgenmet;
   TH1F* outputmet2D;
   TH1F* outputmet1D;
   TH1F* outputrev;
 
-  TFile *inf = TFile::Open(znnfile.data());
-  TFile *inf2 = TFile::Open(zmmfile.data());
-  TFile *inf3 = TFile::Open(corrfile.data());
+  TFile* file_znn   = TFile::Open(znnfile.data());
+  TFile* file_zmm   = TFile::Open(zmmfile.data());
+  TFile* file_corr  = TFile::Open(corrfile.data());
+  TFile* file_data  = TFile::Open(datafile.data());
 
-  inputmet = (TH1F*)inf2->FindObjectAny("h_recmet_after_split_data1_total"); //26 bins
+  inputmet = (TH1F*)file_zmm->FindObjectAny("h_recmet_after_split_data1_total"); //26 bins
   inputmet->SetName("inputmet");
 
-  corrmet1D = (TH1F*)inf3->FindObjectAny("final_corr"); // 26 mins
+  corrmet1D = (TH1F*)file_corr->FindObjectAny("final_corr"); // 26 mins
   // for comparison
-  genmet    = (TH1F*)inf2->FindObjectAny("h_genmet_pre_split1_total"); //26 bins
-  genmet->SetName("genmet");
-  compmet   = (TH1F*)inf->FindObjectAny("h_recmet_after_split_data1_total"); //26 bins
+  genmet    = (TH1F*)file_zmm->FindObjectAny("h_genmet_pre_split1_total"); //26 bins
+  genmet->SetName("genmet"); 
+
+  compmet   = (TH1F*)file_znn->FindObjectAny("h_recmet_after_split_data1_total"); //26 bins
   compmet->SetName("compmet");
+
+  compmet_data   = (TH1F*)file_data->FindObjectAny("h_recmet_after_data"); //26 bins
+  compmet_data->SetName("compmet_data");
+
 
   outputmet2D = (TH1F*) inputmet->Clone("outputmet2D");
   outputmet2D->Reset();
@@ -57,7 +64,7 @@ void final(string znnfile, string zmmfile, string corrfile, string outputfile)
 
   // for debugging. check GenToRec matrix
   TMatrixD* GenToRec = new TMatrixD(nbins,nbins); // 36 bins
-  GenToRec = (TMatrixD*)inf3->FindObjectAny("ref_GenToRec");
+  GenToRec = (TMatrixD*)file_corr->FindObjectAny("ref_GenToRec");
 
   TVectorD ingenVector(nbins);
   for(int i=0;i<nbins;i++)
@@ -73,10 +80,10 @@ void final(string znnfile, string zmmfile, string corrfile, string outputfile)
     recmetVector(i)= inputmet->GetBinContent(i);  
   
   TMatrixD* corrRecToGen = new TMatrixD(nbins,nbins);
-  corrRecToGen = (TMatrixD*)inf3->FindObjectAny("ref_RecToGen");
+  corrRecToGen = (TMatrixD*)file_corr->FindObjectAny("ref_RecToGen");
 
   TMatrixD* corrGenToRec = new TMatrixD(nbins,nbins);
-  corrGenToRec = (TMatrixD*)inf3->FindObjectAny("nunu_GenToRec");
+  corrGenToRec = (TMatrixD*)file_corr->FindObjectAny("nunu_GenToRec");
 
   // first check genMet
   TVectorD genVector=(*corrRecToGen)*recmetVector;
@@ -116,6 +123,7 @@ void final(string znnfile, string zmmfile, string corrfile, string outputfile)
   inputmet->Write();
   genmet->Write();
   compmet->Write();
+  compmet_data->Write();
   outputgenmet->Write();
   outputmet2D->Write();
   outputmet1D->Write();
