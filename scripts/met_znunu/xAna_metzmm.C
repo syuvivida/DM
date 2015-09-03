@@ -278,17 +278,14 @@ void xAna_metzmm(std::string inputFile, int mode=0){
 	for(unsigned int j=0; j< i; j++)
 	  {
 	    int jm= goodMuons[j];
-
-	    // if(muCharge[im]*muCharge[jm]>0)continue;
+	    
+	    if(muCharge[im]*muCharge[jm]>0)continue;
 
 	    TLorentzVector* thatMu = (TLorentzVector*)muP4->At(jm);
 
 	    Float_t mll  = (*thisMu+*thatMu).M();
 	    Float_t ptll = (*thisMu+*thatMu).Pt();
 
-	    h_mz_data->Fill(mll);
-	    h_mz_split_data[split]->Fill(mll);
-	    
 	    if(mll<mzmin || mll>mzmax)continue;
 
 	    float ptmax =  TMath::Max(thisMu->Pt(),thatMu->Pt());
@@ -317,6 +314,8 @@ void xAna_metzmm(std::string inputFile, int mode=0){
 	
 	if(llmet_data>recmetcut){
 	  nPass[12]++;
+	  h_mz_data->Fill(mll);
+	  h_mz_split_data[split]->Fill(mll);
 	  h_metold_data ->Fill(met);
 	  h_metold_split_data[split]->Fill(met);
 	  h_recmet_after_data->Fill(llmet_data);
