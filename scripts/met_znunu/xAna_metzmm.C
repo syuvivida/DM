@@ -303,6 +303,7 @@ void xAna_metzmm(std::string inputFile, int mode=0){
 	    }
 
 	    findMPair=true;
+	    break;
 	  }	
       } // end of double loop
 
