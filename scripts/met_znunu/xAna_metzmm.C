@@ -314,8 +314,8 @@ void xAna_metzmm(std::string inputFile, int mode=0){
 	
 	if(llmet_data>recmetcut){
 	  nPass[12]++;
-	  h_mz_data->Fill(mll);
-	  h_mz_split_data[split]->Fill(mll);
+	  h_mz_data->Fill(dataZ_l4.M());
+	  h_mz_split_data[split]->Fill(dataZ_l4.M());
 	  h_metold_data ->Fill(met);
 	  h_metold_split_data[split]->Fill(met);
 	  h_recmet_after_data->Fill(llmet_data);
