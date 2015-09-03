@@ -8,7 +8,7 @@
 #include <vector>
 
 using namespace std;
-void scaleHistos(std::string input, std::string output)
+void scaleHistos(float datalumi,std::string input, std::string output)
 {
   FILE *fTable = fopen(input.data(),"r");
   int flag=1;
@@ -45,7 +45,7 @@ void scaleHistos(std::string input, std::string output)
 
   for(unsigned i=0; i < infiles.size(); i++){
 
-    float scale = 5000*(xsecs[i]/neve[i]);
+    float scale = datalumi*(xsecs[i]/neve[i]);
     cout << "scale " << i << " = " << scale << endl;
 
     TFile *_file = TFile::Open(infiles[i].data());

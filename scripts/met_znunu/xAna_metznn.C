@@ -19,7 +19,9 @@ const float recmetcut=150;
 
 using namespace std;
 #define DEBUG 0
-void xAna_metznn(std::string inputFile){
+// mode:0 variable bin width, 24 bins
+// mode:1 fixed bin width, 17 bins
+void xAna_metznn(std::string inputFile,int mode=0){
 
   //get TTree from file ...
   TString outputFile;
@@ -78,18 +80,35 @@ void xAna_metznn(std::string inputFile){
       xBin[i]=xLow[i];
     }
 
-  TH2F* h_genrec= new TH2F("h_genrec","",nbins,xBin,nbins,xBin); // add two more bins for overflow and underflow                                                                  
-  //  TH2F* h_genrec= new TH2F("h_genrec","",17,150,1000,17,150,1000); // add two more bins for overflow and underflow                                                                  
+
+  TH2F* h_genrec;
+  TH1F* h_pt;
+  if(mode==0)
+    {
+      h_genrec= new TH2F("h_genrec","",nbins,xBin,nbins,xBin); 
+      h_pt= new TH1F("h_pt","",nbins,xBin);
+    }
+  else if(mode==1)
+    {
+      const int nfixbins=17;
+      const float xmin=150;
+      const float xmax=1000;
+      h_genrec= new TH2F("h_genrec","",nfixbins,xmin,xmax,nfixbins,xmin,xmax); 
+      h_pt = new TH1F("h_pt","", nfixbins,xmin,xmax);
+    }
+      
+  else // wrong mode
+    return;
+  h_genrec->SetXTitle("generator-level");
+  h_genrec->SetYTitle("reconstruction-level");
+  h_pt->SetXTitle("#slash{E}_{T} [GeV]");
+                    
   TH2F* h_genrec_deno= (TH2F*)h_genrec->Clone("h_genrec_deno");
   TH2F* h_genrec_numr= (TH2F*)h_genrec->Clone("h_genrec_numr");
 
  
   TH1F* h_pt0 = new TH1F("h_pt0","",100,0,1000);
   h_pt0->SetXTitle("#slash{E}_{T} [GeV]");
-
-  TH1F* h_pt = new TH1F("h_pt","",nbins,xBin);
-  //  TH1F* h_pt = new TH1F("h_pt","",17,150,1000);
-  h_pt->SetXTitle("#slash{E}_{T} [GeV]");
 
   TH1F* h_genmet = (TH1F*)h_pt0->Clone("h_genmet");
   h_genmet->SetTitle("Generator-level before selections");
