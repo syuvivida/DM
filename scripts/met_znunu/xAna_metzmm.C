@@ -221,6 +221,7 @@ void xAna_metzmm(std::string inputFile, int mode=0){
     vector<bool> &isCustomTrackerMuon = *((vector<bool>*) data.GetPtr("isCustomTrackerMuon"));
     vector<bool> &isLooseMuon = *((vector<bool>*) data.GetPtr("isLooseMuon"));
     Float_t* muMiniIso       = data.GetPtrFloat("muMiniIso");
+    Int_t* muCharge = data.GetPtrInt("muCharge");
 
     //2. pass electron or muon trigger
     std::string* trigName = data.GetPtrString("hlt_trigName");
