@@ -42,6 +42,8 @@ root -q -b xAna_metzmm.C++\(\"/data7/khurana/NCUGlobalTuples/SPRING15/DYJetsHTBi
 root -q -b xAna_metzmm.C++\(\"/data7/khurana/NCUGlobalTuples/SPRING15/DYJetsHTBins25nsSamples/DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_0803/150812_162858/0000\",$mode\)
 root -q -b xAna_metzmm.C++\(\"/data7/khurana/NCUGlobalTuples/SPRING15/DYJetsHTBins25nsSamples/DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_0803/150812_162937/0000\",$mode\)
 
+root -q -b scaleHistos.C++\(41.61,\"inputdata.txt\",\"singlemuon.root\",true\)
+
 root -q -b scaleHistos.C++\(41.61,\"inputttbar.txt\",\"gencut100recocut150_met_tt.root\"\)
 
 root -q -b scaleHistos.C++\(41.61,\"inputznn.txt\",\"gencut100recocut150_met_znn.root\"\)

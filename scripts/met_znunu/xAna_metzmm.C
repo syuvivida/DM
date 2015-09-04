@@ -148,7 +148,7 @@ void xAna_metzmm(std::string inputFile, int mode=0){
   TH1F* h_genmet_after = (TH1F*)h_pt->Clone("h_genmet_after");
   h_genmet_after->SetTitle("Generator-level after selections");
 
-  TH1F* h_mz = new TH1F("h_mz","",50,50,150);
+  TH1F* h_mz = new TH1F("h_mz","",20,70,110);
   h_mz->SetXTitle("M_{#ell#ell} [GeV]");
   TH1F* h_lpt[2];
 
@@ -276,6 +276,8 @@ void xAna_metzmm(std::string inputFile, int mode=0){
 	int im = goodMuons[i];
 	TLorentzVector* thisMu = (TLorentzVector*)muP4->At(im);
 
+	float ptmax=-1;
+	float ptmin=-1;
 	for(unsigned int j=0; j< i; j++)
 	  {
 	    int jm= goodMuons[j];
@@ -288,9 +290,9 @@ void xAna_metzmm(std::string inputFile, int mode=0){
 	    Float_t ptll = (*thisMu+*thatMu).Pt();
 
 	    if(mll<mzmin || mll>mzmax)continue;
-
-	    float ptmax =  TMath::Max(thisMu->Pt(),thatMu->Pt());
-	    float ptmin =  TMath::Min(thisMu->Pt(),thatMu->Pt());
+	    
+	    ptmax =  TMath::Max(thisMu->Pt(),thatMu->Pt());
+	    ptmin =  TMath::Min(thisMu->Pt(),thatMu->Pt());
 
 	    // leading pt must be larger than 50 GeV
 	    if(ptmax< ptmaxcut)continue;
@@ -298,8 +300,6 @@ void xAna_metzmm(std::string inputFile, int mode=0){
 	    if(!findMPair){
 	      dataZ_l4=(*thisMu+*thatMu);
 
-	      h_lpt_data[0]->Fill(ptmax);
-	      h_lpt_data[1]->Fill(ptmin);
 	    }
 
 	    findMPair=true;
@@ -316,6 +316,8 @@ void xAna_metzmm(std::string inputFile, int mode=0){
 	
 	if(llmet_data>recmetcut){
 	  nPass[12]++;
+	  h_lpt_data[0]->Fill(ptmax);
+	  h_lpt_data[1]->Fill(ptmin);
 	  h_mz_data->Fill(dataZ_l4.M());
 	  h_mz_split_data[split]->Fill(dataZ_l4.M());
 	  h_metold_data ->Fill(met);

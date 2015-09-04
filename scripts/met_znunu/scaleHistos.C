@@ -8,7 +8,7 @@
 #include <vector>
 
 using namespace std;
-void scaleHistos(float datalumi,std::string input, std::string output)
+void scaleHistos(float datalumi,std::string input, std::string output, bool isData=false)
 {
   FILE *fTable = fopen(input.data(),"r");
   int flag=1;
@@ -81,7 +81,7 @@ void scaleHistos(float datalumi,std::string input, std::string output)
 	   htotal[nPage]->SetMinimum(0);
 	   htotal[nPage]->Sumw2();
 	 }
-	 h1->Scale(scale);
+	 if(!isData)h1->Scale(scale);
 	 htotal[nPage]->Add(h1);
 	 cout << htotal[nPage]->Integral() << endl;
 	 nPage++;
