@@ -270,14 +270,14 @@ void xAna_metzmm(std::string inputFile, int mode=0){
 
       bool findMPair=false;
       TLorentzVector dataZ_l4(0,0,0,0);
+      float ptmax=-1;
+      float ptmin=-1;
 
       for(unsigned int i=0; i< goodMuons.size(); i++)
       {
 	int im = goodMuons[i];
 	TLorentzVector* thisMu = (TLorentzVector*)muP4->At(im);
 
-	float ptmax=-1;
-	float ptmin=-1;
 	for(unsigned int j=0; j< i; j++)
 	  {
 	    int jm= goodMuons[j];
