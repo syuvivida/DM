@@ -28,4 +28,4 @@ skipevent=$(( 1000 * ($2 - 1) ))
 echo "output file is" $fileout
 echo "skiping " $skipevent " events"
 rm -rf $fileout
-cmsRun step1_splitLHE.py inputFiles=file:$filein outputFile=$fileout skipEvents=$skipevent
+cmsRun step1_splitLHE_higgsDecay.py inputFiles=file:$filein outputFile=$fileout skipEvents=$skipevent
