@@ -17,5 +17,6 @@ void call_stackHisto()
   legends.push_back("t#bar{t}");
 
   stackHisto("h_mz_data_total",files,legends,"M_{#mu#mu} [GeV]");
+  stackHisto("h_recmet_after_data_total",files,legends,"MET [GeV]");
 
 }
