@@ -1,15 +1,27 @@
 #!/bin/bash
 scriptname=`basename $0`
-EXPECTED_ARGS=2
-if [ $# -ne $EXPECTED_ARGS ]
+EXPECTED_ARGS=3
+MIN_ARGS=2
+maxevent=-1
+if [ $# -eq $MIN_ARGS ]
 then
-echo "Usage: $scriptname script queue"
-echo "Example: ./$scriptname runStep1.sh 2nd"
-exit 1
+    echo "maxEvents="$maxevent
+else if [ $# -ne $EXPECTED_ARGS ]
+then
+    echo "Usage: $scriptname scriptfile queue nEventsPerJob"
+    echo "Example: ./scripts/$scriptname runStep3.sh 2nd 1000"
+    exit 1
+else
+    maxevent=$3
+fi
 fi
 
-if [ ! -e $PWD/$1 ]; then
- echo $PWD/$1 " does not exist!"
+script=$1
+queue=$2
+
+
+if [ ! -e $PWD/$script ]; then
+ echo $PWD/$script " does not exist!"
 exit 1
 fi
 
@@ -20,6 +32,5 @@ while [ $iteration -lt $lastfile ];
 do
   iteration=$(( iteration + 1 ))
   echo $iteration
-  bsub -q $2 $PWD/$1 $PWD $iteration
-
+  bsub -q $queue $PWD/$script $PWD $maxevent $iteration
 done

@@ -1,32 +1,36 @@
 #!/bin/bash
 scriptname=`basename $0`
-EXPECTED_ARGS=2
+EXPECTED_ARGS=3
 if [ $# -ne $EXPECTED_ARGS ]
 then
-echo "Usage: $scriptname workdirectory rootFileIndex"
-echo "Example: ./$scriptname $PWD 1"
+echo "Usage: $scriptname workdirectory nEventsPerJob rootFileIndex"
+echo "Example: ./$scriptname $PWD 1000 1"
 exit 1
 fi
 
-if [ ! -e $1/step3.py ]; then
- echo $1/"step3.py does not exist!"
+dirname=$1
+maxevent=$2
+index=$3
+
+if [ ! -e $dirname/step3.py ]; then
+ echo $dirname/"step3.py does not exist!"
 exit 1
 fi
 
 
-cd $1
+cd $dirname
 
 export SCRAM_ARCH=slc6_amd64_gcc491; eval `scramv1 runtime -sh`
-filein=step2_$2.root
+filein=step2_$index.root
 echo "input file is" $filein
-if [ ! -e $1/$filein ]; then
- echo $1/$filein " does not exist!"
+if [ ! -e $dirname/$filein ]; then
+ echo $dirname/$filein " does not exist!"
 exit 1
 fi
-fileout=step3_$2.root
+fileout=step3_$index.root
 echo "output RECO file is " $fileout
-minifileout=step3_miniAOD_$2.root
+minifileout=step3_miniAOD_$index.root
 echo "output miniAOD file is" $minifileout
 rm -rf $fileout
 rm -rf $minifileout
-cmsRun step3.py inputFiles=file:$filein outputFile=$fileout myOutputFile=$minifileout
+cmsRun step3.py inputFiles=file:$filein outputFile=$fileout myOutputFile=$minifileout maxEvents=$maxevent
