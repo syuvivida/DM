@@ -40,24 +40,40 @@ void xAna_metznn(std::string inputFile,int mode=0){
       outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*ZJetsNuNu/}; test2=${test%%/crab*}; echo \"histo_${test2}_all.root\"",
 					   inputFile.data()));
       cout << "output file name = " << outputFile.Data() << endl;      
+
       TSystemDirectory *base = new TSystemDirectory("root","root");
 
       base->SetDirectory(inputFile.data());
       TList *listOfFiles = base->GetListOfFiles();
       TIter fileIt(listOfFiles);
       TFile *fileH = new TFile();
-      int nfile=0;
+      Long64_t nfiles=0;
       while(fileH = (TFile*)fileIt()) {
 	std::string fileN = fileH->GetName();
-	if( fileH->IsFolder())  continue;
-	if(fileN.find("NCUGlobalTuples") == std::string::npos)continue;
-	fileN = inputFile + "/" + fileN;
-	cout << fileN.data() << endl;
-	nfile++;
-	infiles.push_back(fileN);
+	std::string baseString = "NCUGlobal"; 
+	// cout << fileN << endl;
+	if(fileN.find("fail") != std::string::npos)continue;
+	if(fileH->IsFolder()){
+	  std::string newDir=inputFile+fileN;
+	  base->SetDirectory(newDir.data());
+	  TList *listOfFiles2 = base->GetListOfFiles();
+	  TIter fileIt2(listOfFiles2);
+	  TFile *fileH2 = new TFile();  
+	  while(fileH2 = (TFile*)fileIt2()) {
+	    std::string fileN2 = fileH2->GetName();
+	    // cout << fileN2 << endl;
+	    if(fileH2->IsFolder())continue;
+	    if(fileN2.find("fail") != std::string::npos)continue;
+	    if(fileN2.find(baseString) == std::string::npos)continue;
+	    // cout << fileN2.data() << endl;
+	    infiles.push_back(Form("%s/%s",newDir.data(),fileN2.data()));
+	    nfiles++;
+	  }
+	} 
+
       }
 
-      std::cout << "Opened " << nfile << " files" << std::endl;
+      std::cout << "Opened " << nfiles << " files" << std::endl;
 
     }
   
