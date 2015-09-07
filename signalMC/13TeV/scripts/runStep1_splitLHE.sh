@@ -8,15 +8,16 @@ then
     exit 1
 fi
 
-if [ $maxevent -le 0 ]
+dirname=$1
+maxevent=$(( $2 ))
+index=$3
+
+if test $maxevent -lt 0
 then
     echo "maxEvent must be greater than zero when you are running in splitting LHE mode"
     exit 1
 fi
 
-dirname=$1
-maxevent=$2
-index=$3
 
 if [ ! -e $dirname/step1.py ]; then
  echo $dirname/"step1.py does not exist!"
@@ -27,7 +28,7 @@ fi
 cd $dirname
 
 export SCRAM_ARCH=slc6_amd64_gcc481; eval `scramv1 runtime -sh`
-filein=../../../LHE/unweighted_events.lhe
+filein=Higgs_hzpzp_100GeV.lhe
 echo "input file is" $filein
 if [ ! -e $dirname/$filein ]; then
  echo $dirname/$filein " does not exist!"
