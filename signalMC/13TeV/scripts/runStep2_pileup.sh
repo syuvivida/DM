@@ -39,4 +39,4 @@ echo "input file is" $filein
 fileout=step2_$index.root
 echo "output file is" $fileout
 rm -rf $fileout
-cmsRun step2_pileup25ns.py inputFiles=$filein outputFile=$fileout mixHistFile=histProbFunction_$index.root maxEvents=$maxevent
+cmsRun step2_pileup25ns.py inputFiles=file:$filein outputFile=$fileout mixHistFile=histProbFunction_$index.root maxEvents=$maxevent
