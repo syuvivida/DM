@@ -22,7 +22,19 @@ cd $dirname
 
 export SCRAM_ARCH=slc6_amd64_gcc491; eval `scramv1 runtime -sh`
 export X509_USER_PROXY=$HOME/private/grid.proxy
-filein=root://eoscms//eos/cms/store/user/khurana/MonoHStep1/step1_M600_$index.root
+
+filein=step1_$index.root
+if [ ! -e $dirname/$filein ]; then
+    echo $dirname/$filein " does not exist!"
+    filein=step1_${index}_numEvent${maxevent}.root
+    if [ ! -e $dirname/$filein ]; then
+	echo $dirname/$filein " does not exist!"
+	exit 1
+    fi
+fi
+
+echo "input file is" $filein
+
 echo "input file is" $filein
 fileout=step2_$index.root
 echo "output file is" $fileout

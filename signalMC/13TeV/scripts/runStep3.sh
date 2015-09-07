@@ -22,11 +22,17 @@ cd $dirname
 
 export SCRAM_ARCH=slc6_amd64_gcc491; eval `scramv1 runtime -sh`
 filein=step2_$index.root
-echo "input file is" $filein
 if [ ! -e $dirname/$filein ]; then
- echo $dirname/$filein " does not exist!"
-exit 1
+    echo $dirname/$filein " does not exist!"
+    filein=step2_${index}_numEvent${maxevent}.root
+    if [ ! -e $dirname/$filein ]; then
+        echo $dirname/$filein " does not exist!"
+        exit 1
+    fi
 fi
+
+echo "input file is" $filein
+
 fileout=step3_$index.root
 echo "output RECO file is " $fileout
 minifileout=step3_miniAOD_$index.root
