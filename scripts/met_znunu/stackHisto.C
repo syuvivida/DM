@@ -66,6 +66,8 @@ void stackHisto(string histoName, vector<string> inputFiles,
   c_dw->cd();
   myRatio(myHistos, xtitle);
 
+  c_dw->RedrawAxis();
+
   c.Draw();
     
   string outputfilename;
@@ -100,9 +102,6 @@ void myPlot(vector<TH1F*> histos,
   }
 
    
-  histos[0]->GetXaxis()->SetTitle("");
-  histos[0]->GetXaxis()->SetLabelOffset(999);
-  histos[0]->GetXaxis()->SetLabelSize(0);
   if(ymin>dummy)
     {
       histos[0]->SetMinimum(ymin);
@@ -117,6 +116,9 @@ void myPlot(vector<TH1F*> histos,
   hstack->GetHistogram()->GetYaxis()->SetTitle("Event Numbers");
   hstack->GetHistogram()->GetXaxis()->SetTickLength(0);
   hstack->GetHistogram()->GetXaxis()->SetLabelOffset(999);
+  hstack->GetHistogram()->GetXaxis()->SetTitle("");
+  hstack->GetHistogram()->GetXaxis()->SetLabelOffset(999);
+  hstack->GetHistogram()->GetXaxis()->SetLabelSize(0);
   histos[0]->Draw("e1same");
 
   TLegend *leg = new TLegend(0.5, 0.8, 0.9, 0.9);
