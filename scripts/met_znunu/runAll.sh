@@ -63,3 +63,9 @@ mv histo_singlemuon.root $dirname/.
 mv singlemuon.root $dirname/.
 mv histo_TT*root $dirname/.
 mv histo_ZJetsToNuNu*root $dirname/.
+
+root -q -b call_stackHisto.C++
+
+mv *pdf $dirname/.
+mv *png $dirname/.
+mv *eps $dirname/.
