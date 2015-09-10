@@ -18,5 +18,7 @@ void call_stackHisto()
 
   stackHisto("h_mz_data_total",files,legends,"M_{#mu#mu} [GeV]");
   stackHisto("h_recmet_after_data_total",files,legends,"MET [GeV]");
+  stackHisto("h_lpt_data0_total",files,legends,"p_{T}^{\ell 1} [GeV]");
+  stackHisto("h_lpt_data1_total",files,legends,"p_{T}^{\ell 2} [GeV]");
 
 }

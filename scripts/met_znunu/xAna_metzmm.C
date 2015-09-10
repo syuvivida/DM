@@ -100,6 +100,7 @@ void xAna_metzmm(std::string inputFile, int mode=0){
   Long64_t nPass[20]={0};
 
   TH1F* h_dR=new TH1F("h_dR","",60,0,6);
+  TH1F* h_ptr=new TH1F("h_ptr","",40,-2,2);
 
   std::vector<float> xLow;
   for(int i=0;i<=14;i++)
@@ -364,14 +365,16 @@ void xAna_metzmm(std::string inputFile, int mode=0){
 
 	if(genParSt[ig]!=1)continue;
 
-	if(abs(genParId[ig])!=13)continue;
+	int pid = genParId[ig];
+
+	if(abs(pid)!=13)continue;
 
 	if(genMomParId[ig]!=23 &&
-	   genMomParId[ig]!=genParId[ig])continue;
+	   genMomParId[ig]!=pid)continue;
 
-	if(muIndex[0]==-1)	
+	if(muIndex[0]==-1 && pid== 13)	
 	  muIndex[0]=ig;
-	else if(muIndex[1]==-1)
+	if(muIndex[1]==-1 && pid== -13)
 	  muIndex[1]=ig;
 
 	if(muIndex[0]>-1 && muIndex[1]>-1)
@@ -390,9 +393,9 @@ void xAna_metzmm(std::string inputFile, int mode=0){
 	mu_l4[i] = *((TLorentzVector*)genParP4->At(muIndex[i]));
    
 
-      if(DEBUG)
-	for(int i=0; i<2; i++)
-	  mu_l4[i].Print();
+      // if(DEBUG)
+      // 	for(int i=0; i<2; i++)
+      // 	  mu_l4[i].Print();
  
 
       TLorentzVector z_l4=mu_l4[0]+mu_l4[1];
@@ -408,23 +411,72 @@ void xAna_metzmm(std::string inputFile, int mode=0){
 
       // look for reco muons that are matched to gen-muons
       int recmuIndex[2]={-1,-1};
+      const float DRMAX = 0.1;
+      const float RPTMAX= 0.3;
+ 
+      for(int im=0; im< nMu; im++)
+	{
+	  TLorentzVector* thisMuo= (TLorentzVector*)muP4->At(im);
+	  float dR1_gen0= thisMuo->DeltaR(mu_l4[0]);
+	  float dR1_gen1= thisMuo->DeltaR(mu_l4[1]);
+	  h_dR->Fill(dR1_gen0);
+	  h_dR->Fill(dR1_gen1);
 
-      for(int ip=0; ip<2; ip++){
+	  if(dR1_gen0 > DRMAX && dR1_gen1 > DRMAX)continue;
 
-	float ptmax=-99999;
-	for(int im=0; im< nMu; im++)
-	  {
+	  float ptr1_gen0= (thisMuo->Pt()-mu_l4[0].Pt())/mu_l4[0].Pt();
+	  float ptr1_gen1= (thisMuo->Pt()-mu_l4[1].Pt())/mu_l4[1].Pt();
+	  h_ptr->Fill(ptr1_gen0);
+	  h_ptr->Fill(ptr1_gen1);
 	  
-	    TLorentzVector* thisMu = (TLorentzVector*)muP4->At(im);
-	    float dR = thisMu->DeltaR(mu_l4[ip]);
-	    h_dR->Fill(dR);
-	    if(dR<0.2 && thisMu->Pt()>ptmax)
-	      {
-		ptmax=thisMu->Pt();
-		recmuIndex[ip]=im;
-	      }
-	  }
-      }
+	  if(fabs(ptr1_gen0)>RPTMAX && fabs(ptr1_gen1)>RPTMAX )continue;
+
+	  for(int jm=0; jm<im; jm++)
+	    {
+	      TLorentzVector* thatMuo = (TLorentzVector*)muP4->At(jm);
+	  
+	      float dR2_gen0= thatMuo->DeltaR(mu_l4[0]);
+	      float dR2_gen1= thatMuo->DeltaR(mu_l4[1]);
+	      h_dR->Fill(dR2_gen0);
+	      h_dR->Fill(dR2_gen1);
+	    
+	      if(dR2_gen0 > DRMAX && dR2_gen1 > DRMAX)continue;
+
+	      float ptr2_gen0= (thatMuo->Pt()-mu_l4[0].Pt())/mu_l4[0].Pt();
+	      float ptr2_gen1= (thatMuo->Pt()-mu_l4[1].Pt())/mu_l4[1].Pt();
+
+	      h_ptr->Fill(ptr2_gen0);
+	      h_ptr->Fill(ptr2_gen1);
+
+	      if(fabs(ptr2_gen0)>RPTMAX && fabs(ptr2_gen1)>RPTMAX )continue;
+
+	      bool matched = 
+	       	(dR1_gen0 < DRMAX && fabs(ptr1_gen0)< RPTMAX && 
+	       	 dR2_gen1 < DRMAX && fabs(ptr2_gen1)< RPTMAX ) ||
+	       	(dR1_gen1 < DRMAX && fabs(ptr1_gen1)< RPTMAX && 
+	       	 dR2_gen0 < DRMAX && fabs(ptr2_gen0)< RPTMAX);
+	    
+	      if(!matched)
+		{
+		  if(DEBUG){
+		    cout << "Why? " << dR1_gen0 << "\t" << dR1_gen1 << "\t" <<
+		      dR2_gen0 << "\t" << dR2_gen1 << "\t" <<
+		      ptr1_gen0 << "\t" << ptr1_gen1 << "\t" <<
+		      ptr2_gen0 << "\t" << ptr2_gen1 << endl;
+		    mu_l4[0].Print();
+		    mu_l4[1].Print();
+		    thisMuo->Print();
+		    thatMuo->Print();
+		  }
+		  continue;
+		}	      
+
+	      recmuIndex[0] = im;
+	      recmuIndex[1] = jm;
+	      break;
+	    }
+	} // end of double muon loop
+
 
       if(recmuIndex[0]==-1 || recmuIndex[1]==-1)
 	{
@@ -434,6 +486,9 @@ void xAna_metzmm(std::string inputFile, int mode=0){
 	}
     
       nPass[2]++;
+
+      if(recmuIndex[0]==recmuIndex[1])
+	cout << "impossible" << endl;
 
       TLorentzVector recZ_l4(0,0,0,0);
       TLorentzVector recMu_l4[2];
@@ -525,6 +580,7 @@ void xAna_metzmm(std::string inputFile, int mode=0){
       std::cout << "nPass[" << i << "]= " << nPass[i] << std::endl;
 
   TFile* outFile = new TFile(outputFile.Data(),"recreate");
+  h_ptr->Write();
   h_dR->Write();
   h_genrec_deno->Write();
   h_genrec_numr->Write();

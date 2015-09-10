@@ -94,7 +94,8 @@ void myPlot(vector<TH1F*> histos,
   THStack *hstack = new THStack("hstack", "");
   
   for(unsigned int i=1; i < histos.size(); i++){
-    int colorcode=kBlue+2-i*2;
+    // int colorcode=kBlue+2-i*2;
+    int colorcode=kBlue-4-5*(i-1);
     histos[i]->SetFillColor(colorcode);
     histos[i]->SetFillStyle(1001);
     histos[i]->SetLineColor(colorcode);
