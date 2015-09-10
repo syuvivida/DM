@@ -23,6 +23,7 @@ void myRatio(vector<TH1F*>,
 // first file is always data
 void stackHisto(string histoName, vector<string> inputFiles,
 		vector<string> legends,
+		vector<string> histoNames,
 		string xtitle="test", 
 		float ymin=dummy, float ymax=dummy,
 		bool logY=false){
@@ -33,7 +34,10 @@ void stackHisto(string histoName, vector<string> inputFiles,
   for(unsigned int i=0;i<nfiles;i++)
     {
       file[i]= TFile::Open(inputFiles[i].data());
-      myHistos.push_back((TH1F*)(file[i]->Get(histoName.data())));
+      if(histoNames.size()==0)
+	myHistos.push_back((TH1F*)(file[i]->Get(histoName.data())));
+      else
+	myHistos.push_back((TH1F*)(file[i]->Get(histoNames[i].data())));
     }
 
   
@@ -99,6 +103,9 @@ void myPlot(vector<TH1F*> histos,
     histos[i]->SetFillColor(colorcode);
     histos[i]->SetFillStyle(1001);
     histos[i]->SetLineColor(colorcode);
+    histos[i]->SetMarkerColor(colorcode);
+    histos[i]->SetMarkerStyle(21);
+    histos[i]->SetMarkerSize(0.1);
     hstack->Add(histos[i]);    
   }
 
@@ -113,7 +120,14 @@ void myPlot(vector<TH1F*> histos,
       histos[0]->SetMaximum(ymax);
       hstack->SetMaximum(ymax);
     }
-  hstack->Draw("histe");
+  else
+    {
+      float maxy = 1.2*TMath::Max(histos[0]->GetMaximum(),hstack->GetMaximum());
+      histos[0]->SetMaximum(maxy);
+      hstack->SetMaximum(maxy);      
+    }
+
+  hstack->Draw("hist");
   hstack->GetHistogram()->GetYaxis()->SetTitle("Event Numbers");
   hstack->GetHistogram()->GetXaxis()->SetTickLength(0);
   hstack->GetHistogram()->GetXaxis()->SetLabelOffset(999);

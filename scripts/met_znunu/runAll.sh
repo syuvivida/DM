@@ -54,7 +54,7 @@ root -q -b scaleHistos.C++\(41.61,\"inputzmm.txt\",\"gencut100recocut150_met_zmm
 
 root -q -b produceCorr.C++\(\"gencut100recocut150_met_znn.root\",\"gencut100recocut150_met_zmm.root\",\"corr_Znn.root\"\)
 
-root -q -b final.C++\(\"gencut100recocut150_met_znn.root\",\"gencut100recocut150_met_zmm.root\",\"corr_Znn.root\",\"histo_singlemuon.root\",\"final_Znn.root\"\)
+root -q -b final.C++\(\"gencut100recocut150_met_znn.root\",\"gencut100recocut150_met_zmm.root\",\"gencut100recocut150_met_tt.root\",\"corr_Znn.root\",\"singlemuon.root\",\"final_Znn.root\"\)
 
 mv *Znn*.root $dirname/.
 mv gencut100recocut150*root $dirname/.
