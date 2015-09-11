@@ -21,10 +21,11 @@ void myRatio(vector<TH1F*>,
 	     string xtitle="test"); // first one is always data histogram
 
 // first file is always data
-void stackHisto(string histoName, vector<string> inputFiles,
-		vector<string> legends,
+void stackHisto(vector<string> inputFiles,
 		vector<string> histoNames,
+		vector<string> legends,
 		string xtitle="test", 
+		string output="test",
 		float ymin=dummy, float ymax=dummy,
 		bool logY=false){
   
@@ -34,12 +35,14 @@ void stackHisto(string histoName, vector<string> inputFiles,
   for(unsigned int i=0;i<nfiles;i++)
     {
       file[i]= TFile::Open(inputFiles[i].data());
-      if(histoNames.size()==0)
-	myHistos.push_back((TH1F*)(file[i]->Get(histoName.data())));
+      if(histoNames.size()==1)
+	myHistos.push_back((TH1F*)(file[i]->Get(histoNames[0].data())));
       else
 	myHistos.push_back((TH1F*)(file[i]->Get(histoNames[i].data())));
     }
 
+  if(output=="test")
+    output=histoNames[0];
   
   gStyle->SetOptStat(0);
   gStyle->SetPadGridY(kTRUE);
@@ -75,11 +78,11 @@ void stackHisto(string histoName, vector<string> inputFiles,
   c.Draw();
     
   string outputfilename;
-  outputfilename = histoName + ".pdf";
+  outputfilename = output + ".pdf";
   c.Print(outputfilename.data());
-  outputfilename = histoName + ".png";
+  outputfilename = output + ".png";
   c.Print(outputfilename.data());
-  outputfilename = histoName + ".eps";
+  outputfilename = output + ".eps";
   c.Print(outputfilename.data());
 
 
