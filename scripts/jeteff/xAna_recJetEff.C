@@ -13,44 +13,49 @@
 #include <TClonesArray.h>
 #include <TLorentzVector.h>
 #include <TEfficiency.h>
+#include <TSystemDirectory.h>
+#include <TList.h>
 
 using namespace std;
 void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 
   std::vector<string> infiles;
-  bool readOneFile=true;
   TString outputFile;
-  TString myName=myDefinition? "myDefinition":"JETMET";
-  if(inputFile.find(".txt")!= std::string::npos)
-    {
-      readOneFile=false;
-      TString endfix=gSystem->GetFromPipe(Form("file=%s; test=${file##*/}; echo \"${test%%.txt*}\"",inputFile.data()));
-      outputFile = "eff_" + myName + "_all.root";
-    }
+  string myName=myDefinition? "myDefinition":"JETMET";
 
-  if(readOneFile)
-    {
-      infiles.push_back(inputFile);
-      outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*/}; echo \"eff_%s_${test}\"",inputFile.data(),myName.Data()));
+  if(inputFile.find(".root")!= std::string::npos)
+    { 
+      outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*ZprimeToZhToZlephbb/}; echo \"jeteff_%s_${test}\"",inputFile.data(),
+					   myName.data()));
+      cout << "output file name = " << outputFile.Data() << endl;
+      infiles.push_back(inputFile.data());
     }
-  else{
-    FILE *fTable = fopen(inputFile.data(),"r");
-    int flag=1;
-    int nfile=0;
+  else
+    {
+      outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*signalMC/}; echo \"jeteff_%s_${test}.root\"",inputFile.data(),
+					   myName.data()));
+      cout << "output file name = " << outputFile.Data() << endl;      
+      TSystemDirectory *base = new TSystemDirectory("root","root");
 
-    while (flag!=-1){
-      char filename[300];
-      flag=fscanf(fTable,"%s",filename);
-      // first reading input file
-      if(flag!=-1){
-	std::string tempFile = filename;    
-	infiles.push_back(tempFile);
+      base->SetDirectory(inputFile.data());
+      TList *listOfFiles = base->GetListOfFiles();
+      TIter fileIt(listOfFiles);
+      TFile *fileH = new TFile();
+      int nfile=0;
+      while(fileH = (TFile*)fileIt()) {
+	std::string fileN = fileH->GetName();
+	if( fileH->IsFolder())  continue;
+	if(fileN.find("Zprime") == std::string::npos)continue;
+	fileN = inputFile + "/" + fileN;
+	cout << fileN.data() << endl;
 	nfile++;
+	infiles.push_back(fileN);
       }
+
+      std::cout << "Opened " << nfile << " files" << std::endl;
+
     }
 
-    cout << "nfiles = " << nfile << endl;
-  }
   
 
   cout << "output file name = " << outputFile.Data() << endl;
@@ -59,6 +64,16 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
   
   Long64_t nTotal=0;
   Long64_t nPass[20]={0};
+
+  TH1F* h_mass=new TH1F("h_mass","",60,60,180);
+
+  TH1F* h_fatjetmass=(TH1F*)h_mass->Clone("h_fatjetmass");
+  h_fatjetmass->SetXTitle("Fatjet Pruned mass [GeV]");
+
+  TH1F* h_bbmass=(TH1F*)h_mass->Clone("h_bbmass");
+  h_bbmass->SetXTitle("M_{bb} [GeV]");
+  
+
   TH1F* h_pt=new TH1F("h_pt","",125,0,2500);
   h_pt->SetXTitle("Higgs p_{T} [GeV]");
 
@@ -66,8 +81,13 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
   TH1F* h_numrNoMatch=(TH1F*)h_pt->Clone("h_numrNoMatch");
   TH1F* h_numrFAT=(TH1F*)h_pt->Clone("h_numrFAT");
   TH1F* h_numrTHIN=(TH1F*)h_pt->Clone("h_numrTHIN");
+
+  TH1F* h_numrFATMass=(TH1F*)h_pt->Clone("h_numrFATMass");
+  TH1F* h_numrTHINMass=(TH1F*)h_pt->Clone("h_numrTHINMass");
+
   TH1F* h_numrFATCSV=(TH1F*)h_pt->Clone("h_numrFATCSV");
   TH1F* h_numrTHINCSV=(TH1F*)h_pt->Clone("h_numrTHINCSV");
+
 
   TH1F* h_dR=new TH1F("h_dR","",120,0,6);
   TH1F* h_dR_H  = (TH1F*)h_dR->Clone("h_dR_H");
@@ -140,38 +160,47 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
     Int_t nFATJet         = data.GetInt("FATnJet");
     TClonesArray* fatjetP4 = (TClonesArray*) data.GetPtrTObject("FATjetP4");
     Float_t*  fatjetCISVV2 = data.GetPtrFloat("FATjetCISVV2");
+    Float_t*  fatjetPRmass = data.GetPtrFloat("FATjetPRmass");
 
     const float dRFATMax=myDefinition? 0.8: 0.1;
     bool findAFATJet=false;
+    bool findAFATJetMass=false;
     bool findAFATB=false;
 
     for(int ij=0; ij<nFATJet; ij++)
       {
     	
      	TLorentzVector* thisJet = (TLorentzVector*)fatjetP4->At(ij);
-	if(thisJet->Pt()<30)continue;
+	if(thisJet->Pt()<200)continue;
 	if(fabs(thisJet->Eta())>2.5)continue;
-
-	
-	// if(thisJet->DeltaR(*b_p4[0]) > dRFATMax && myDefinition)continue;
-	// if(thisJet->DeltaR(*b_p4[1]) > dRFATMax && myDefinition)continue;
 
 	h_dR_H->Fill(thisJet->DeltaR(*higgs_p4));
 	h_dR_bb_fat->Fill(thisJet->DeltaR(*b_p4[0]));
 	h_dR_bb_fat->Fill(thisJet->DeltaR(*b_p4[1]));
 
-	if(thisJet->DeltaR(*higgs_p4) > dRFATMax)continue;
+	
+	if(thisJet->DeltaR(*b_p4[0]) > dRFATMax && myDefinition)continue;
+	if(thisJet->DeltaR(*b_p4[1]) > dRFATMax && myDefinition)continue;
 
-
+	if(thisJet->DeltaR(*higgs_p4) > dRFATMax && !myDefinition)continue;
 
 	findAFATJet=true;
+
+
+	h_fatjetmass->Fill(fatjetPRmass[ij]);
+	
+	if(fatjetPRmass[ij]>130 || fatjetPRmass[ij]<90)continue;
+
+
+	findAFATJetMass=true;
+
 
 	if(fatjetCISVV2[ij] < 0.605)continue;
 	if(fatjetCISVV2[ij] > 1)continue;
 
 	findAFATB=true;
 
-	if(findAFATJet && findAFATB)break;
+	if(findAFATJet && findAFATJetMass && findAFATB)break;
 	
       }
     
@@ -180,11 +209,18 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 	h_numrFAT->Fill(higgs_p4->Pt());
 	nPass[1]++;
 
-	if(findAFATB)
-	  {
-	    h_numrFATCSV->Fill(higgs_p4->Pt());
-	    nPass[2]++;
-	  }
+	if(findAFATJetMass){
+
+	  h_numrFATMass->Fill(higgs_p4->Pt());
+	  nPass[2]++;
+
+	  if(findAFATB)
+	    {
+	      h_numrFATCSV->Fill(higgs_p4->Pt());
+	      nPass[3]++;
+	    }
+
+	}
 
       }
 
@@ -193,8 +229,9 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
     TClonesArray* thinjetP4 = (TClonesArray*) data.GetPtrTObject("THINjetP4");
     Float_t*  thinjetCISVV2 = data.GetPtrFloat("THINjetCISVV2");
 
-    bool findATHINJet[2]={false,false};
-    bool findATHINB[2]={false,false};
+    bool findATHINJetPair=false;
+    bool findATHINMassPair=false;
+    bool findATHINBPair=false;
     const float dRTHINMax=myDefinition? 0.4 : 0.1;
     int bjetindex[2]={-1,-1};
     for(int ij=0; ij<nTHINJet; ij++)
@@ -210,54 +247,87 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 	
 	// exclude when the jet is matched to both
 	if(thisJet->DeltaR(*b_p4[0]) < dRTHINMax && thisJet->DeltaR(*b_p4[1]) < dRTHINMax)continue;
-	else if(thisJet->DeltaR(*b_p4[0]) < dRTHINMax && thisJet->DeltaR(*b_p4[1]) > dRTHINMax)
-	  {
-	    findATHINJet[0]=true;
-	    if(thinjetCISVV2[ij]>0.605 && thinjetCISVV2[ij]<1)
-	      {
-		findATHINB[0]=true;
-		bjetindex[0] = ij;
-	      }
-	  }
 
-	else if(thisJet->DeltaR(*b_p4[0]) > dRTHINMax && thisJet->DeltaR(*b_p4[1]) < dRTHINMax)
+	// exclude when the jet is not matched to either
+	if(thisJet->DeltaR(*b_p4[0]) > dRTHINMax && thisJet->DeltaR(*b_p4[1]) > dRTHINMax)continue;
+
+
+	for(int jj=0; jj<ij; jj++)
 	  {
-	    findATHINJet[1]=true;
-	    if(thinjetCISVV2[ij]>0.605 && thinjetCISVV2[ij]<1)
-	      {
-		findATHINB[1]=true;
-		bjetindex[1] = ij;
-	      }
-	  }
+
+	    TLorentzVector* thatJet = (TLorentzVector*)thinjetP4->At(jj);
+	    if(thatJet->Pt()<30)continue;
+	    if(fabs(thatJet->Eta())>2.5)continue;
+
+	    // exclude when the jet is matched to both
+	    if(thatJet->DeltaR(*b_p4[0]) < dRTHINMax && thatJet->DeltaR(*b_p4[1]) < dRTHINMax)continue;
+
+	    // exclude when the jet is not matched to either
+	    if(thatJet->DeltaR(*b_p4[0]) > dRTHINMax && thatJet->DeltaR(*b_p4[1]) > dRTHINMax)continue;
 	    
-	if(findATHINJet[0] && findATHINJet[1] && 
-	   findATHINB[0] && findATHINB[1])break;
+	    if( (thisJet->DeltaR(*b_p4[0]) < dRTHINMax && thisJet->DeltaR(*b_p4[1]) > dRTHINMax &&
+		 thatJet->DeltaR(*b_p4[0]) > dRTHINMax && thatJet->DeltaR(*b_p4[1]) < dRTHINMax) || 
+		(thisJet->DeltaR(*b_p4[0]) > dRTHINMax && thisJet->DeltaR(*b_p4[1]) < dRTHINMax &&
+		 thatJet->DeltaR(*b_p4[0]) < dRTHINMax && thatJet->DeltaR(*b_p4[1]) > dRTHINMax)		 
+		)
 
+	      {
+		findATHINJetPair=true;
+
+
+		float bbmass = (*thisJet+*thatJet).M();
+
+		h_bbmass->Fill(bbmass);
+
+		if(bbmass<100 || bbmass>140)continue;
+
+		findATHINMassPair=true;
+
+		if(thinjetCISVV2[ij]>0.605 && thinjetCISVV2[ij]<1 && 
+		   thinjetCISVV2[jj]>0.605 && thinjetCISVV2[jj]<1)   
+		  {
+		    findATHINBPair=true;
+		    bjetindex[0] = ij;
+		    bjetindex[1] = jj;
+		  }
+	      }
+	    
+	    if(findATHINJetPair && findATHINMassPair && findATHINBPair)
+	      break;
+
+	  }
 	
-      }
+      } //end of double loop
 
 
     
-    if(findATHINJet[0] && findATHINJet[1])
+    if(findATHINJetPair)
       {
 
 	// for(int i=0;i<2;i++)
 	//   std::cout << "b jet index " << i <<  " = " << bjetindex[i] << endl;
 
 	h_numrTHIN->Fill(higgs_p4->Pt());
-	nPass[3]++;
-	if(findATHINB[0] && findATHINB[1])
-	  {
-	    // for(int i=0;i<2;i++)
-	    //   std::cout << "real b jet index " << i <<  " = " << bjetindex[i] << endl;
+	nPass[4]++;
 
-	    h_numrTHINCSV->Fill(higgs_p4->Pt());
-	    nPass[4]++;
+	if(findATHINMassPair){
+
+	  h_numrTHINMass->Fill(higgs_p4->Pt());
+	  nPass[5]++;
+	  
+	  if(findATHINBPair)
+	    {
+	      // for(int i=0;i<2;i++)
+	      //   std::cout << "real b jet index " << i <<  " = " << bjetindex[i] << endl;
+	      
+	      h_numrTHINCSV->Fill(higgs_p4->Pt());
+	      nPass[6]++;
+	    }
 	  }
       }
     
 
-    if( !findAFATJet && !(findATHINJet[0] && findATHINJet[1]))
+    if( !findAFATJet && !findATHINJetPair)
       h_numrNoMatch->Fill(higgs_p4->Pt());
 
    
@@ -276,11 +346,30 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
   tEff->SetName("thinJetEff");
   tEff->SetTitle("Two AK4 jet efficiency; Higgs p_{T} [GeV]; Efficiency");
 
-  TEfficiency* fEffCSV = new TEfficiency(*h_numrFATCSV,*h_numrFAT);
+
+  TEfficiency* fEff2 = new TEfficiency(*h_numrFATMass,*h_deno);
+  fEff2->SetName("fatJetEff2");
+  fEff2->SetTitle("AK8 jet reconstruction + mass cut efficiency; Higgs p_{T} [GeV]; Efficiency");
+
+  TEfficiency* tEff2 = new TEfficiency(*h_numrTHINMass,*h_deno);
+  tEff2->SetName("thinJetEff2");
+  tEff2->SetTitle("Two AK4 jet reconstruction + mass cut efficiency; Higgs p_{T} [GeV]; Efficiency");
+
+
+  TEfficiency* fEffMass = new TEfficiency(*h_numrFATMass, *h_numrFAT);
+  fEffMass->SetName("fatJetMassEff");
+  fEffMass->SetTitle("Higgs mass cut efficiency; Higgs p_{T} [GeV]; Efficiency");
+
+  TEfficiency* tEffMass = new TEfficiency(*h_numrTHINMass, *h_numrTHIN);
+  tEffMass->SetName("thinJetMassEff");
+  tEffMass->SetTitle("Higgs mass cut efficiency; Higgs p_{T} [GeV]; Efficiency");
+
+
+  TEfficiency* fEffCSV = new TEfficiency(*h_numrFATCSV,*h_numrFATMass);
   fEffCSV->SetName("fatJetCSVEff");
   fEffCSV->SetTitle("AK8 CSV efficiency; Higgs p_{T} [GeV]; Efficiency");
 
-  TEfficiency* tEffCSV = new TEfficiency(*h_numrTHINCSV,*h_numrTHIN);
+  TEfficiency* tEffCSV = new TEfficiency(*h_numrTHINCSV,*h_numrTHINMass);
   tEffCSV->SetName("thinJetCSVEff");
   tEffCSV->SetTitle("Two AK4 CSV efficiency; Higgs p_{T} [GeV]; Efficiency");
 
@@ -302,16 +391,29 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
   h_numrNoMatch->Write();
   h_numrFAT->Write();
   h_numrTHIN->Write();
+  h_numrFATMass->Write();
+  h_numrTHINMass->Write();
   h_numrFATCSV->Write();
   h_numrTHINCSV->Write();
+
+
+  h_fatjetmass->Write();
+  h_bbmass->Write();
+
 
   nEff->Write();
 
   fEff->Write();
   tEff->Write(); 
 
+  fEff2->Write();
+  tEff2->Write(); 
+
   fEffTotal->Write();
   tEffTotal->Write(); 
+
+  fEffMass->Write();
+  tEffMass->Write(); 
 
   fEffCSV->Write();
   tEffCSV->Write(); 
