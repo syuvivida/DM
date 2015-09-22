@@ -25,14 +25,18 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 
   if(inputFile.find(".root")!= std::string::npos)
     { 
+      //outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*ZprimeToZhToZlephbb_25ns/}; echo \"jeteff_%s_${test}\"",inputFile.data(),
       outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*ZprimeToZhToZlephbb/}; echo \"jeteff_%s_${test}\"",inputFile.data(),
+      //      outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*MonoHSignalTreesMerged_20150919/}; echo \"jeteff_%s_${test}\"",inputFile.data(),
 					   myName.data()));
       cout << "output file name = " << outputFile.Data() << endl;
       infiles.push_back(inputFile.data());
     }
   else
     {
+      //      outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*jet_CMSSW747/}; echo \"jeteff_%s_${test}.root\"",inputFile.data(),
       outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*signalMC/}; echo \"jeteff_%s_${test}.root\"",inputFile.data(),
+      //      outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*SPRING15/}; echo \"jeteff_%s_${test}.root\"",inputFile.data(),
 					   myName.data()));
       cout << "output file name = " << outputFile.Data() << endl;      
       TSystemDirectory *base = new TSystemDirectory("root","root");
@@ -86,6 +90,9 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
   TH1F* h_numrTHINMass=(TH1F*)h_pt->Clone("h_numrTHINMass");
 
   TH1F* h_numrFATCSV=(TH1F*)h_pt->Clone("h_numrFATCSV");
+  TH1F* h_numrSubCSV1=(TH1F*)h_pt->Clone("h_numrSubCSV1");
+  TH1F* h_numrSubCSV12=(TH1F*)h_pt->Clone("h_numrSubCSV12");
+  TH1F* h_numrSubCSV2=(TH1F*)h_pt->Clone("h_numrSubCSV2");
   TH1F* h_numrTHINCSV=(TH1F*)h_pt->Clone("h_numrTHINCSV");
 
 
@@ -161,11 +168,20 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
     TClonesArray* fatjetP4 = (TClonesArray*) data.GetPtrTObject("FATjetP4");
     Float_t*  fatjetCISVV2 = data.GetPtrFloat("FATjetCISVV2");
     Float_t*  fatjetPRmass = data.GetPtrFloat("FATjetPRmass");
+    Int_t*   nSubSoftDropJet = data.GetPtrInt("FATnSubSDJet");
+    vector<float>   *subjetSDCSV =  data.GetPtrVectorFloat("FATsubjetSDCSV", nFATJet);
+    vector<float>   *subjetSDPx  =  data.GetPtrVectorFloat("FATsubjetSDPx", nFATJet);
+    vector<float>   *subjetSDPy  =  data.GetPtrVectorFloat("FATsubjetSDPy", nFATJet);
+    vector<float>   *subjetSDPz  =  data.GetPtrVectorFloat("FATsubjetSDPz", nFATJet);
+    vector<float>   *subjetSDE   =  data.GetPtrVectorFloat("FATsubjetSDE", nFATJet);
 
     const float dRFATMax=myDefinition? 0.8: 0.1;
     bool findAFATJet=false;
     bool findAFATJetMass=false;
     bool findAFATB=false;
+    bool findASubB1=false;
+    bool findASubB12=false;
+    bool findASubB2=false;
 
     for(int ij=0; ij<nFATJet; ij++)
       {
@@ -189,21 +205,45 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 
 	h_fatjetmass->Fill(fatjetPRmass[ij]);
 	
-	if(fatjetPRmass[ij]>130 || fatjetPRmass[ij]<90)continue;
+	if(fatjetPRmass[ij]>140 || fatjetPRmass[ij]<70)continue;
 
 
 	findAFATJetMass=true;
 
 
-	if(fatjetCISVV2[ij] < 0.605)continue;
-	if(fatjetCISVV2[ij] > 1)continue;
+	if(fatjetCISVV2[ij] > 0.605 && fatjetCISVV2[ij] < 1)	  
+	  findAFATB=true;
 
-	findAFATB=true;
+	int nSubBTag=0;
+	if( nSubSoftDropJet[ij]!=2)
+	  continue;
 
-	if(findAFATJet && findAFATJetMass && findAFATB)break;
+	TLorentzVector sub[2];
+	for(int is=0; is < nSubSoftDropJet[ij]; is++)
+	  {
+	    if(subjetSDCSV[ij][is] < 0.605 || subjetSDCSV[ij][is] >1)continue;
+	    nSubBTag++;
+
+	    sub[is].SetPxPyPzE(
+			       subjetSDPx[ij][is],
+			       subjetSDPy[ij][is],
+			       subjetSDPz[ij][is],
+			       subjetSDE[ij][is]
+			       );
+	    
+	  }
+
+	float subjetdR = sub[0].DeltaR(sub[1]);
+
+	if(nSubBTag>=1)findASubB1=true;
+	if(nSubBTag==2)findASubB2=true;
+	if( (subjetdR<0.3  && nSubBTag==1) || 
+	    (subjetdR>0.3  && nSubBTag==2))
+	  findASubB12=true;
+
 	
       }
-    
+
     if(findAFATJet)
       {
 	h_numrFAT->Fill(higgs_p4->Pt());
@@ -220,9 +260,26 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 	      nPass[3]++;
 	    }
 
-	}
+	  if(findASubB1)
+	    {
+	      h_numrSubCSV1->Fill(higgs_p4->Pt());
+	      nPass[4]++;
+	    }
+	  if(findASubB12)
+	    {
+	      h_numrSubCSV12->Fill(higgs_p4->Pt());
+	      nPass[5]++;
+	    }
+	  if(findASubB2)
+	    {
+	      h_numrSubCSV2->Fill(higgs_p4->Pt());
+	      nPass[6]++;
+	    }
 
-      }
+
+	} // pass mass window
+	
+      } // find a fatjet
 
     //// THIN Jet
     Int_t nTHINJet         = data.GetInt("THINnJet");
@@ -279,7 +336,7 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 
 		h_bbmass->Fill(bbmass);
 
-		if(bbmass<100 || bbmass>140)continue;
+		if(bbmass< 80 || bbmass>150)continue;
 
 		findATHINMassPair=true;
 
@@ -308,12 +365,12 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 	//   std::cout << "b jet index " << i <<  " = " << bjetindex[i] << endl;
 
 	h_numrTHIN->Fill(higgs_p4->Pt());
-	nPass[4]++;
+	nPass[7]++;
 
 	if(findATHINMassPair){
 
 	  h_numrTHINMass->Fill(higgs_p4->Pt());
-	  nPass[5]++;
+	  nPass[8]++;
 	  
 	  if(findATHINBPair)
 	    {
@@ -321,7 +378,7 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 	      //   std::cout << "real b jet index " << i <<  " = " << bjetindex[i] << endl;
 	      
 	      h_numrTHINCSV->Fill(higgs_p4->Pt());
-	      nPass[6]++;
+	      nPass[9]++;
 	    }
 	  }
       }
@@ -367,7 +424,22 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 
   TEfficiency* fEffCSV = new TEfficiency(*h_numrFATCSV,*h_numrFATMass);
   fEffCSV->SetName("fatJetCSVEff");
-  fEffCSV->SetTitle("AK8 CSV efficiency; Higgs p_{T} [GeV]; Efficiency");
+  fEffCSV->SetTitle("AK8 Fatjet CSV efficiency; Higgs p_{T} [GeV]; Efficiency");
+
+
+  TEfficiency* fEffCSV1 = new TEfficiency(*h_numrSubCSV1,*h_numrFATMass);
+  fEffCSV1->SetName("subJetCSVEff1");
+  fEffCSV1->SetTitle("AK8 Subjet CSV efficiency; Higgs p_{T} [GeV]; Efficiency");
+
+  TEfficiency* fEffCSV12 = new TEfficiency(*h_numrSubCSV12,*h_numrFATMass);
+  fEffCSV12->SetName("subJetCSVEff12");
+  fEffCSV12->SetTitle("AK8 Subjet CSV efficiency; Higgs p_{T} [GeV]; Efficiency");
+
+  TEfficiency* fEffCSV2 = new TEfficiency(*h_numrSubCSV2,*h_numrFATMass);
+  fEffCSV2->SetName("subJetCSVEff2");
+  fEffCSV2->SetTitle("AK8 Subjet CSV efficiency; Higgs p_{T} [GeV]; Efficiency");
+
+
 
   TEfficiency* tEffCSV = new TEfficiency(*h_numrTHINCSV,*h_numrTHINMass);
   tEffCSV->SetName("thinJetCSVEff");
@@ -380,6 +452,19 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
   TEfficiency* tEffTotal = new TEfficiency(*h_numrTHINCSV,*h_deno);
   tEffTotal->SetName("thinJetTotalEff");
   tEffTotal->SetTitle("Two AK4 total efficiency; Higgs p_{T} [GeV]; Efficiency");
+
+  TEfficiency* fEffTotal1 = new TEfficiency(*h_numrSubCSV1,*h_deno);
+  fEffTotal1->SetName("fatJetTotalEff1");
+  fEffTotal1->SetTitle("AK8 total efficiency; Higgs p_{T} [GeV]; Efficiency");
+
+  TEfficiency* fEffTotal12 = new TEfficiency(*h_numrSubCSV12,*h_deno);
+  fEffTotal12->SetName("fatJetTotalEff12");
+  fEffTotal12->SetTitle("AK8 total efficiency; Higgs p_{T} [GeV]; Efficiency");
+
+  TEfficiency* fEffTotal2 = new TEfficiency(*h_numrSubCSV2,*h_deno);
+  fEffTotal2->SetName("fatJetTotalEff2");
+  fEffTotal2->SetTitle("AK8 total efficiency; Higgs p_{T} [GeV]; Efficiency");
+
 
   TFile* outFile = new TFile(outputFile.Data(),"recreate");
 
@@ -395,6 +480,10 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
   h_numrTHINMass->Write();
   h_numrFATCSV->Write();
   h_numrTHINCSV->Write();
+
+  h_numrSubCSV1->Write();
+  h_numrSubCSV12->Write();
+  h_numrSubCSV2->Write();
 
 
   h_fatjetmass->Write();
@@ -412,11 +501,20 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
   fEffTotal->Write();
   tEffTotal->Write(); 
 
+  fEffTotal1->Write();
+  fEffTotal12->Write();
+  fEffTotal2->Write();
+
   fEffMass->Write();
   tEffMass->Write(); 
 
   fEffCSV->Write();
   tEffCSV->Write(); 
+
+
+  fEffCSV1->Write();
+  fEffCSV12->Write();
+  fEffCSV2->Write();
 
 
   outFile->Close();

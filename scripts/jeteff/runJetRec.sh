@@ -11,3 +11,6 @@ root -q -b xAna_recJetEff.C++\(\"/data7/syu/13TeV_signalMC/ZprimeToZhToZlephbb\"
 root -q -b call_plotAllEff.C\(\"jeteff_myDefinition_ZprimeToZhToZlephbb.root\"\)
 
 root -q -b call_plotAllEff.C\(\"jeteff_JETMET_ZprimeToZhToZlephbb.root\"\)
+
+mv jeteff_myDefinition_ZprimeToZhToZlephbb.root jeteff/.
+mv jeteff_JETMET_ZprimeToZhToZlephbb.root jeteff/.
