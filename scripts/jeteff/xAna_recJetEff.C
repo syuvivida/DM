@@ -17,7 +17,7 @@
 #include <TList.h>
 
 using namespace std;
-void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
+void xAna_recJetEff(std::string inputFile, int mode=0, bool myDefinition=true){
 
   std::vector<string> infiles;
   TString outputFile;
@@ -25,19 +25,30 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 
   if(inputFile.find(".root")!= std::string::npos)
     { 
-      //outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*ZprimeToZhToZlephbb_25ns/}; echo \"jeteff_%s_${test}\"",inputFile.data(),
-      // outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*ZprimeToZhToZlephbb/}; echo \"jeteff_%s_${test}\"",inputFile.data(),
-      outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*MonoHSignalTreesMerged_20150919/}; echo \"jeteff_%s_${test}\"",inputFile.data(),
-					   myName.data()));
+      if(mode==0) // default miniAOD
+	outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*ZprimeToZhToZlephbb/}; echo \"jeteff_%s_${test}\"",inputFile.data(),
+					     myName.data()));
+      else if(mode==1) // with jet energy correction
+	outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*ZprimeToZhToZlephbb_25ns/}; echo \"jeteff_%s_${test}\"",inputFile.data(),
+					     myName.data()));
+      else if(mode==2)
+	outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*MonoHSignalTreesMerged_20150919/}; echo \"jeteff_%s_${test}\"",inputFile.data(),
+					     myName.data()));
       cout << "output file name = " << outputFile.Data() << endl;
       infiles.push_back(inputFile.data());
     }
   else
     {
-      //outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*jet_CMSSW747/}; echo \"jeteff_%s_${test}.root\"",inputFile.data(),
-      //outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*signalMC/}; echo \"jeteff_%s_${test}.root\"",inputFile.data(),
-      outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*SPRING15/}; echo \"jeteff_%s_${test}.root\"",inputFile.data(),
+      if(mode==0)
+	outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*signalMC/}; echo \"jeteff_%s_${test}.root\"",inputFile.data(),
 					   myName.data()));
+      else if(mode==1)
+	outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*jet_CMSSW747/}; echo \"jeteff_%s_${test}.root\"",inputFile.data(),
+					   myName.data()));
+      else if(mode==2)
+	outputFile=gSystem->GetFromPipe(Form("file=%s; test=${file##*SPRING15/}; echo \"jeteff_%s_${test}.root\"",inputFile.data(),
+					   myName.data()));
+
       cout << "output file name = " << outputFile.Data() << endl;      
       TSystemDirectory *base = new TSystemDirectory("root","root");
 
@@ -78,8 +89,11 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
   h_bbmass->SetXTitle("M_{bb} [GeV]");
   
 
-  // TH1F* h_pt=new TH1F("h_pt","",125,0,2500);
-  TH1F* h_pt=new TH1F("h_pt","",75,0,1500);
+  TH1F* h_pt;
+  if(mode==0 || mode==1)
+    h_pt=new TH1F("h_pt","",125,0,2500);
+  else
+    h_pt=new TH1F("h_pt","",125,0,1500);
   h_pt->SetXTitle("Higgs p_{T} [GeV]");
 
   TH1F* h_deno=(TH1F*)h_pt->Clone("h_deno"); 
@@ -169,7 +183,9 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
     TClonesArray* fatjetP4 = (TClonesArray*) data.GetPtrTObject("FATjetP4");
     Float_t*  fatjetCISVV2 = data.GetPtrFloat("FATjetCISVV2");
     Float_t*  fatjetPRmass = data.GetPtrFloat("FATjetPRmass");
-    // Float_t*  fatjetPRmassCorr = data.GetPtrFloat("FATjetPRmassL2L3Corr");
+    Float_t*  fatjetPRmassCorr;
+    if(mode==1)
+      fatjetPRmassCorr= data.GetPtrFloat("FATjetPRmassL2L3Corr");
     Int_t*   nSubSoftDropJet = data.GetPtrInt("FATnSubSDJet");
     vector<float>   *subjetSDCSV =  data.GetPtrVectorFloat("FATsubjetSDCSV", nFATJet);
     vector<float>   *subjetSDPx  =  data.GetPtrVectorFloat("FATsubjetSDPx", nFATJet);
@@ -205,11 +221,15 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 	findAFATJet=true;
 
 
-	h_fatjetmass->Fill(fatjetPRmass[ij]);
-	if(fatjetPRmass[ij]<70 || fatjetPRmass[ij]>140)continue;
+	if(mode==0 || mode==2){
+	  h_fatjetmass->Fill(fatjetPRmass[ij]);
+	  if(fatjetPRmass[ij]<70 || fatjetPRmass[ij]>140)continue;
+	}
 
-	// h_fatjetmass->Fill(fatjetPRmassCorr[ij]);	
-	// if(fatjetPRmassCorr[ij]<80 || fatjetPRmassCorr[ij]>150)continue;
+	else if(mode==1){
+	  h_fatjetmass->Fill(fatjetPRmassCorr[ij]);	
+	  if(fatjetPRmassCorr[ij]<80 || fatjetPRmassCorr[ij]>150)continue;
+	}
 
 	findAFATJetMass=true;
 
@@ -240,7 +260,7 @@ void xAna_recJetEff(std::string inputFile, bool myDefinition=true){
 
 	if(nSubBTag>=1)findASubB1=true;
 	if(nSubBTag==2)findASubB2=true;
-	if( (subjetdR<0.3  && nSubBTag==1) || 
+	if( (subjetdR<0.3  && nSubBTag>=1) || 
 	    (subjetdR>0.3  && nSubBTag==2))
 	  findASubB12=true;
 

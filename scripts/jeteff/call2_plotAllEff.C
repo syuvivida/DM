@@ -4,8 +4,9 @@
 
 using namespace std;
 
-void call2_plotAllEff(string filename)
+void call2_plotAllEff(string filename, string outdir)
 {
+  
 
   bool JETMET=false;
   if(filename.find("JETMET")!= std::string::npos)
@@ -47,7 +48,7 @@ void call2_plotAllEff(string filename)
 
   cuts.push_back("p_{T}>30 GeV, |#eta|<2.5");
   
-  plotAllEff(filename,effnames,
+  plotAllEff(outdir,filename,effnames,
 	     ";Generator-level Higgs p_{T} [GeV];Efficiency;",
       	     legends,
 	     cuts,
@@ -74,7 +75,7 @@ void call2_plotAllEff(string filename)
   effnames.push_back("thinJetEff2");
   cuts.push_back("70<M_{pruned}<140 GeV");
   cuts.push_back("80<M_{bb}<150 GeV");
-  plotAllEff(filename,effnames,
+  plotAllEff(outdir,filename,effnames,
     	     ";Generator-level Higgs p_{T} [GeV];Efficiency;",
 	     legends,
 	     cuts,
@@ -113,7 +114,7 @@ void call2_plotAllEff(string filename)
   cuts.push_back("80<M_{bb}<150 GeV");
 
 
-  plotAllEff(filename,effnames,
+  plotAllEff(outdir,filename,effnames,
     	     ";Generator-level Higgs p_{T} [GeV];Efficiency;",
 	     legends,
 	     cuts,
@@ -174,7 +175,7 @@ void call2_plotAllEff(string filename)
   cuts.push_back("");
 
   
-  plotAllEff(filename,effnames,
+  plotAllEff(outdir,filename,effnames,
        	     ";Generator-level Higgs p_{T} [GeV];Efficiency;",
      	     legends,
       	     cuts,
@@ -206,7 +207,7 @@ void call2_plotAllEff(string filename)
   cuts.clear();
   cuts.push_back("CISVV2 > 0.605");
 
-  plotAllEff(filename,effnames,
+  plotAllEff(outdir,filename,effnames,
    	     ";Generator-level Higgs p_{T} [GeV];Efficiency;",
   	     legends,
   	     cuts,

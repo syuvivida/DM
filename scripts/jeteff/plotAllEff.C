@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void plotAllEff(string inputFile, vector<string> effnames, string title, 
+void plotAllEff(string outputdir, string inputFile, vector<string> effnames, string title, 
 		vector<vector<string>> legends,
 		vector<string> cuts,
 		string outputprefix,
@@ -113,9 +113,9 @@ void plotAllEff(string inputFile, vector<string> effnames, string title,
   lar2->Draw("same");
   pavetex->Draw("same");
 
-  gSystem->mkdir("jeteff");
+  gSystem->mkdir(outputdir.data());
 
-  std::string outputname = "jeteff/" + outputprefix;
+  std::string outputname = outputdir + "/" + outputprefix;
   c1->Print(Form("%s.pdf",outputname.data()));
   c1->Print(Form("%s.eps",outputname.data()));
   c1->Print(Form("%s.C",outputname.data()));
