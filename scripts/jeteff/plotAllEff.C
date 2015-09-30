@@ -33,17 +33,17 @@ void plotAllEff(string outputdir, string inputFile, vector<string> effnames, str
   const unsigned int nfiles = effnames.size();
   TEfficiency* h[nfiles];
 
-  int color[5]={1, kRed, kBlue, kGreen+2, kMagenta};
+  int color[8]={1, kRed, kOrange-3, kYellow, kGreen+2, kAzure+10, kBlue, kViolet-3};
 
   for(unsigned int i=0;i<nfiles;i++)
     {
       h[i]  =(TEfficiency*)inf->FindObjectAny(effnames[i].data());
       h[i]->SetFillStyle(3144);
-      h[i]->SetMarkerColor(color[i%5]);
+      h[i]->SetMarkerColor(color[i%8]);
       h[i]->SetMarkerStyle(20+i);
       h[i]->SetMarkerSize(0.5);
-      h[i]->SetLineColor(color[i%5]);
-      h[i]->SetFillColor(color[i%5]);
+      h[i]->SetLineColor(color[i%8]);
+      h[i]->SetFillColor(color[i%8]);
       h[i]->SetTitle(title.data());
 
     }

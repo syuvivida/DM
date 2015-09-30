@@ -24,6 +24,19 @@ root -q -b call_plotAllEff.C\(\"jeteff_JETMET_ZprimeToZhToZlephbb_25ns.root\",1\
 mv jeteff_myDefinition_ZprimeToZhToZlephbb_25ns.root jeteff_mass/.
 mv jeteff_JETMET_ZprimeToZhToZlephbb_25ns.root jeteff_mass/.
 
+for file in $(ls /data7/syu/jet_CMSSW747/ZprimeToZhToZlephbb_25ns/ZprimeToZhToZlephbb*)
+do
+    root -q -b xAna_recJetEff.C++\(\"$file\",1,true\)
+    root -q -b xAna_recJetEff.C++\(\"$file\",1,false\)
+    test=${file##*ZprimeToZhToZlephbb_25ns/};
+    test3=${test%%-madgraph.root}
+    dir=jeteff_mass/$test3
+    root -q -b call2_plotAllEff.C\(\"jeteff_myDefinition_${test}\",\"$dir\",1\)
+    root -q -b call2_plotAllEff.C\(\"jeteff_JETMET_${test}\",\"$dir\",1\)
+    mv jeteff_myDefinition_${test} $dir/.
+    mv jeteff_JETMET_${test} $dir/.
+done
+
 
 root -q -b xAna_recJetEff.C++\(\"/data7/khurana/NCUGlobalTuples/SPRING15/MonoHSignalTreesMerged_20150919\",2,true\)
 root -q -b xAna_recJetEff.C++\(\"/data7/khurana/NCUGlobalTuples/SPRING15/MonoHSignalTreesMerged_20150919\",2,false\)
@@ -47,3 +60,4 @@ do
     mv jeteff_myDefinition_${test} $dir/.
     mv jeteff_JETMET_${test} $dir/.
 done
+
