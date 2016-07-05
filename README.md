@@ -11,6 +11,4 @@ git add xxxx
 
 git commit -m "remove lines"
 
-git pull --rebase upstream v0.04
-
 git push origin v0.04
