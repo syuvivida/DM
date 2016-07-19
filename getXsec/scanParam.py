@@ -37,7 +37,7 @@ def replaceMA0(searchExp,replaceExp):
     for line in fileinput.input(fileName, inplace=1):
     	if line.lower().find('ma0')>0 and line.find('28')>0:
             line = line.replace(searchExp,replaceExp)
- 	if line.lower().find("mh__2")>0 and line.find("26")>0:
+ 	if line.lower().find("mhn")>0 and line.find("26")>0:
 	    line = line.replace(searchExp,replaceExp)
 	if line.lower().find("mhp")>0 and line.find("27")>0:
 	    line = line.replace(searchExp,replaceExp)
@@ -45,7 +45,7 @@ def replaceMA0(searchExp,replaceExp):
 
 def replaceMDM(searchExp,replaceExp):
     for line in fileinput.input(fileName, inplace=1):
-    	if line.lower().find('mx')>0 and line.find('1000022')>0:
+    	if line.lower().find('mx')>0 and line.find('18')>0:
             line = line.replace(searchExp,replaceExp)
         sys.stdout.write(line)
 
