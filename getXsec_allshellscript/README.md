@@ -51,5 +51,9 @@ cd ..
 cd Cards
 chmod 755 makeXsec.sh
 ./makeXsec.sh >& xsec.txt
+```
+
+Need to watch out that sometimes one or two mass points fail and the cross sections will not be filled in properly in the 2D histograms
+```
 root -l makeXsec.C++
 ```
