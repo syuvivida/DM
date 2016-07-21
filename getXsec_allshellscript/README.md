@@ -32,6 +32,7 @@ curl https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec_allshellscript
 cd ..
 ./bin/generate_events -f
 cd Cards
+chmod 755 makeXsec.sh
 ./makeXsec.sh >& xsec.txt
 root -l makeXsec.C++
 ```
