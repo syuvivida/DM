@@ -28,6 +28,9 @@ curl https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec_allshellscript
 curl https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec_allshellscript/setNCUStyle.C -o setNCUStyle.C
 ```
 
+Set lhapdf to 263000 for gz=0.8 in the run card
+Set lhapdf to 263400 for gz=formula in the run card
+
 ### Scanning the mass points, takes about 40 mins
 ```
 cd ..

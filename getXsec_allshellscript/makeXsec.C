@@ -38,9 +38,9 @@ void makeXsec(){
 	int massA[6]={300,400,500,600,700,800};
 	fstream file1("xsec.txt");
 	TH2D* th2=new TH2D("xsec","xsec",8,0,8,6,0,6);
-	double db[2][2]={0};
-	for (int i=0;i<2;i++){
-		for (int j=0;j<2;j++){
+	double db[8][6]={0};
+	for (int i=0;i<8;i++){
+		for (int j=0;j<6;j++){
 			file1>>db[i][j];
 			cout<<db[i][j];
 			th2->SetBinContent(i+1,j+1,db[i][j]);
