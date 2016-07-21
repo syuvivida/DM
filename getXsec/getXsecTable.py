@@ -78,7 +78,7 @@ def main():
 
 	hAList = gethAList(hA_files)
 
-	histo_hA0 = TH2F('xsec1','Xsec(gz=formula) pdf setting 653000', 12, 500,2800,8,200,900)
+	histo_hA0 = TH2F('xsec1','Xsec(gz=0.8) pdf setting 263400', 12, 500,2800,8,200,900)
 	histo_hA0.SetXTitle("M_Zp (GeV)")
 	histo_hA0.SetYTitle("M_A0 (GeV)")
 	histo_hA0.SetStats(0)
