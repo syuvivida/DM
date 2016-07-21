@@ -34,7 +34,7 @@ curl https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec_allshellscript
 curl https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec_allshellscript/makeXsec.C -o makeXsec.C
 curl https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec_allshellscript/setNCUStyle.C -o setNCUStyle.C
 ```
-### Modify card settings
+## Modify card settings
 
 Set lhapdf to 263000 for gz=0.8 in the run card
 Set lhapdf to 263400 for gz=formula in the run card
