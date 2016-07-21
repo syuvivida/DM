@@ -22,7 +22,7 @@
 #include <TSystem.h>
 #include <string>
 #include <sstream>
-#include "../HHbbbbAnalyzer/setNCUStyle.C"
+#include "setNCUStyle.C"
 #include<TH2.h>
 #include "TLine.h"
 #include "TF1.h"

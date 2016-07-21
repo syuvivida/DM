@@ -25,9 +25,10 @@ curl https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec_allshellscript
 curl https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec_allshellscript/param_card.dat -o param_card.dat
 curl https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec_allshellscript/makeXsec.sh -o makeXsec.sh
 curl https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec_allshellscript/makeXsec.C -o makeXsec.C
+curl https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec_allshellscript/setNCUStyle.C -o setNCUStyle.C
 ```
 
-### Scanning the mass points
+### Scanning the mass points, takes about 40 mins
 ```
 cd ..
 ./bin/generate_events -f
