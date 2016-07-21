@@ -38,7 +38,7 @@ def getMA0Value(readLine):
 	return ma0Value
 
 def getMDMValue(readLine):
-	mdmValue = float(readLine.strip().split(' # ')[0].split('1000022 ')[1])
+	mdmValue = float(readLine.strip().split(' # ')[0].split('18 ')[1])
 	return mdmValue
 
 def getWeightValue(readLine):
