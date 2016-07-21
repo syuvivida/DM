@@ -6,12 +6,6 @@ bash
 source gridpack_generation.sh interactive
 ```
 
-## Obtain the 2HDM models (gz as external parameter)
-```
-cd MG5_aMC_v2_3_3/models
-tar xvzf /afs/cern.ch/cms/generators/www/MonoHiggs_Zp2HDM_v1.4.tgz
-mv Zp2HDM_v1.4 Zp2HDM
-```
 
 ## Obtain the 2HDM models (gz as formula)
 ```
