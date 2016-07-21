@@ -6,6 +6,13 @@ bash
 source gridpack_generation.sh interactive
 ```
 
+## Obtain the 2HDM models (gz as formula)
+```
+cd MG5_aMC_v2_3_3/models
+tar xvzf /afs/cern.ch/cms/generators/www/MonoHiggs_Zp2HDM_v1.4.tgz 
+mv Zp2HDM_v1.4 Zp2HDM
+```
+
 
 ## Obtain the 2HDM models (gz as formula)
 ```
@@ -27,10 +34,15 @@ curl https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec_allshellscript
 curl https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec_allshellscript/makeXsec.C -o makeXsec.C
 curl https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec_allshellscript/setNCUStyle.C -o setNCUStyle.C
 ```
+### Modify card settings
 
 Set lhapdf to 263000 for gz=0.8 in the run card
 Set lhapdf to 263400 for gz=formula in the run card
 
+Remove the line below in the prameter card when using gz=formula
+```
+2 8.000000e-01 # gz 
+```
 ### Scanning the mass points, takes about 40 mins
 ```
 cd ..
