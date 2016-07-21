@@ -37,13 +37,14 @@ curl https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec_allshellscript
 ## Modify card settings
 
 Set lhapdf to 263000 for gz=0.8 in the run card
+
 Set lhapdf to 263400 for gz=formula in the run card
 
 Remove the line below in the prameter card when using gz=formula
 ```
 2 8.000000e-01 # gz 
 ```
-### Scanning the mass points, takes about 40 mins
+## Scanning the mass points, takes about 40 mins
 ```
 cd ..
 ./bin/generate_events -f
