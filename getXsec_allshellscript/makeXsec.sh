@@ -61,7 +61,7 @@ do
      out2=${out1##*Cross-section :}
      #echo $out2
      out3=${out2% +-*}
-     echo $out3
+     echo $out3" "$i" "$j
      cd Cards/
     done
 done

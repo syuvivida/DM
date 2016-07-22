@@ -40,7 +40,7 @@ Set lhapdf to 263000 for gz=0.8 in the run card
 
 Set lhapdf to 263400 for gz=formula in the run card
 
-Remove the line below in the prameter card when using gz=formula
+Remove the line below in the parameter card when using gz=formula
 ```
 2 8.000000e-01 # gz 
 ```
@@ -53,7 +53,7 @@ chmod 755 makeXsec.sh
 ./makeXsec.sh >& xsec.txt
 ```
 
-Need to watch out that sometimes one or two mass points fail and the cross sections will not be filled in properly in the 2D histograms
+Need to watch out that sometimes one or two mass points fail and the cross sections will not be filled in properly in the 2D histograms. In this case you will have to run one job specificly for this mass point.
 ```
 root -l makeXsec.C++
 ```
