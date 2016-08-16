@@ -13,6 +13,8 @@ The mono Higgs gridpacks are in these directories
 and 
 /cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.2.2/monoHiggs/ 
 
+An example of dirName is "/cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.0/monoHiggs/Zp2HDM/Zprime_A0h_A0chichi/v1/"
+
 The number of events per job should be in the range between 100 to 1000.
 
 ```
