@@ -10,6 +10,9 @@ def prepare(directory,nevents,njobs):
     if int(nevents) < 1:
         print "Number of events too small"
         quit()
+    elif int(nevents) > 1000:
+        print "Number of events too big"
+        quit()
     print "Number of events per job is", nevents
 
     if int(njobs) < 1:
