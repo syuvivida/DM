@@ -28,25 +28,31 @@ source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh
 python MultiCrab_stepLHE.py submit
 ```
 
-## Check the status of jobs
+## Check the status of stepLHE jobs
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh
-python MultiCrab_stepLHE.py status <work_directory>
+python MultiCrab_stepLHE.py status crab_projects_MonoHStepLHE
 ```
 
 ## Prepare the input files for step0
 Make sure your stepLHE jobs finish OK before you move to step0 (check the status).
 
-The "dataset.txt" below is the input files for stepLHE:
+The "dataset.txt" below is the text file from the "prepare" step of stepLHE:
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh
 python MultiCrab_step0.py prepare dataset.txt
 ```
 A text file "step0_inputdataset.txt" will be created. 
-The first column lists the dataset name of stepLHE files and the second column lists the crab directory to be used when submitting jobs.
+The first column lists the input dataset names and the second column lists the crab directory to be used when submitting jobs.
 
 ## Submit the jobs of step0
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh
 python MultiCrab_step0.py submit
 ``` 
+
+## Check the status of step0 jobs
+```
+source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh
+python MultiCrab_step0.py status crab_projects_MonoHStep0
+```
