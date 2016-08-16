@@ -13,7 +13,7 @@ The mono Higgs gridpacks are in these directories
 and 
 /cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.2.2/monoHiggs/
 ```
-python python MultiCrab_stepLHE.py prepare <dirName> <NumberOfEventsPerjob> <NumberOfJobs>
+python MultiCrab_stepLHE.py prepare <dirName> <NumberOfEventsPerjob> <NumberOfJobs>
 ```
 
 If you do not want to submit jobs for all the gridpacks listed in dataset.txt, you could modify dataset.txt.
