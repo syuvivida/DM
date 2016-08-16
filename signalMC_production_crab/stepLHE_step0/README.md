@@ -7,6 +7,16 @@ cd CMSSW_7_1_20/src
 cmsenv
 ```
 
+## Download codes from github
+```
+git clone git@github.com:syuvivida/DM.git DM
+cd DM
+git checkout v0.05
+cd -
+mv DM/signalMC_production_crab/stepLHE_step0/* .
+rm -rf DM
+```
+
 ## Prepare the input files for stepLHE
 The mono Higgs gridpacks are in these directories
 /cvmfs/cms.cern.ch/phys_generator/gridpacks/slc6_amd64_gcc481/13TeV/madgraph/V5_2.3.0/monoHiggs
