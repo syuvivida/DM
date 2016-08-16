@@ -20,11 +20,13 @@ If you do not want to submit jobs for all the gridpacks listed in dataset.txt, y
 
 ## Submit the jobs of stepLHE
 ```
+source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh
 python MultiCrab_stepLHE.py submit
 ```
 
 ## Check the status of jobs
 ```
+source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh
 python MultiCrab_stepLHE.py status <work_directory>
 ```
  
