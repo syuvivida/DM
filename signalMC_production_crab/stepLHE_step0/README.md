@@ -29,4 +29,18 @@ python MultiCrab_stepLHE.py submit
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh
 python MultiCrab_stepLHE.py status <work_directory>
 ```
- 
+
+## Prepare the input files for step0
+Make sure your stepLHE jobs finish OK before you move to step0
+Check the status of stepLHE jobs before you move on
+The "dataset.txt" below is the input files for stepLHE
+```
+source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh
+python MultiCrab_step0.py prepare dataset.txt
+```
+
+## Submit the jobs of step0
+```
+source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh
+python MultiCrab_step0.py submit
+``` 
