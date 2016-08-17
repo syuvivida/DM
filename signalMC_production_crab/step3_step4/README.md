@@ -18,6 +18,9 @@ A text file "step3_inputdataset.txt" will be created.
 
 
 ## CMSSW setup for step3 and step4
+
+Note, you should run the following commands in a different directory. 
+
 ```
 setenv SCRAM_ARCH slc6_amd64_gcc530 (bash: export SCRAM_ARCH=slc6_amd64_gcc530)
 source /afs/cern.ch/cms/cmsset_default.csh (bash: source /afs/cern.ch/cms/cmsset_default.sh)
@@ -38,7 +41,7 @@ rm -rf DM
 ```
 
 ## Prepare the input files for step3
-copy the file step2_inputdataset.txt to the directory CMSSW_8_0_11/src/
+copy the file step3_inputdataset.txt to the directory CMSSW_8_0_11/src/
 
 ## Submit the jobs of step3
 ```

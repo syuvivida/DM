@@ -18,6 +18,9 @@ A text file "step1_inputdataset.txt" will be created.
 
 
 ## CMSSW setup for step1 and step2
+
+Note, you should run the following commands in a different directory.
+
 ```
 setenv SCRAM_ARCH slc6_amd64_gcc530 (bash: export SCRAM_ARCH=slc6_amd64_gcc530)
 source /afs/cern.ch/cms/cmsset_default.csh (bash: source /afs/cern.ch/cms/cmsset_default.sh)
