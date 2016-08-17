@@ -2,6 +2,7 @@
 ## CMSSW setup for stepLHE and step0 
 ```
 setenv SCRAM_ARCH slc6_amd64_gcc481 (bash: export SCRAM_ARCH=slc6_amd64_gcc481)
+source  /afs/cern.ch/cms/cmsset_default.csh (bash: source  /afs/cern.ch/cms/cmsset_default.sh)
 cmsrel CMSSW_7_1_20
 cd CMSSW_7_1_20/src
 cmsenv
