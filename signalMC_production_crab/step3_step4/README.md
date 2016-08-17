@@ -11,6 +11,7 @@ cd CMSSW_8_0_3_patch2/src
 cmsenv
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 curl https://raw.githubusercontent.com/syuvivida/DM/v0.05/signalMC_production_crab/step3_step4/MultiCrab_step3.py -o MultiCrab_step3.py
+voms-proxy-init --voms cms
 python MultiCrab_step3.py prepare step2_inputdataset.txt
 ```
 A text file "step3_inputdataset.txt" will be created.
@@ -42,12 +43,14 @@ copy the file step2_inputdataset.txt to the directory CMSSW_8_0_11/src/
 ## Submit the jobs of step3
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
+voms-proxy-init --voms cms
 python MultiCrab_step3.py submit
 ```
 
 ## Check the status of step3 jobs
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
+voms-proxy-init --voms cms
 python MultiCrab_step3.py status crab_projects_MonoHStep3
 ```
 
@@ -57,6 +60,7 @@ Make sure your step3 jobs finish OK before you move to step4 (check the status).
 The "step3_inputdataset.txt" below is the text file from the "prepare" step of step3:
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
+voms-proxy-init --voms cms
 python MultiCrab_step4.py prepare step3_inputdataset.txt
 ```
 A text file "step4_inputdataset.txt" will be created. 
@@ -65,11 +69,13 @@ The first column lists the input dataset names and the second column lists the c
 ## Submit the jobs of step4
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
+voms-proxy-init --voms cms
 python MultiCrab_step4.py submit
 ``` 
 
 ## Check the status of step4 jobs
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
+voms-proxy-init --voms cms
 python MultiCrab_step4.py status crab_projects_MonoHStep4
 ```
