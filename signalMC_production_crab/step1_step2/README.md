@@ -51,3 +51,25 @@ source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cer
 python MultiCrab_step1.py status crab_projects_MonoHStep1
 ```
 
+## Prepare the input files for step2
+Make sure your step1 jobs finish OK before you move to step2 (check the status).
+
+The "step1_inputdataset.txt" below is the text file from the "prepare" step of step1:
+```
+source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
+python MultiCrab_step2.py prepare step1_inputdataset.txt
+```
+A text file "step2_inputdataset.txt" will be created. 
+The first column lists the input dataset names and the second column lists the crab directory to be used when submitting jobs.
+
+## Submit the jobs of step2
+```
+source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
+python MultiCrab_step2.py submit
+``` 
+
+## Check the status of step2 jobs
+```
+source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
+python MultiCrab_step2.py status crab_projects_MonoHStep2
+```
