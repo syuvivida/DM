@@ -50,6 +50,18 @@ voms-proxy-init --voms cms
 python MultiCrab_step1.py submit
 ```
 
+## If you are running step1 on an official GEN-SIM sample
+
+Prepare your own "step1_inputdataset.txt". The first column should be the dataset name from https://cmsweb.cern.ch/das/ and the second column is the corresponding name of the crab workDirectory.
+
+```
+source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
+voms-proxy-init --voms cms
+
+python MultiCrab_step1.py submit official
+```
+
+
 ## Check the status of step1 jobs
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)

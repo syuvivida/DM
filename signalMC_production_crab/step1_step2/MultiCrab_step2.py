@@ -16,7 +16,7 @@ def prepare(dataset):
         os.system(name)
 
 
-def submit():
+def submit(official):
     print "submitting"
     f = open('step2_inputdataset.txt','r')
     for line in f:
@@ -26,7 +26,10 @@ def submit():
         a,b = line.split()
         datasetdetail=[a,b]
         print datasetdetail
-        name='crab submit -c crabConfig_step2.py General.requestName=step2-'+datasetdetail[1]+' Data.inputDataset='+datasetdetail[0]
+        if not official:
+            name='crab submit -c crabConfig_step2.py General.requestName=step2-'+datasetdetail[1]+' Data.inputDataset='+datasetdetail[0]
+        else: 
+            name='crab submit -c crabConfig_step2.py General.requestName=step2-'+datasetdetail[1]+' Data.inputDataset='+datasetdetail[0]+' Data.inputDBS=global'
         print name
         os.system(name)
 
@@ -77,7 +80,11 @@ if sys.argv[1] == "prepare" :
 ## submit jobs 
 if len(sys.argv) == 2 :
     if sys.argv[1] == "submit" :
-        submit()
+        submit(False)
+
+if len(sys.argv) == 3 :
+    if sys.argv[1] == "submit" and sys.argv[2] == "official":
+        submit(True)
 
 
 ## check status of jobs 
