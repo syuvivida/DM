@@ -1,4 +1,4 @@
-// example code to run Bulk Graviton->ZZ->ZlepZhad selections on electron-channel
+// example code to run 2015 mono-Higgs resolved selections on signal (EXO-16-012)
 
 #include <vector>
 #include <iostream>
@@ -22,7 +22,7 @@ void efferr(float nsig,float ntotal,float factor=1)
 
 
 using namespace std;
-void xAna_monoHiggs(std::string inputFile){
+void resolved_xAna_monoHiggs(std::string inputFile){
 
   //get TTree from file ...
   TreeReader data(inputFile.data());
@@ -101,7 +101,7 @@ void xAna_monoHiggs(std::string inputFile){
     float pfMet = data.GetFloat("pfMetCorrPt");
     float pfMetPhi = data.GetFloat("pfMetCorrPhi");
     
-    if(pfMet<200.)continue;
+    if(pfMet<170.)continue;
     nPass[3]++;
 
 
@@ -167,49 +167,77 @@ void xAna_monoHiggs(std::string inputFile){
     nPass[6]++;
 				      
 
-    int nFATJets     = data.GetInt("FATnJet");
-    TClonesArray* fatjetP4 = (TClonesArray*) data.GetPtrTObject("FATjetP4");
-    float*  fatjetPRmassL2L3Corr = data.GetPtrFloat("FATjetPRmassL2L3Corr");
-    int*   nSubSoftDropJet = data.GetPtrInt("FATnSubSDJet");
-    vector<float>   *subjetSDCSV =  data.GetPtrVectorFloat("FATsubjetSDCSV", nFATJets);
-    vector<float>   *subjetSDPx  =  data.GetPtrVectorFloat("FATsubjetSDPx", nFATJets);
-    vector<float>   *subjetSDPy  =  data.GetPtrVectorFloat("FATsubjetSDPy", nFATJets);
-    vector<float>   *subjetSDPz  =  data.GetPtrVectorFloat("FATsubjetSDPz", nFATJets);
-    vector<float>   *subjetSDE   =  data.GetPtrVectorFloat("FATsubjetSDE", nFATJets);  
-    vector<bool>    &passFatJetTightID = *((vector<bool>*) data.GetPtr("FATjetPassIDTight"));
-    
-    int HIndex=-1;
-    for(int ij=0; ij<nFATJets; ij++)
-      {
-    	
-     	TLorentzVector* thisJet = (TLorentzVector*)fatjetP4->At(ij);
-    	if(thisJet->Pt()<200)continue;
-	if(fabs(thisJet->Eta())>2.4)continue;
-	if(!passFatJetTightID[ij])continue;
-	HIndex=ij;
-	break; // only take the first one also the leading-pt one
-      }
-    
-    if(HIndex<0)continue;
-    nPass[7]++;
-
-    TLorentzVector* higgsJet = (TLorentzVector*)fatjetP4->At(HIndex);
-
-
-    //veto n>=1 AK4 jets and n>=0 AK4 b jet
+    //find a pair of b-jets that could be a Higgs candidate
     const int nTHINJets     = data.GetInt("THINnJet");
     TClonesArray* thinjetP4 = (TClonesArray*) data.GetPtrTObject("THINjetP4");
     float* thinJetCSV =  data.GetPtrFloat("THINjetCISVV2");
     vector<bool>& passThinJetLooseID = *((vector<bool>*) data.GetPtr("THINjetPassIDLoose"));
     vector<bool>& passThinJetPUID = *((vector<bool>*) data.GetPtr("THINisPUJetID"));    
     
-    unsigned int nGoodTHINBJets=0;
-    unsigned int nGoodTHINJets=0;
-    int jetIndex=-1;
+    float maxHpt=-999;
+    int Hindex[2]={-1,-1};
 
     for(int ij=0; ij < nTHINJets; ij++){
       TLorentzVector* thisJet = (TLorentzVector*)thinjetP4->At(ij);
-      if(thisJet->DeltaR(*higgsJet)<0.8)continue;
+      if(thisJet->Pt()<30)continue;
+      if(fabs(thisJet->Eta())>2.4)continue;
+      if(!passThinJetLooseID[ij])continue;
+      if(!passThinJetPUID[ij])continue;
+      
+      // for b-jet (medium ID)
+      if(thinJetCSV[ij]<0.80)continue;
+
+      for(int jj=0; jj < ij ; jj++){
+	TLorentzVector* thatJet = (TLorentzVector*)thinjetP4->At(jj);
+	if(thatJet->Pt()<30)continue;
+	if(fabs(thatJet->Eta())>2.4)continue;
+	if(!passThinJetLooseID[jj])continue;
+	if(!passThinJetPUID[jj])continue;
+	
+	// for b-jet (medium ID)
+	if(thinJetCSV[jj]<0.80)continue;
+
+	float thisHpt = (*thisJet + *thatJet).Pt();
+	float thisHmass = (*thisJet + *thatJet).M();
+	if(thisHpt < 150.)continue;
+
+	if(thisHmass < 100)continue;
+	if(thisHmass > 150)continue;
+	
+	if(thisHpt>maxHpt)
+	  {
+	    Hindex[0]=jj;
+	    Hindex[1]=ij;
+	    maxHpt   =thisHpt;
+	  }
+
+      } // end of inner loop jet
+
+
+    } // end of outer loop jet
+
+
+    if(Hindex[0]<0 || Hindex[1]<0)continue;
+    nPass[7]++;
+
+    TLorentzVector  bjet[2];
+    for(int ib=0; ib<2;ib++)bjet[ib] = 
+			      *((TLorentzVector*)thinjetP4->At(Hindex[ib]));
+    TLorentzVector  higgsJet = bjet[0]+bjet[1];
+
+    // cout << "Hindex [0] = " << Hindex[0] << endl;
+    // cout << "Hindex [1] = " << Hindex[1] << endl;
+
+    //veto n>=1 AK4 jets and extra AK4 b jet
+    
+    unsigned int nGoodTHINBJets=0;
+    unsigned int nGoodTHINJets=0;
+    int jetIndex=-1; // extra AK4 jets if there is one
+
+    for(int ij=0; ij < nTHINJets; ij++){
+      TLorentzVector* thisJet = (TLorentzVector*)thinjetP4->At(ij);
+      if(thisJet->DeltaR(bjet[0])<0.4)continue;
+      if(thisJet->DeltaR(bjet[1])<0.4)continue;
       if(thisJet->Pt()<30)continue;
       if(fabs(thisJet->Eta())>4.5)continue;
       if(!passThinJetLooseID[ij])continue;
@@ -243,19 +271,6 @@ void xAna_monoHiggs(std::string inputFile){
     nPass[10]++;
 
     
-    // additional mass cut and subjet cuts on Higgs
-    if(fatjetPRmassL2L3Corr[HIndex]<100)continue;
-    if(fatjetPRmassL2L3Corr[HIndex]>150)continue;	
-
-    // require subjets b-tagged
-    int nSubBJet=0;
-    for(int is=0; is < nSubSoftDropJet[HIndex]; is++){
-      if(subjetSDCSV[HIndex][is] < 0.46)continue;
-      nSubBJet++;
-    }
-    if(nSubBJet<2)continue;
-
-    nPass[11]++;
 
   } // end of loop over entries
 
@@ -266,7 +281,7 @@ void xAna_monoHiggs(std::string inputFile){
       std::cout << "nPass[" << i << "]= " << nPass[i] << std::endl;
 
 
-  efferr(nPass[11],nTotal);
+  efferr(nPass[10],nTotal);
 
   // TFile* outFile = new TFile("test.root","recreate");
 
