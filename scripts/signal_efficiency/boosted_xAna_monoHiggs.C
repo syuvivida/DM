@@ -206,14 +206,17 @@ void boosted_xAna_monoHiggs(std::string inputFile){
     unsigned int nGoodTHINBJets=0;
     unsigned int nGoodTHINJets=0;
     int jetIndex=-1;
+    std::vector<int> indexForDPhi;
+    indexForDPhi.clear();
 
     for(int ij=0; ij < nTHINJets; ij++){
       TLorentzVector* thisJet = (TLorentzVector*)thinjetP4->At(ij);
-      if(thisJet->DeltaR(*higgsJet)<0.8)continue;
       if(thisJet->Pt()<30)continue;
       if(fabs(thisJet->Eta())>4.5)continue;
       if(!passThinJetLooseID[ij])continue;
       if(!passThinJetPUID[ij])continue;
+      indexForDPhi.push_back(ij);
+      if(thisJet->DeltaR(*higgsJet)<0.8)continue;
       
       nGoodTHINJets++;
       jetIndex=ij;
@@ -231,15 +234,21 @@ void boosted_xAna_monoHiggs(std::string inputFile){
     if(nGoodTHINBJets>0)continue;
     nPass[9]++;
 
-
-    if(jetIndex>=0)
+    bool passDphi=true;
+    for(unsigned int i=0; i<indexForDPhi.size(); i++)
       {
+	int jetIndex=indexForDPhi[i];
 	TLorentzVector* thisJet = (TLorentzVector*)thinjetP4->At(jetIndex);
 	double dphi=TVector2::Phi_mpi_pi(pfMetPhi-thisJet->Phi());
 
-	if(fabs(dphi)<0.4)continue;
-	
+	if(fabs(dphi)<0.4)
+	  {
+	    passDphi=false;
+	    break;
+	  }	
       }
+    
+    if(!passDphi)continue;
     nPass[10]++;
 
     

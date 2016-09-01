@@ -233,16 +233,22 @@ void resolved_xAna_monoHiggs(std::string inputFile){
     unsigned int nGoodTHINBJets=0;
     unsigned int nGoodTHINJets=0;
     int jetIndex=-1; // extra AK4 jets if there is one
+    std::vector<int> indexForDPhi;
+    indexForDPhi.clear();
 
     for(int ij=0; ij < nTHINJets; ij++){
       TLorentzVector* thisJet = (TLorentzVector*)thinjetP4->At(ij);
-      if(thisJet->DeltaR(bjet[0])<0.4)continue;
-      if(thisJet->DeltaR(bjet[1])<0.4)continue;
       if(thisJet->Pt()<30)continue;
       if(fabs(thisJet->Eta())>4.5)continue;
       if(!passThinJetLooseID[ij])continue;
       if(!passThinJetPUID[ij])continue;
-      
+
+      indexForDPhi.push_back(ij);
+
+      if(thisJet->DeltaR(bjet[0])<0.4)continue;
+      if(thisJet->DeltaR(bjet[1])<0.4)continue;
+
+
       nGoodTHINJets++;
       jetIndex=ij;
 
@@ -260,16 +266,22 @@ void resolved_xAna_monoHiggs(std::string inputFile){
     nPass[9]++;
 
 
-    if(jetIndex>=0)
+    bool passDphi=true;
+    for(unsigned int i=0; i<indexForDPhi.size(); i++)
       {
+	int jetIndex=indexForDPhi[i];
 	TLorentzVector* thisJet = (TLorentzVector*)thinjetP4->At(jetIndex);
 	double dphi=TVector2::Phi_mpi_pi(pfMetPhi-thisJet->Phi());
 
-	if(fabs(dphi)<0.4)continue;
-	
+	if(fabs(dphi)<0.4)
+	  {
+	    passDphi=false;
+	    break;
+	  }	
       }
+    
+    if(!passDphi)continue;
     nPass[10]++;
-
     
 
   } // end of loop over entries
