@@ -4,8 +4,6 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
-#include <TString.h>
-#include <map>
 #include <TH1D.h>
 #include <TFile.h>
 #include "untuplizer.h"
