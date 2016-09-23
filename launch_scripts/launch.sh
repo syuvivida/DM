@@ -27,10 +27,9 @@ echo ""
 echo "Producing cards for mediator mass = "$mmed" GeV"
 echo "Producing cards for DM mass = "$mchi" GeV "
 echo ""
-newname=${name}_MMED${mmed}_MDM$mchi
+newname=${name}\_MSC${mmed}\_MDM${mchi}
 sed -e 's/FOLDERNAME/'$newname'/g' -e 's/MMED/'$mmed'/g' -e 's/MCHI/'$mchi'/g' $CARDSDIR/${name}_proc_card.dat > $CARDSDIR/${newname}_proc_card.dat
-bsub -q1nd $PWD/runLaunch.sh $PWD $CARDSDIR/${newname}_proc_card.dat
-#$PWD/runLaunch.sh $PWD $CARDSDIR/${newname}_proc_card.dat
+bsub -q2nd $PWD/runLaunch.sh $PWD $CARDSDIR/${newname}_proc_card.dat
 
 
 
