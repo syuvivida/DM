@@ -1,0 +1,8 @@
+import DMsimp_s_spin0
+# Define multiparticle labels
+generate p p > xd xd~ h [QCD]
+output FOLDERNAME -nojpeg
+launch FOLDERNAME
+       set MY0 MMED
+       set MXd MCHI
+       set WY0 auto  
