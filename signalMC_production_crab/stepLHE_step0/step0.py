@@ -104,6 +104,13 @@ process.generator = cms.EDFilter("Pythia8HadronizerFilter",
 
 process.ProductionFilterSequence = cms.Sequence(process.generator)
 
+process.genParticlesForJetsNoNu.ignoreParticleIDs += cms.vuint32(18,9000006,9000007)
+process.genParticlesForJetsNoMuNoNu.ignoreParticleIDs += cms.vuint32(18,9000006,9000007)
+process.genCandidatesForMET.ignoreParticleIDs += cms.vuint32(18,9000006,9000007)
+process.genParticlesForMETAllVisible.ignoreParticleIDs += cms.vuint32(18,9000006,9000007)
+
+
+
 # Path and EndPath definitions
 process.generation_step = cms.Path(process.pgen)
 process.simulation_step = cms.Path(process.psim)
