@@ -21,7 +21,7 @@ echo "Producing step0 for DM mass = "$mchi" GeV "
 echo ""
 newname=${name}\_MSC${mmed}\_MDM${mchi}
 outputfile=step0_${newname}.root
-bsub -q1nd -R "rusage[mem=12000]" $PWD/runStep0.sh $PWD $newname $outputfile
+bsub -q1nd -R "rusage[mem=12000]" $PWD/runStep0.sh $PWD $newname $outputfile $name
 
 
 

@@ -8,5 +8,6 @@ cd $1
 export SCRAM_ARCH=slc6_amd64_gcc472; eval `scramv1 runtime -sh`
 export X509_USER_PROXY=$HOME/private/grid.proxy
 cmsRun step0.py inputFiles=file:$lhefile outputFile=$3
-xrdcp $3 root://eoscms//eos/cms//store/user/syu/MonoH-DMSpin0/$3
+dirName=MonoH-$4
+xrdcp $3 root://eoscms//eos/cms//store/user/syu/$dirName/$3
 rm -rf $3
