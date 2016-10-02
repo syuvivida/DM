@@ -1,0 +1,7 @@
+import model Higgs_scalar_UFO
+generate p p > h chi chi~ QED=3
+output FOLDERNAME -nojpeg
+launch FOLDERNAME
+       set MSc MMED
+       set mDM MCHI
+       set WSc auto

@@ -1,0 +1,11 @@
+import model Higgs_ZB_UFO
+generate p p > h chi chi~ QED=3
+output FOLDERNAME -nojpeg
+launch FOLDERNAME
+       set MZp MMED
+       set mDM MCHI
+       set sp 0.3
+       set gDM 1
+       set gq 0.3333
+       set gZ  MMED
+       set WZp auto
