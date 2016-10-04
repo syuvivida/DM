@@ -21,7 +21,7 @@ echo "Producing ntuples for DM mass = "$mchi" GeV "
 echo ""
 newname=${name}\_MSC${mmed}\_MDM${mchi}
 inputfile=step0_${newname}.root
-outputfile=LOgentuple_${newname}.root
+outputfile=gentuple_${newname}.root
 bsub -q8nh -R "rusage[mem=12000]" $PWD/runNtuple.sh $PWD $inputfile $outputfile $name
 
 
