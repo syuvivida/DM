@@ -6,6 +6,6 @@ launch FOLDERNAME
        set mDM MCHI
        set sp 0.3
        set gDM 1
-       set gq 0.3333
-       set gZ  MMED
+       set gq 0.25
+       set gZ gZZH
        set WZp auto
