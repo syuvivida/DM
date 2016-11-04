@@ -10,7 +10,7 @@ ROOT.gROOT.SetBatch(True)
 from MonoHbbQuantities import *
 from PileUpWeights import PUWeight
 
-ROOT.gROOT.ProcessLine('.L BTagCalibrationStandalone.cpp+') 
+ROOT.gROOT.ProcessLine('.L BTagCalibrationStandalone.cpp++') 
 
 ######################################
 ## set up running mode of the code.
