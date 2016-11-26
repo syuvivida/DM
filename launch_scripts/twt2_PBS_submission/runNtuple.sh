@@ -1,4 +1,5 @@
- -N TESTJOB
+#!/bin/sh
+#PBS -N TESTJOB
 #PBS -l nodes=1
 #PBS -o OUT.log
 #PBS -e ERR.log
