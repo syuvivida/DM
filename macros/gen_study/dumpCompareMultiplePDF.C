@@ -21,7 +21,8 @@ void dumpCompareMultiplePDF(std::string inputText_,std::string header,bool norma
   std::string dirName = "plots";
   gSystem->mkdir(dirName.data());
 
-  TLegend* leg = new TLegend(0.6,0.435,0.83,0.857);
+  // TLegend* leg = new TLegend(0.6,0.435,0.83,0.857);
+  TLegend* leg = new TLegend(0.45,0.435,0.83,0.857);
   leg->SetFillColor(0);
   leg->SetFillStyle(0);
   leg->SetTextSize(0.04);
