@@ -1,0 +1,14 @@
+import model Zp2HDM
+generate p p > Zp > h A0, A0 > n1 n1~
+output FOLDERNAME -nojpeg
+launch FOLDERNAME
+       set MZp MMED
+       set MA0 MMED2
+       set MHN MMED2
+       set MHP MMED2
+       set MX MCHI
+       set gx 1
+       set gz 0.8
+       set Tb 1 
+       set WZp auto
+       set WA0 auto
