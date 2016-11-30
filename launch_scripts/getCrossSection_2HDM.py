@@ -6,7 +6,7 @@ name=sys.argv[1]
 filename='crossSection_'+name+'.txt'
 os.system('rm -rf '+filename)
 
-dmrange =[1]
+dmrange =[100]
 med2range = [300,400,500,600,700,800]
 medrange=[600,800,1000,1200,1400,1700,2000,2500]
 for med in medrange:
