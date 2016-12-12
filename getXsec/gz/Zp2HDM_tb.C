@@ -2,19 +2,20 @@ void Zp2HDM_tb(const float mzp, const float ma0, const float tb1, const float tb
 {
 
   const float ymt=172;
-
-  if(ma0<ymt*2){
-    cout << "This program can only be run for ma0 > " << ymt*2 << " GeV !! " << endl;
-    return;
-  }
+  const float ymb=4.7;
+  bool noTTbar=ma0<ymt*2;
+  // if(ma0<ymt*2){
+  //   cout << "This program can only be run for ma0 > " << ymt*2 << " GeV !! " << endl;
+  //   return;
+  // }
 
   float ratio1 = ((tb1*tb1)/pow(1+tb1*tb1,2))/((tb2*tb2)/pow(1+tb2*tb2,2));
   cout << "ratio of Gamma(Z'->A0h) = " << ratio1 << endl;
 
   const float gdm=1;
   const float mdm=100;
-  float gamma_a0 = (gdm*gdm*pow(ma0,2)*sqrt(pow(ma0,4)-4*pow(ma0*mdm,2)))/8.0/TMath::Pi()/pow(ma0,3);
-  cout << "width of A0-> chi chi = " << gamma_a0 << " GeV" << endl;
+  float gamma_chichi = (gdm*gdm*pow(ma0,2)*sqrt(pow(ma0,4)-4*pow(ma0*mdm,2)))/8.0/TMath::Pi()/pow(ma0,3);
+  cout << "width of A0-> chi chi = " << gamma_chichi << " GeV" << endl;
 
   const double aEW = 1.0/127.9;
   const double ee = 2*sqrt(aEW)*sqrt(TMath::Pi());
@@ -28,16 +29,27 @@ void Zp2HDM_tb(const float mzp, const float ma0, const float tb1, const float tb
 
   const float vu=(2*MW*sw)/ee;
   cout << "vu = " << vu << endl;
+  const float vd=(2*MW*sw)/ee;
+  cout << "vd = " << vd << endl;
   float yt=sqrt(2)*ymt/vu;
-  float gamma_a01 = (3./pow(tb1,2)*pow(ma0*yt,2)*sqrt(pow(ma0,4)-4*pow(ma0*ymt,2)))/16.0/TMath::Pi()/pow(ma0,3);
-  cout << "width of A0-> tt for tanbeta = " << tb1 << " is " << gamma_a01 << " GeV" << endl;
-  cout << "BR(A0->chi chi) for tanbeta = " << tb1 << " is " << gamma_a0/(gamma_a01+gamma_a0) << endl;
+  float gamma_tt1 = noTTbar? 0: (3./pow(tb1,2)*pow(ma0*yt,2)*sqrt(pow(ma0,4)-4*pow(ma0*ymt,2)))/16.0/TMath::Pi()/pow(ma0,3);
+  cout << "width of A0-> tt for tanbeta = " << tb1 << " is " << gamma_tt1 << " GeV" << endl;
 
-  float gamma_a02 = (3./pow(tb2,2)*pow(ma0*yt,2)*sqrt(pow(ma0,4)-4*pow(ma0*ymt,2)))/16.0/TMath::Pi()/pow(ma0,3);
-  cout << "width of A0-> tt for tanbeta = " << tb2 << " is " << gamma_a02 << " GeV" << endl;
-  cout << "BR(A0->chi chi) for tanbeta = " << tb2 << " is " << gamma_a0/(gamma_a02+gamma_a0) << endl;
 
-  float ratio2 = (gamma_a02+gamma_a0)/(gamma_a01+gamma_a0);
+  float yb=sqrt(2)*ymb/vd;
+  float gamma_bb1 = (3.*pow(tb1,2)*pow(ma0*yb,2)*sqrt(pow(ma0,4)-4*pow(ma0*ymb,2)))/16.0/TMath::Pi()/pow(ma0,3);
+  cout << "width of A0-> bb for tanbeta = " << tb1 << " is " << gamma_bb1 << " GeV" << endl;
+
+  cout << "BR(A0->chi chi) for tanbeta = " << tb1 << " is " << gamma_chichi/(gamma_tt1+gamma_bb1+gamma_chichi) << endl;
+
+  float gamma_tt2 = noTTbar? 0 : (3./pow(tb2,2)*pow(ma0*yt,2)*sqrt(pow(ma0,4)-4*pow(ma0*ymt,2)))/16.0/TMath::Pi()/pow(ma0,3);
+  cout << "width of A0-> tt for tanbeta = " << tb2 << " is " << gamma_tt2 << " GeV" << endl;
+  float gamma_bb2 = (3.*pow(tb2,2)*pow(ma0*yb,2)*sqrt(pow(ma0,4)-4*pow(ma0*ymb,2)))/16.0/TMath::Pi()/pow(ma0,3);
+  cout << "width of A0-> bb for tanbeta = " << tb2 << " is " << gamma_bb2 << " GeV" << endl;
+
+  cout << "BR(A0->chi chi) for tanbeta = " << tb2 << " is " << gamma_chichi/(gamma_tt2+gamma_bb2+gamma_chichi) << endl;
+
+  float ratio2 = (gamma_bb2+gamma_tt2+gamma_chichi)/(gamma_bb1+gamma_tt1+gamma_chichi);
 
   cout << "ratio of BR(A0->chi chi) = " << ratio2 << endl;
 
