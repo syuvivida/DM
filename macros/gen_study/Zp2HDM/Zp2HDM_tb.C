@@ -52,7 +52,8 @@ void Zp2HDM_tb(const float mzp, const float ma0, const float tb1, const float tb
   float ratio2 = (gamma_bb2+gamma_tt2+gamma_chichi)/(gamma_bb1+gamma_tt1+gamma_chichi);
 
   cout << "ratio of BR(A0->chi chi) = " << ratio2 << endl;
-
+  cout << endl;
+  cout << "For Z'-2HDM cross sections at MZp = " << mzp << " GeV and MA0 = " <<  ma0 << " GeV: " << endl;
   float dr = xs1/xs2/ratio1/ratio2;
   cout << "ratio of Madgraph estimation divided by Eiko's prediction = " << dr << endl;
 }
