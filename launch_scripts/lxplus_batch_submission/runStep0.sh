@@ -1,5 +1,6 @@
 #!/bin/sh
 lhedir=$2
+rm -rf /tmp/syu/${lhedir}.lhe
 cp -p /afs/cern.ch/work/s/syu/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_3_3/${lhedir}/Events/run_01/unweighted_events.lhe.gz /tmp/syu/${lhedir}.lhe.gz
 gunzip /tmp/syu/${lhedir}.lhe.gz
 lhefile=/tmp/syu/${lhedir}.lhe
@@ -11,3 +12,4 @@ cmsRun step0.py inputFiles=file:$lhefile outputFile=/tmp/syu/$3
 dirName=MonoH-$4
 xrdcp /tmp/syu/$3 root://eoscms//eos/cms//store/user/syu/$dirName/$3
 rm -rf /tmp/syu/$3
+rm -rf /tmp/syu/${lhedir}.lhe
