@@ -1,7 +1,11 @@
 import os
+import sys
+print sys.argv
 
+PID=sys.argv[1]
 name='2HDM'
-filename='crossSection_'+name+'.txt'
+filename='width_'+name+ '_PID' + PID + '.txt'
+tempfile='temp_'+filename
 os.system('rm -rf '+filename)
 
 dmrange =[100]
@@ -12,6 +16,9 @@ for med in medrange:
     for dm in dmrange:	
         dirname = name+'_MZp'+str(med)+'_MA0'+str(med2)+'_MDM'+str(dm)
         print dirname
-        command = 'grep -a pb '+dirname+'/Events/run_01/run_01_tag_1_banner.txt | awk \'{print "'+str(med)+' '+str(med2)+' '+str(dm)+'",$6}\' >> '+filename
+        command = 'grep -a "DECAY  '+PID+'" '+dirname+'/Events/run_01/run_01_tag_1_banner.txt | awk \'{print "'+str(med)+' '+str(med2)+' '+str(dm)+'",$3}\' >> '+tempfile
         print command
         os.system(command)
+command="awk '{print $1,$2,$3,$4,$4/$1}' "+tempfile + " > " + filename
+os.system(command)
+
