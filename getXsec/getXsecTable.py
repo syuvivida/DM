@@ -2,13 +2,14 @@
 #-------------------------------------------------------------
 # File: getXsecTable.py
 # Created: 15 July 2016 Fang-Ying Tsai
+# Modified 15 Dec 2016 Shu-Xiao Liu
 #-------------------------------------------------------------  
 import glob
 import errno
 from ROOT import TGraph, TFile, TCanvas, TH2F, gStyle
 from ROOT import TGraph2D
 from array import array
-
+import os
 class GetValue():
     def __init__(self):
     	self.fileNum = []
@@ -55,7 +56,7 @@ def gethAList(lhefile):
 	    	try:
 	    	    with open(name) as f: 
 	    	    	for lheFile in f:
-	    	    		if lheFile.find('mzp') > 0:
+	    	    		if lheFile.find('mzp') > 0 and lheFile.find('32') > 0:
 	    	    			s.zpMass = getMZpValue(lheFile)
 	    	    		elif lheFile.find('ma0') > 0:
 	    	    			s.ma0Mass = getMA0Value(lheFile)
@@ -78,7 +79,7 @@ def main():
 
 	hAList = gethAList(hA_files)
 
-	histo_hA0 = TH2F('xsec1','Xsec(gz=0.8) pdf setting 263400', 12, 500,2800,8,200,900)
+	histo_hA0 = TH2F('xsec1','Xsec(gz=0.8, tb=10.0) pdf setting 263400', 12, 500,2800,8,200,900)
 	histo_hA0.SetXTitle("M_Zp (GeV)")
 	histo_hA0.SetYTitle("M_A0 (GeV)")
 	histo_hA0.SetStats(0)
@@ -90,6 +91,7 @@ def main():
 	f.Write()
 	f.Close()
 	c1.Update()
-
+	print 'path of root file'
+        print os.getcwd()+'/*.root'
 if __name__ == "__main__":
    main()

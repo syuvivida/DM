@@ -3,7 +3,7 @@
 # File: scanParam.py
 # Created: 12 July 2016 Fang-Ying Tsai
 # original script: https://github.com/syuvivida/DM/blob/v0.04/getXsec/scanParam.py
-# Modified: 12 Nov 2016 Shu-Xiao Liu
+# Modified: 12 Dec 2016 Shu-Xiao Liu
 #-------------------------------------------------------------  
 
 import sys
@@ -114,9 +114,18 @@ def nDir(path):
 
 def main():
     
-    if not os.path.exists('../Bannerfile'):
-        os.makedirs('../Bannerfile')
-    errorinfo = []
+    bannerDir = 'Bannerfile'
+    ## create a new directory to save banner file    
+    fileNum = 0
+    dirlen = len(bannerDir)
+    while os.path.exists('../'+bannerDir):
+       bannerDir = bannerDir[0:dirlen]
+       fileNum += 1
+       bannerDir += str(fileNum)
+    os.makedirs('../'+bannerDir)
+    
+    errorinfo = [] ## record the mass point error happen
+    ## scan mass point
     MzpList=["1.000000e+03","6.000000e+02","8.000000e+02","2.500000e+03","1.200000e+03","1.400000e+03","1.700000e+03","2.000000e+03","1.000000e+03"]
     MA0List=["3.000000e+02","4.000000e+02","5.000000e+02","6.000000e+02","7.000000e+02","8.000000e+02","3.000000e+02"]
     for i in range(len(MzpList)-1):
@@ -130,29 +139,27 @@ def main():
             if Noutput+1 < 10: outputDir = 'Events/run_0' + str(Noutput+1)
             else: outputDir = 'Events/run_' + str(Noutput+1)
             with cd(".."):
-                ## it tries 3 tims if it do not generate output directory
+                ## it tries 3 times if error happens
                 for Runtime in range(3):  
                     print "Mass point\tMZp:" + MzpList[i+1] + "\tMA0:" + MA0List[j+1]
                     generateEvent()
-                    ## check the output file exists or not and record the mass point when error occurs
+                    ## check whether the output file exists or not and record the mass point when error occurs
                     if os.path.exists(outputDir): break
 		    else: errorinfo.append('MZp:' + MzpList[i+1] + '\tMA0:' + MA0List[j+1])
-                ## collect Banner files to new directory
-                if Noutput+1 < 10: os.system("cp Events/run_0{}/run*.txt Bannerfile".format(str(Noutput+1)))
-                else: os.system("cp Events/run_{}/run*.txt Bannerfile".format(str(Noutput+1))) 	
+                ## collect Banner files and copy to the new directory
+                if Noutput+1 < 10: os.system("cp Events/run_0{}/run*.txt ".format(str(Noutput+1)) + bannerDir)
+                else: os.system("cp Events/run_{}/run*.txt ".format(str(Noutput+1)) + bannerDir) 	
     
     print 'mass point of failed run'
     for error in range(len(errorinfo)):
         print errorinfo[error]
     
-    os.chdir('../Bannerfile')
+    os.chdir('../'+bannerDir)
     #os.system('wget https://raw.githubusercontent.com/syuvivida/DM/v0.04/getXsec/getXsecTable.py')
     os.system('cp ../Cards/getXsecTable.py .')
     os.system('chmod 755 getXsecTable.py')
-    print 'making figure'
+    print 'producing figure ...'
     os.system('python getXsecTable.py')
-    print 'copy path'
-    print os.getcwd()+'/*.root'
 
 if __name__ == "__main__":
    main()
