@@ -1,0 +1,8 @@
+import model DMsimp_s_spin1
+#generate p p > xd xd~ j / h w+ w- z a
+generate p p > xd xd~ j
+output FOLDERNAME -nojpeg
+launch FOLDERNAME
+       set MY1 MMED
+       set MXd MCHI
+       set WY1 auto
