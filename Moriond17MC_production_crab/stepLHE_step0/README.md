@@ -15,7 +15,7 @@ git clone git@github.com:syuvivida/DM.git DM
 cd DM
 git checkout 2016ana
 cd -
-mv DM/signalMC_production_crab/stepLHE_step0/* .
+mv DM/Moriond17MC_production_crab/stepLHE_step0/* .
 rm -rf DM
 ```
 
