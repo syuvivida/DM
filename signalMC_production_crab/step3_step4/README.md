@@ -1,7 +1,8 @@
+# Recipe to produce Spring16 MC samples
 
 ## Check the status of step2 production and prepare input for step3
 
-Go to your work directory for step1 and step2 (created following the instruction at https://github.com/syuvivida/DM/tree/v0.05/signalMC_production_crab/step1_step2)
+Go to your work directory for step1 and step2 (created following the instruction at https://github.com/syuvivida/DM/tree/2016ana/signalMC_production_crab/step1_step2)
 
 Make sure your step2 jobs are 100% finished before you move on to step3
 
@@ -10,7 +11,7 @@ source /afs/cern.ch/cms/cmsset_default.csh (bash: source /afs/cern.ch/cms/cmsset
 cd CMSSW_8_0_3_patch2/src
 cmsenv
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
-curl https://raw.githubusercontent.com/syuvivida/DM/v0.05/signalMC_production_crab/step3_step4/MultiCrab_step3.py -o MultiCrab_step3.py
+curl https://raw.githubusercontent.com/syuvivida/DM/2016ana/signalMC_production_crab/step3_step4/MultiCrab_step3.py -o MultiCrab_step3.py
 voms-proxy-init --voms cms
 python MultiCrab_step3.py prepare step2_inputdataset.txt
 ```
@@ -34,7 +35,7 @@ cmsenv
 ```
 git clone git@github.com:syuvivida/DM.git DM
 cd DM
-git checkout v0.05
+git checkout 2016ana
 cd -
 mv DM/signalMC_production_crab/step3_step4/* .
 rm -rf DM

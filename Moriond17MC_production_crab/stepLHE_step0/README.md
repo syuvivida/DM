@@ -1,4 +1,3 @@
-# Recipe to produce Spring16 MC samples
 
 ## CMSSW setup for stepLHE and step0 
 ```

@@ -1,4 +1,4 @@
-# Recipe to produce Spring16 MC samples
+## Recipe to produce Moriond17 MC samples
 
 ### General things to remember 
 
@@ -16,8 +16,6 @@ step0: GEN-SIM
 
 step1: RAWSIM
 
-step2: RAWAODSIM
+step2: AODSIM
 
-step3: AODSIM  (this step produces HLT trigger results)
-
-step4: MINIAODSIM
+step3: MINIAODSIM
