@@ -9,10 +9,10 @@ config.General.requestName = 'MonoHStep1'
 config.General.workArea = 'crab_projects_MonoHStep1'
 config.General.transferOutputs = True
 config.General.transferLogs = True
-config.JobType.inputFiles = ['pu_files.py']
 config.section_("JobType")
 config.JobType.pluginName = 'Analysis'
 config.JobType.psetName = 'step1.py'
+config.JobType.inputFiles = ['pu_files.py']
 
 config.section_("Data")
 config.Data.inputDataset = '/MonoH_2HDM_Zprime_A0hbb_MZp1000_MA0300/syu-GEN-SIM-f1e2824a9e11b7b9d6a221661f489786/USER'
