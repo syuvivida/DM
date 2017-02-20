@@ -1,0 +1,13 @@
+import model 2HDMPZ2II
+generate p p > xd xd~ h1 / z [QCD]
+output FOLDERNAME -nojpeg
+launch FOLDERNAME
+       set sinp SINTHETA
+       set Mxd MCHI
+       set mh3 MH3
+       set mh4 MH4
+       set Wh1 auto
+       set Wh2 auto
+       set Wh3 auto
+       set Whc auto
+       set Wh4 auto
