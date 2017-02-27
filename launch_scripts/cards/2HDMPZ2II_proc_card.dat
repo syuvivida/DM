@@ -4,6 +4,8 @@ output FOLDERNAME -nojpeg
 launch FOLDERNAME
        set sinp SINTHETA
        set Mxd MCHI
+       set mhc 750
+       set mh2 750
        set mh3 MH3
        set mh4 MH4
        set Wh1 auto
