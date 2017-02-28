@@ -24,18 +24,21 @@ header=MA${mmed}\_Ma${ma0}\_MDM${mdm}
 
 ## Now produce input text file for comparison
 
-SINPARRAY=(0p5000 0p7071 0p8660)
+SINPARRAY=(0p1 0p3 0p5000 0p7071 0p8660)
 inputtextfile=${name}\_${header}.txt
 rm -rf $inputtextfile
 
 for ((i=0; i < ${#SINPARRAY[@]}; i++))
 do
   sinp=${SINPARRAY[$i]}
-  filename=/data7/monoH/monoH_genOnly/2HDMPZ2/MA500_MDM1/output/histo\_2HDMPZ2II\_${sinp}\_MA${mmed}\_Ma${ma0}\_MDM${mdm}.root
-  sinvalue=${sinp/p/.}
-  echo $sinvalue
-  legend="sin#theta="$sinvalue
-  echo $filename $legend >> $inputtextfile
+  filename=/data7/monoH/monoH_genOnly/2HDMPZ2/varysinp/MA500_MDM1/output/histo\_2HDMPZ2II\_${sinp}\_MA${mmed}\_Ma${ma0}\_MDM${mdm}.root
+  if [ -f $filename ]; 
+  then  
+      sinvalue=${sinp/p/.}
+      echo $sinvalue
+      legend="sin#theta="$sinvalue
+      echo $filename $legend >> $inputtextfile
+  fi
 done
 
 cd /afs/cern.ch/work/s/syu/13tev/80X/CMSSW_8_0_20/src
