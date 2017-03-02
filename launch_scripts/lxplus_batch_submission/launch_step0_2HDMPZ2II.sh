@@ -25,7 +25,8 @@ echo "Producing step0 for a mass = "$mh4" GeV "
 echo "Producing step0 for DM mass = "$mchi" GeV "
 echo ""
 
-sinpname_temp=${sinp/./0p}
+sinpname_temp2=${sinp/./0p}
+sinpname_temp=${sinpname_temp2/10p/1p}
 sinpname=${sinpname_temp:0:6}
 echo $sinpname
 

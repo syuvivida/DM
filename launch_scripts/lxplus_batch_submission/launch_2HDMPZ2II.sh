@@ -32,12 +32,13 @@ echo "Producing cards for a mass = "$mh4" GeV "
 echo "Producing cards for DM mass = "$mchi" GeV "
 echo ""
 
-sinpname_temp=${sinp/./0p}
+sinpname_temp2=${sinp/./0p}
+sinpname_temp=${sinpname_temp2/10p/1p}
 sinpname=${sinpname_temp:0:6}
-#echo $sinpname
+echo $sinpname
 
 newname=${name}\_${sinpname}\_MA${mh3}\_Ma${mh4}\_MDM${mchi}
 echo $newname
 sed -e 's/FOLDERNAME/'$newname'/g' -e 's/SINTHETA/'$sinp'/g' -e 's/MH3/'$mh3'/g' -e 's/MH4/'$mh4'/g' -e 's/MCHI/'$mchi'/g' $CARDSDIR/${name}_proc_card.dat > $CARDSDIR/${newname}_proc_card.dat
-bsub -q2nw -R "rusage[mem=12000]" $PWD/runLaunch.sh $PWD $CARDSDIR/${newname}_proc_card.dat
+#bsub -q2nw -R "rusage[mem=12000]" $PWD/runLaunch.sh $PWD $CARDSDIR/${newname}_proc_card.dat
 #$PWD/runLaunch.sh $PWD $CARDSDIR/${newname}_proc_card.dat
