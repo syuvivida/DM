@@ -63,6 +63,6 @@ void Draw2D_xsec_sinp(string inputFile)
     t.DrawLatex(x,y,sinp[i]);
   }
 
-  c1->Print("2HDMZP2_xsec_varysinp.pdf");
+  c1->Print("2HDMPZ2_xsec_varysinp.pdf");
 
 }

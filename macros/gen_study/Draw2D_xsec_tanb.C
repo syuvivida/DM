@@ -7,20 +7,21 @@
 
 using namespace std;
 
-void Draw2D_width_sinp(string higgs,string inputFile="temp.txt")
+void Draw2D_xsec_tanb(string inputFile)
 {
   setNCUStyle();
   const Int_t nx = 7;
   const Int_t ny = 5;
 
   char* Ma[nx]={"50","100","200","300","400","490","600"};
-  char* sinp[ny]={"0.1","0.3","0.5","#sqrt{2}/2","#sqrt{3}/2"};
-  TH2F *h = new TH2F("h",Form("%s Width (GeV)",higgs.data()),nx,0,nx,ny,0,ny);
+  char* sinp[ny]={"0.3","0.5","0.7","1.0","1.5"};
+  TH2F *h = new TH2F("h","pp#rightarrow h #chi#chi Production Cross Section (pb)",nx,0,nx,ny,0,ny);
   ifstream fin;
   fin.open(inputFile.data());
 
   for(int iy=0; iy<ny; iy++){
     for(int ix=0; ix<nx; ix++){
+      //      if(iy==0 && ix==nx-1)continue;
       double tempy, tempx, value;
       fin >> tempy >> tempx >> value;
       h->SetBinContent(ix+1,iy+1,value);
@@ -31,7 +32,7 @@ void Draw2D_width_sinp(string higgs,string inputFile="temp.txt")
   TCanvas *c1 = new TCanvas("c1","demo bin labels",10,10,800,800);
   c1->SetGrid();
   c1->SetLeftMargin(0.15);
-  c1->SetRightMargin(0.12);
+  c1->SetRightMargin(0.14);
   c1->SetBottomMargin(0.15);
   gStyle->SetPaintTextFormat("4.4f");
 
@@ -40,7 +41,7 @@ void Draw2D_width_sinp(string higgs,string inputFile="temp.txt")
   h->GetXaxis()->SetLabelOffset(90);
   h->GetXaxis()->SetTitle("M_{a} [GeV]");
   h->GetYaxis()->SetLabelOffset(90);
-  h->GetYaxis()->SetTitle("sin#theta");
+  h->GetYaxis()->SetTitle("tan#beta");
   h->Draw("textcolz");
   // draw labels along X
   Float_t x, y;
@@ -63,6 +64,6 @@ void Draw2D_width_sinp(string higgs,string inputFile="temp.txt")
     t.DrawLatex(x,y,sinp[i]);
   }
 
-  c1->Print(Form("2HDMPZ2_%swidth_varysinp.pdf",higgs.data()));
+  c1->Print("2HDMPZ2_xsec_varytanb_sinp0p7071.pdf");
 
 }
