@@ -1,5 +1,5 @@
 # Enviornment setup
-## create directory in the lxplus work area
+## Create directory in the lxplus work area
 The following instruction assumes the shell is tcsh.
 ### Download genproduction, model files, and default run card
 ```
