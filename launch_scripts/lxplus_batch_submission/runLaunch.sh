@@ -8,6 +8,6 @@ cd $PRODHOME
 
 source gridpack_generation.sh interactive
 
-cd MG5_aMC_v2_3_3
+cd MG5_aMC_v2_4_2
 
 ./bin/mg5_aMC $CARDNAME
