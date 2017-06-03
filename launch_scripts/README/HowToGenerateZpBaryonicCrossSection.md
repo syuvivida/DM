@@ -44,5 +44,5 @@ cd $BASEDIR/interactive/interactive_gridpack/work/MG5_aMC_v2_4_2/
 wget https://raw.githubusercontent.com/syuvivida/DM/2016ana/launch_scripts/python_files/getCrossSection.py
 
 ## Now you need to modify the dmrange and medrange in getCrossSection.py so to match your mass points
-python getCrossSection.py
+python getCrossSection.py default_ZpBaryonic
 ```
