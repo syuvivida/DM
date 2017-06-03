@@ -13,7 +13,7 @@ source gridpack_generation.sh interactive
 cd $BASEDIR/interactive/interactive_gridpack/work/MG5_aMC_v2_4_2/models
 tar xvf /afs/cern.ch/cms/generators/www/Higgs_ZB_UFO.tar
 cd $BASEDIR/interactive/interactive_gridpack/work/MG5_aMC_v2_4_2/Template/LO/Cards
-wget https://raw.githubusercontent.com/syuvivida/DM/2016ana/launch_scripts/cards/run_card.dat
+wget https://raw.githubusercontent.com/syuvivida/DM/2016ana/launch_scripts/cards/run_card.dat -O run_card.dat
 exit
 ```
 
@@ -21,7 +21,7 @@ exit
 ```
 cd $BASEDIR
 wget https://raw.githubusercontent.com/syuvivida/DM/2016ana/launch_scripts/cards/default_ZpBaryonic_proc_card.dat 
-wget https://github.com/syuvivida/DM/blob/2016ana/launch_scripts/mass_files/inputbaryon
+wget https://raw.githubusercontent.com/syuvivida/DM/2016ana/launch_scripts/mass_files/inputbaryon
 wget https://raw.githubusercontent.com/syuvivida/DM/2016ana/launch_scripts/lxplus_batch_submission/runLaunch.sh 
 wget https://raw.githubusercontent.com/syuvivida/DM/2016ana/launch_scripts/lxplus_batch_submission/launch_default_ZpBaryonic.sh
 chmod 755 *sh
