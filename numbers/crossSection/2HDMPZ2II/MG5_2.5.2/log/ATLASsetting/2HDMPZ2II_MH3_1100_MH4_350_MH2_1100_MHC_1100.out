@@ -1,0 +1,645 @@
+@(#)CERN job starter $Date: 2010/06/23 14:22:16 $
+Working directory is </pool/lsf/syu/60545419> on <b697ebb9c4.cern.ch>
+
+Starting job on  Fri Jul 21 18:41:11 CEST 2017
+Running on  Linux b697ebb9c4.cern.ch 2.6.32-696.3.1.el6.x86_64 #1 SMP Wed May 31 08:51:37 CEST 2017 x86_64 x86_64 x86_64 GNU/Linux
+System release  Scientific Linux CERN SLC release 6.9 (Carbon)
+name: interactive
+carddir: 
+queue: local
+scram_arch: slc6_amd64_gcc481
+cmssw_version: CMSSW_7_1_28
+# On branch mg25x
+# Changed but not updated:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	modified:   gridpack_generation.sh
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#	2HDMPZ2II_MH3_1000_MH4_100_MH2_1000_MHC_1000_proc_card.dat
+#	2HDMPZ2II_MH3_1000_MH4_150_MH2_1000_MHC_1000_proc_card.dat
+#	2HDMPZ2II_MH3_1000_MH4_200_MH2_1000_MHC_1000_proc_card.dat
+#	2HDMPZ2II_MH3_1000_MH4_250_MH2_1000_MHC_1000_proc_card.dat
+#	2HDMPZ2II_MH3_1000_MH4_300_MH2_1000_MHC_1000_proc_card.dat
+#	2HDMPZ2II_MH3_1000_MH4_350_MH2_1000_MHC_1000_proc_card.dat
+#	2HDMPZ2II_MH3_1000_MH4_400_MH2_1000_MHC_1000_proc_card.dat
+#	2HDMPZ2II_MH3_1000_MH4_450_MH2_1000_MHC_1000_proc_card.dat
+#	2HDMPZ2II_MH3_1000_MH4_500_MH2_1000_MHC_1000_proc_card.dat
+#	2HDMPZ2II_MH3_100_MH4_100_MH2_100_MHC_100_proc_card.dat
+#	2HDMPZ2II_MH3_1100_MH4_100_MH2_1100_MHC_1100_proc_card.dat
+#	2HDMPZ2II_MH3_1100_MH4_150_MH2_1100_MHC_1100_proc_card.dat
+#	2HDMPZ2II_MH3_1100_MH4_200_MH2_1100_MHC_1100_proc_card.dat
+#	2HDMPZ2II_MH3_1100_MH4_250_MH2_1100_MHC_1100_proc_card.dat
+#	2HDMPZ2II_MH3_1100_MH4_300_MH2_1100_MHC_1100_proc_card.dat
+#	2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100_proc_card.dat
+#	2HDMPZ2II_MH3_1100_MH4_400_MH2_1100_MHC_1100_proc_card.dat
+#	2HDMPZ2II_MH3_1100_MH4_450_MH2_1100_MHC_1100_proc_card.dat
+#	2HDMPZ2II_MH3_1100_MH4_500_MH2_1100_MHC_1100_proc_card.dat
+#	2HDMPZ2II_MH3_1200_MH4_100_MH2_1200_MHC_1200_proc_card.dat
+#	2HDMPZ2II_MH3_1200_MH4_150_MH2_1200_MHC_1200_proc_card.dat
+#	2HDMPZ2II_MH3_1200_MH4_200_MH2_1200_MHC_1200_proc_card.dat
+#	2HDMPZ2II_MH3_1200_MH4_250_MH2_1200_MHC_1200_proc_card.dat
+#	2HDMPZ2II_MH3_1200_MH4_300_MH2_1200_MHC_1200_proc_card.dat
+#	2HDMPZ2II_MH3_1200_MH4_350_MH2_1200_MHC_1200_proc_card.dat
+#	2HDMPZ2II_MH3_1200_MH4_400_MH2_1200_MHC_1200_proc_card.dat
+#	2HDMPZ2II_MH3_1200_MH4_450_MH2_1200_MHC_1200_proc_card.dat
+#	2HDMPZ2II_MH3_1200_MH4_500_MH2_1200_MHC_1200_proc_card.dat
+#	2HDMPZ2II_MH3_1300_MH4_100_MH2_1300_MHC_1300_proc_card.dat
+#	2HDMPZ2II_MH3_1300_MH4_150_MH2_1300_MHC_1300_proc_card.dat
+#	2HDMPZ2II_MH3_1300_MH4_200_MH2_1300_MHC_1300_proc_card.dat
+#	2HDMPZ2II_MH3_1300_MH4_250_MH2_1300_MHC_1300_proc_card.dat
+#	2HDMPZ2II_MH3_1300_MH4_300_MH2_1300_MHC_1300_proc_card.dat
+#	2HDMPZ2II_MH3_1300_MH4_350_MH2_1300_MHC_1300_proc_card.dat
+#	2HDMPZ2II_MH3_1300_MH4_400_MH2_1300_MHC_1300_proc_card.dat
+#	2HDMPZ2II_MH3_1300_MH4_450_MH2_1300_MHC_1300_proc_card.dat
+#	2HDMPZ2II_MH3_1300_MH4_500_MH2_1300_MHC_1300_proc_card.dat
+#	2HDMPZ2II_MH3_1400_MH4_100_MH2_1400_MHC_1400_proc_card.dat
+#	2HDMPZ2II_MH3_1400_MH4_150_MH2_1400_MHC_1400_proc_card.dat
+#	2HDMPZ2II_MH3_1400_MH4_200_MH2_1400_MHC_1400_proc_card.dat
+#	2HDMPZ2II_MH3_1400_MH4_250_MH2_1400_MHC_1400_proc_card.dat
+#	2HDMPZ2II_MH3_1400_MH4_300_MH2_1400_MHC_1400_proc_card.dat
+#	2HDMPZ2II_MH3_1400_MH4_350_MH2_1400_MHC_1400_proc_card.dat
+#	2HDMPZ2II_MH3_1400_MH4_400_MH2_1400_MHC_1400_proc_card.dat
+#	2HDMPZ2II_MH3_1400_MH4_450_MH2_1400_MHC_1400_proc_card.dat
+#	2HDMPZ2II_MH3_1400_MH4_500_MH2_1400_MHC_1400_proc_card.dat
+#	2HDMPZ2II_MH3_1500_MH4_100_MH2_1500_MHC_1500_proc_card.dat
+#	2HDMPZ2II_MH3_1500_MH4_150_MH2_1500_MHC_1500_proc_card.dat
+#	2HDMPZ2II_MH3_1500_MH4_200_MH2_1500_MHC_1500_proc_card.dat
+#	2HDMPZ2II_MH3_1500_MH4_250_MH2_1500_MHC_1500_proc_card.dat
+#	2HDMPZ2II_MH3_1500_MH4_300_MH2_1500_MHC_1500_proc_card.dat
+#	2HDMPZ2II_MH3_1500_MH4_350_MH2_1500_MHC_1500_proc_card.dat
+#	2HDMPZ2II_MH3_1500_MH4_400_MH2_1500_MHC_1500_proc_card.dat
+#	2HDMPZ2II_MH3_1500_MH4_450_MH2_1500_MHC_1500_proc_card.dat
+#	2HDMPZ2II_MH3_1500_MH4_500_MH2_1500_MHC_1500_proc_card.dat
+#	2HDMPZ2II_MH3_1600_MH4_100_MH2_1600_MHC_1600_proc_card.dat
+#	2HDMPZ2II_MH3_1600_MH4_150_MH2_1600_MHC_1600_proc_card.dat
+#	2HDMPZ2II_MH3_1600_MH4_200_MH2_1600_MHC_1600_proc_card.dat
+#	2HDMPZ2II_MH3_1600_MH4_250_MH2_1600_MHC_1600_proc_card.dat
+#	2HDMPZ2II_MH3_1600_MH4_300_MH2_1600_MHC_1600_proc_card.dat
+#	2HDMPZ2II_MH3_1600_MH4_350_MH2_1600_MHC_1600_proc_card.dat
+#	2HDMPZ2II_MH3_1600_MH4_400_MH2_1600_MHC_1600_proc_card.dat
+#	2HDMPZ2II_MH3_1600_MH4_450_MH2_1600_MHC_1600_proc_card.dat
+#	2HDMPZ2II_MH3_1600_MH4_500_MH2_1600_MHC_1600_proc_card.dat
+#	2HDMPZ2II_MH3_200_MH4_100_MH2_200_MHC_200_proc_card.dat
+#	2HDMPZ2II_MH3_200_MH4_150_MH2_200_MHC_200_proc_card.dat
+#	2HDMPZ2II_MH3_200_MH4_200_MH2_200_MHC_200_proc_card.dat
+#	2HDMPZ2II_MH3_300_MH4_100_MH2_300_MHC_300_proc_card.dat
+#	2HDMPZ2II_MH3_300_MH4_150_MH2_300_MHC_300_proc_card.dat
+#	2HDMPZ2II_MH3_300_MH4_200_MH2_300_MHC_300_proc_card.dat
+#	2HDMPZ2II_MH3_300_MH4_250_MH2_300_MHC_300_proc_card.dat
+#	2HDMPZ2II_MH3_300_MH4_300_MH2_300_MHC_300_proc_card.dat
+#	2HDMPZ2II_MH3_400_MH4_100_MH2_400_MHC_400_proc_card.dat
+#	2HDMPZ2II_MH3_400_MH4_150_MH2_400_MHC_400_proc_card.dat
+#	2HDMPZ2II_MH3_400_MH4_200_MH2_400_MHC_400_proc_card.dat
+#	2HDMPZ2II_MH3_400_MH4_250_MH2_400_MHC_400_proc_card.dat
+#	2HDMPZ2II_MH3_400_MH4_300_MH2_400_MHC_400_proc_card.dat
+#	2HDMPZ2II_MH3_400_MH4_350_MH2_400_MHC_400_proc_card.dat
+#	2HDMPZ2II_MH3_400_MH4_400_MH2_400_MHC_400_proc_card.dat
+#	2HDMPZ2II_MH3_500_MH4_100_MH2_500_MHC_500_proc_card.dat
+#	2HDMPZ2II_MH3_500_MH4_150_MH2_500_MHC_500_proc_card.dat
+#	2HDMPZ2II_MH3_500_MH4_200_MH2_500_MHC_500_proc_card.dat
+#	2HDMPZ2II_MH3_500_MH4_250_MH2_500_MHC_500_proc_card.dat
+#	2HDMPZ2II_MH3_500_MH4_300_MH2_500_MHC_500_proc_card.dat
+#	2HDMPZ2II_MH3_500_MH4_350_MH2_500_MHC_500_proc_card.dat
+#	2HDMPZ2II_MH3_500_MH4_400_MH2_500_MHC_500_proc_card.dat
+#	2HDMPZ2II_MH3_500_MH4_450_MH2_500_MHC_500_proc_card.dat
+#	2HDMPZ2II_MH3_500_MH4_500_MH2_500_MHC_500_proc_card.dat
+#	2HDMPZ2II_MH3_600_MH4_100_MH2_600_MHC_600_proc_card.dat
+#	2HDMPZ2II_MH3_600_MH4_150_MH2_600_MHC_600_proc_card.dat
+#	2HDMPZ2II_MH3_600_MH4_200_MH2_600_MHC_600_proc_card.dat
+#	2HDMPZ2II_MH3_600_MH4_250_MH2_600_MHC_600_proc_card.dat
+#	2HDMPZ2II_MH3_600_MH4_300_MH2_600_MHC_600_proc_card.dat
+#	2HDMPZ2II_MH3_600_MH4_350_MH2_600_MHC_600_proc_card.dat
+#	2HDMPZ2II_MH3_600_MH4_400_MH2_600_MHC_600_proc_card.dat
+#	2HDMPZ2II_MH3_600_MH4_450_MH2_600_MHC_600_proc_card.dat
+#	2HDMPZ2II_MH3_600_MH4_500_MH2_600_MHC_600_proc_card.dat
+#	2HDMPZ2II_MH3_700_MH4_100_MH2_700_MHC_700_proc_card.dat
+#	2HDMPZ2II_MH3_700_MH4_150_MH2_700_MHC_700_proc_card.dat
+#	2HDMPZ2II_MH3_700_MH4_200_MH2_700_MHC_700_proc_card.dat
+#	2HDMPZ2II_MH3_700_MH4_250_MH2_700_MHC_700_proc_card.dat
+#	2HDMPZ2II_MH3_700_MH4_300_MH2_700_MHC_700_proc_card.dat
+#	2HDMPZ2II_MH3_700_MH4_350_MH2_700_MHC_700_proc_card.dat
+#	2HDMPZ2II_MH3_700_MH4_400_MH2_700_MHC_700_proc_card.dat
+#	2HDMPZ2II_MH3_700_MH4_450_MH2_700_MHC_700_proc_card.dat
+#	2HDMPZ2II_MH3_700_MH4_500_MH2_700_MHC_700_proc_card.dat
+#	2HDMPZ2II_MH3_800_MH4_100_MH2_800_MHC_800_proc_card.dat
+#	2HDMPZ2II_MH3_800_MH4_150_MH2_800_MHC_800_proc_card.dat
+#	2HDMPZ2II_MH3_800_MH4_200_MH2_800_MHC_800_proc_card.dat
+#	2HDMPZ2II_MH3_800_MH4_250_MH2_800_MHC_800_proc_card.dat
+#	2HDMPZ2II_MH3_800_MH4_300_MH2_800_MHC_800_proc_card.dat
+#	2HDMPZ2II_MH3_800_MH4_350_MH2_800_MHC_800_proc_card.dat
+#	2HDMPZ2II_MH3_800_MH4_400_MH2_800_MHC_800_proc_card.dat
+#	2HDMPZ2II_MH3_800_MH4_450_MH2_800_MHC_800_proc_card.dat
+#	2HDMPZ2II_MH3_800_MH4_500_MH2_800_MHC_800_proc_card.dat
+#	2HDMPZ2II_MH3_900_MH4_100_MH2_900_MHC_900_proc_card.dat
+#	2HDMPZ2II_MH3_900_MH4_150_MH2_900_MHC_900_proc_card.dat
+#	2HDMPZ2II_MH3_900_MH4_200_MH2_900_MHC_900_proc_card.dat
+#	2HDMPZ2II_MH3_900_MH4_250_MH2_900_MHC_900_proc_card.dat
+#	2HDMPZ2II_MH3_900_MH4_300_MH2_900_MHC_900_proc_card.dat
+#	2HDMPZ2II_MH3_900_MH4_350_MH2_900_MHC_900_proc_card.dat
+#	2HDMPZ2II_MH3_900_MH4_400_MH2_900_MHC_900_proc_card.dat
+#	2HDMPZ2II_MH3_900_MH4_450_MH2_900_MHC_900_proc_card.dat
+#	2HDMPZ2II_MH3_900_MH4_500_MH2_900_MHC_900_proc_card.dat
+#	2HDMPZ2II_proc_card.dat
+#	2HDMPZ2II_proc_card.dat~
+#	ATLAS_mass
+#	LSFJOB_60545393/
+#	cards/testATLAS/
+#	interactive/
+#	launch_2HDMPZ2II.sh
+#	launch_2HDMPZ2II.sh~
+#	runLaunch.sh
+#	runLaunch.sh~
+#	testATLAS.log
+#	testATLAS/
+no changes added to commit (use "git add" and/or "git commit -a")
+Current git revision is:
+0bbec92b3038971e3e0a64618fcf83a7833dbb80
+diff --git a/bin/MadGraph5_aMCatNLO/gridpack_generation.sh b/bin/MadGraph5_aMCatNLO/gridpack_generation.sh
+index 728419e..a2b5a94 100755
+--- a/bin/MadGraph5_aMCatNLO/gridpack_generation.sh
++++ b/bin/MadGraph5_aMCatNLO/gridpack_generation.sh
+@@ -112,7 +112,7 @@ CARDSDIR=${PRODHOME}/${carddir}
+ MGBASEDIR=mgbasedir
+ 
+ MG_EXT=".tar.gz"
+-MG=MG5_aMC_v2.5.5$MG_EXT
++MG=MG5_aMC_v2.5.2$MG_EXT
+ MGSOURCE=https://cms-project-generators.web.cern.ch/cms-project-generators/$MG
+ 
+ #syscalc is a helper tool for madgraph to add scale and pdf variation weights for LO processes
+/afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO
+Reusing existing directory assuming generated code already exists
+WARNING: If you changed the process card you need to clean the folder and run from scratch
+************************************************************
+*                                                          *
+*                     W E L C O M E to                     *
+*              M A D G R A P H 5 _ a M C @ N L O           *
+*                                                          *
+*                                                          *
+*                 *                       *                *
+*                   *        * *        *                  *
+*                     * * * * 5 * * * *                    *
+*                   *        * *        *                  *
+*                 *                       *                *
+*                                                          *
+*         VERSION 2.5.2                 2016-12-10         *
+*                                                          *
+*    The MadGraph5_aMC@NLO Development Team - Find us at   *
+*    https://server06.fynu.ucl.ac.be/projects/madgraph     *
+*                            and                           *
+*            http://amcatnlo.web.cern.ch/amcatnlo/         *
+*                                                          *
+*               Type 'help' for in-line help.              *
+*           Type 'tutorial' to learn how MG5 works         *
+*    Type 'tutorial aMCatNLO' to learn how aMC@NLO works   *
+*    Type 'tutorial MadLoop' to learn how MadLoop works    *
+*                                                          *
+************************************************************
+load MG5 configuration from input/mg5_configuration.txt 
+None does not seem to correspond to a valid fastjet-config executable (v3+). We will use fjcore instead.
+ Please set the 'fastjet'variable to the full (absolute) /PATH/TO/fastjet-config (including fastjet-config).
+ MG5_aMC> set fastjet /PATH/TO/fastjet-config
+
+set lhapdf to /cvmfs/cms.cern.ch/slc6_amd64_gcc481/external/lhapdf/6.1.6-ddibom/share/LHAPDF/../../bin/lhapdf-config
+set ninja to /afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/HEPTools/lib
+No valid eps viewer found. Please set in ./input/mg5_configuration.txt
+No valid web browser found. Please set in ./input/mg5_configuration.txt
+import /afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100_proc_card.dat
+The import format was not given, so we guess it as command
+import model Pseudoscalar_2HDM
+INFO: Change particles name to pass to MG5 convention 
+Defined multiparticle p = g u c d s u~ c~ d~ s~
+Defined multiparticle j = g u c d s u~ c~ d~ s~
+Defined multiparticle l+ = e+ mu+
+Defined multiparticle l- = e- mu-
+Defined multiparticle vl = ve vm vt
+Defined multiparticle vl~ = ve~ vm~ vt~
+Defined multiparticle all = g ghg ghg~ u c d s u~ c~ d~ s~ a gha gha~ ve vm vt e- mu- ve~ vm~ vt~ e+ mu+ t b t~ b~ z w+ ghz ghwp ghwm h+ h1 h2 h3 h4 w- ghz~ ghwp~ ghwm~ h- ta- xd ta+ xd~
+generate g g > xd xd~ h1 / z [QCD]
+[1;60m------------------------------------------------------------------------[0m
+[1;60m No Born diagrams found. Now switching to the loop-induced mode.        [0m
+[1;60m Please cite ref. 'arXiv:1507.00020' when using results from this mode. [0m
+[1;60m------------------------------------------------------------------------[0m
+1 processes with 80 diagrams generated in 6.324 s
+Total: 1 processes with 80 diagrams
+output 2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100 -nojpeg
+INFO: initialize a new directory: 2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100 
+INFO: remove old information in 2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100 
+INFO: Organizing processes into subprocess groups 
+INFO: Generating Helas calls for process: g g > xd xd~ h1 WEIGHTED<=12 [ noborn = QCD ] / z 
+INFO: Processing color information for loop process: g g > xd xd~ h1 [ noborn = QCD ] / z 
+INFO: Creating color matrix  loop process: g g > xd xd~ h1 WEIGHTED<=12 [ noborn = QCD ] / z 
+INFO: Creating files in directory /afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100/SubProcesses/PV0_0_1_gg_xdxdxh1_no_z 
+ALOHA: aloha creates FFV1 set of routines with options: L1
+INFO: Computing diagram color coefficients 
+INFO: Drawing loop Feynman diagrams for Process: g g > xd xd~ h1 WEIGHTED<=12 [ noborn = QCD ] / z 
+INFO: Creating files in directory P0_gg_xdxdxh1 
+INFO: Generating Feynman diagrams for Process: g g > xd xd~ h1 WEIGHTED<=12 [ noborn = QCD ] / z 
+INFO: Finding symmetric diagrams for subprocess group gg_xdxdxh1 
+History written to /afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100/Cards/proc_card_mg5.dat
+Generated helas calls for 1 subprocesses (80 diagrams) in 1.307 s
+ALOHA: aloha creates FFS1 routines
+ALOHA: aloha creates FFS3 set of routines with options: L2
+ALOHA: aloha creates SSS1 routines
+ALOHA: aloha creates FFS3_5 set of routines with options: L2
+save configuration file to /afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100/Cards/me5_configuration.txt
+INFO: Use Fortran compiler gfortran 
+INFO: Use c++ compiler g++ 
+INFO: Generate web pages 
+Output to directory /afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100 done.
+Type "launch" to generate events from this process, or see
+/afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100/README
+Run "open index.html" to see more information about this process.
+launch 2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100
+************************************************************
+*                                                          *
+*                      W E L C O M E to                    *
+*             M A D G R A P H 5 _ a M C @ N L O            *
+*                      M A D E V E N T                     *
+*                                                          *
+*                 *                       *                *
+*                   *        * *        *                  *
+*                     * * * * 5 * * * *                    *
+*                   *        * *        *                  *
+*                 *                       *                *
+*                                                          *
+*         VERSION 2.5.2                 2016-12-10         *
+*                                                          *
+*    The MadGraph5_aMC@NLO Development Team - Find us at   *
+*    https://server06.fynu.ucl.ac.be/projects/madgraph     *
+*                                                          *
+*               Type 'help' for in-line help.              *
+*                                                          *
+************************************************************
+INFO: load configuration from /afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100/Cards/me5_configuration.txt  
+INFO: load configuration from /afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/input/mg5_configuration.txt  
+INFO: load configuration from /afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100/Cards/me5_configuration.txt  
+No valid eps viewer found. Please set in ./input/mg5_configuration.txt
+No valid web browser found. Please set in ./input/mg5_configuration.txt
+generate_events run_01
+The following switches determine which programs are run:
+/--------------------------------------------------------------------------------------------------\
+|  [31m1[0m. Choose the shower/hadronization program:                           shower = [31mNot installed[0m    |
+|  [31m2[0m. Choose the detector simulation program:                          detector = [31mNot installed[0m    |
+|  [31m3[0m. Run an analysis package on the events generated:                 analysis = [33mNo analysis tool interfaced to MG5aMC.[0m|
+|  [31m4[0m. Decay particles with the MadSpin module:                          madspin = [31mOFF[0m              |
+|  [31m5[0m. Add weights to events for different model hypothesis:            reweight = [31mOFF[0m              |
+\--------------------------------------------------------------------------------------------------/
+  Either type the switch number (1 to 5) to change its setting,
+  Set any switch explicitly (e.g. type 'madspin=ON' at the prompt)
+  Type 'help' for the list of all valid option
+  Type '0', 'auto', 'done' or just press enter when you are done.
+ [[4m0[0m, auto, done, madspin=ON, madspin=OFF, madspin, reweight=ON, reweight=OFF, reweight, parton, ... ]
+[1;34mThe answer to the previous question is not set in your input file[0m
+[1;34mUse 0 value[0m
+set sinp 0.35
+[1;60mINFO: modify param_card information BLOCK higgs with id (5,) set to 0.35 [0m
+set tanbeta 1
+[1;60mINFO: modify param_card information BLOCK frblock with id (2,) set to 1.0 [0m
+set laP1 3.0
+[1;60mINFO: modify param_card information BLOCK higgs with id (2,) set to 3.0 [0m
+set laP2 3.0
+[1;60mINFO: modify param_card information BLOCK higgs with id (3,) set to 3.0 [0m
+set lam3 3.0
+[1;60mINFO: modify param_card information BLOCK higgs with id (1,) set to 3.0 [0m
+set sinbma 1.0
+[1;60mINFO: modify param_card information BLOCK frblock with id (3,) set to 1.0 [0m
+set gPXd 1.0
+[1;60mINFO: modify param_card information BLOCK dminputs with id (1,) set to 1.0 [0m
+set Mxd 1.0
+[1;60mINFO: modify param_card information BLOCK mass with id (52,) set to 1.0 [0m
+set mhc 1100
+[1;60mINFO: modify param_card information BLOCK mass with id (37,) set to 1100.0 [0m
+set mh2 1100
+[1;60mINFO: modify param_card information BLOCK mass with id (35,) set to 1100.0 [0m
+set mh3 1100
+[1;60mINFO: modify param_card information BLOCK mass with id (36,) set to 1100.0 [0m
+set mh4 350
+[1;60mINFO: modify param_card information BLOCK mass with id (55,) set to 350.0 [0m
+set Wh1 auto
+[1;60mINFO: modify param_card information BLOCK decay with id (25,) set to Auto [0m
+set Wh2 auto
+[1;60mINFO: modify param_card information BLOCK decay with id (35,) set to Auto [0m
+set Wh3 auto
+[1;60mINFO: modify param_card information BLOCK decay with id (36,) set to Auto [0m
+set Whc auto
+[1;60mINFO: modify param_card information BLOCK decay with id (37,) set to Auto [0m
+set Wh4 auto
+[1;60mINFO: modify param_card information BLOCK decay with id (55,) set to Auto [0m
+Do you want to edit a card (press enter to bypass editing)?
+/------------------------------------------------------------\
+|  [31m1[0m. param         : [32mparam_card.dat[0m                         |
+|  [31m2[0m. run           : [32mrun_card.dat[0m                           |
+|  [31m3[0m. MadLoopParams : [32mMadLoopParams.dat[0m                      |
+\------------------------------------------------------------/
+ you can also
+   - enter the path to a valid card or banner.
+   - use the 'set' command to modify a parameter directly.
+     The set option works only for param_card and run_card.
+     Type 'help set' for more information on this command.
+   - call an external program (ASperGE/MadWidth/...).
+     Type 'help' for the list of available command
+ [[4m0[0m, done, 1, param, 2, run, 3, MadLoopParams, enter path]
+[1;60mThe answer to the previous question is not set in your input file[0m
+[1;60mUse 0 value[0m
+INFO: Change particles name to pass to MG5 convention 
+************************************************************
+*                                                          *
+*                     W E L C O M E to                     *
+*              M A D G R A P H 5 _ a M C @ N L O           *
+*                                                          *
+*                                                          *
+*                 *                       *                *
+*                   *        * *        *                  *
+*                     * * * * 5 * * * *                    *
+*                   *        * *        *                  *
+*                 *                       *                *
+*                                                          *
+*         VERSION 2.5.2                 2016-12-10         *
+*                                                          *
+*    The MadGraph5_aMC@NLO Development Team - Find us at   *
+*    https://server06.fynu.ucl.ac.be/projects/madgraph     *
+*                            and                           *
+*            http://amcatnlo.web.cern.ch/amcatnlo/         *
+*                                                          *
+*               Type 'help' for in-line help.              *
+*           Type 'tutorial' to learn how MG5 works         *
+*    Type 'tutorial aMCatNLO' to learn how aMC@NLO works   *
+*    Type 'tutorial MadLoop' to learn how MadLoop works    *
+*                                                          *
+************************************************************
+load MG5 configuration from input/mg5_configuration.txt 
+None does not seem to correspond to a valid fastjet-config executable (v3+). We will use fjcore instead.
+ Please set the 'fastjet'variable to the full (absolute) /PATH/TO/fastjet-config (including fastjet-config).
+ MG5_aMC> set fastjet /PATH/TO/fastjet-config
+
+set lhapdf to /cvmfs/cms.cern.ch/slc6_amd64_gcc481/external/lhapdf/6.1.6-ddibom/share/LHAPDF/../../bin/lhapdf-config
+set ninja to /afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/HEPTools/lib
+No valid eps viewer found. Please set in ./input/mg5_configuration.txt
+No valid web browser found. Please set in ./input/mg5_configuration.txt
+set automatic_html_opening False --no_save
+compute_widths 25 35 36 37 55 --precision_channel=0.01 --body_decay=4.0025 --path=/afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100/Cards/param_card.dat --output=/afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100/Cards/param_card.dat
+[1;34mPlease note that the automatic computation of the width is
+    only valid in narrow-width approximation and at tree-level.[0m
+INFO: Get two body decay from FeynRules formula 
+Results written to /afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100/Cards/param_card.dat
+INFO: get decay diagram for h1 
+Vertexlist of this model has not been searched.Automatically run the model.find_vertexlist()
+Found 6 stable particles
+INFO: get decay diagram for h2 
+INFO:     current estimated error: 0.0287545238047 go to 4-body decay: 
+100 / 118: 5s
+INFO:     stop to 4.0 body-decay. approximate error: 0.269066926602 
+INFO: get decay diagram for h3 
+INFO:     current estimated error: 1.82546710674 go to 4-body decay: 
+INFO:     stop to 4.0 body-decay. approximate error: 7.51781293581 
+INFO: get decay diagram for h+ 
+INFO:     current estimated error: 0.365616931724 go to 4-body decay: 
+INFO:     stop to 4.0 body-decay. approximate error: 0.00984402794313 
+INFO: get decay diagram for h4 
+Pass to numerical integration for computing the widths:
+INFO: More info in temporary files:
+    /afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/tmpmWhgY5/temp_decay/index.html 
+Results written to /afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100/Cards/param_card.dat
+INFO: Update the dependent parameter of the param_card.dat 
+Generating 20000 events with run name run_01
+survey  run_01 
+INFO: compile directory 
+[1;34mNot able to open file /afs/cern.ch/work/s/syu/2HDM_gridpack/v25x/genproductions/bin/MadGraph5_aMCatNLO/interactive/interactive_gridpack/work/MG5_aMC_v2_5_2/2HDMPZ2II_MH3_1100_MH4_350_MH2_1100_MHC_1100/crossx.html since no program configured.Please set one in ./input/mg5_configuration.txt[0m
+run_card missed argument ptlund. Takes default: -1.0
+run_card missed argument pdgs_for_merging_cut. Takes default: [21, 1, 2, 3, 4, 5, 6]
+run_card missed argument bias_parameters. Takes default: {}
+initMadLoop -r -f
+run_card missed argument ptlund. Takes default: -1.0
+run_card missed argument pdgs_for_merging_cut. Takes default: [21, 1, 2, 3, 4, 5, 6]
+run_card missed argument bias_parameters. Takes default: {}
+Initializing MadLoop loop-induced matrix elements (this can take some time)...
+MadLoop initialization finished.
+compile Source Directory
+Using random number seed offset = 21
+INFO: Running Survey 
+Creating Jobs
+Working on SubProcesses
+INFO:     P0_gg_xdxdxh1  
+INFO:  Idle: 32,  Running: 16,  Completed: 0 [ current time: 20h06 ] 
+INFO:  Idle: 31,  Running: 16,  Completed: 1 [  41.8s  ] 
+INFO:  Idle: 27,  Running: 16,  Completed: 5 [  45.5s  ] 
+INFO:  Idle: 24,  Running: 16,  Completed: 8 [  54.4s  ] 
+INFO:  Idle: 18,  Running: 16,  Completed: 18 [  1m 46s  ] 
+INFO:  Idle: 16,  Running: 16,  Completed: 20 [  1m 50s  ] 
+INFO:  Idle: 8,  Running: 16,  Completed: 31 [  1m 53s  ] 
+INFO:  Idle: 7,  Running: 16,  Completed: 32 [  2m 15s  ] 
+INFO:  Idle: 7,  Running: 16,  Completed: 33 [  2m 24s  ] 
+INFO:  Idle: 6,  Running: 16,  Completed: 34 [  2m 28s  ] 
+INFO:  Idle: 5,  Running: 16,  Completed: 35 [  2m 39s  ] 
+INFO:  Idle: 3,  Running: 16,  Completed: 37 [  2m 43s  ] 
+INFO:  Idle: 2,  Running: 16,  Completed: 38 [  2m 48s  ] 
+INFO:  Idle: 0,  Running: 14,  Completed: 42 [  2m 51s  ] 
+INFO: P0_gg_xdxdxh1/G1.4 is at 4.32e-06 +- 2.52e-07 pb. Now submitting iteration #2. 
+INFO: P0_gg_xdxdxh1/G1.5 is at 1.1e-06 +- 1.22e-07 pb. Now submitting iteration #2. 
+INFO: P0_gg_xdxdxh1/G1.7 is at 2.03e-07 +- 2.17e-08 pb. Now submitting iteration #2. 
+INFO:  Idle: 1,  Running: 15,  Completed: 46 [  2m 54s  ] 
+INFO: P0_gg_xdxdxh1/G2.5 is at 1.34e-05 +- 1.03e-06 pb. Now submitting iteration #2. 
+INFO: P0_gg_xdxdxh1/G3 is at 0.013 +- 0.000658 pb. Now submitting iteration #2. 
+INFO: P0_gg_xdxdxh1/G1.8 is at 3.11e-08 +- 1.45e-08 pb. Now submitting iteration #2. 
+INFO: P0_gg_xdxdxh1/G2.7 is at 1.01e-07 +- 8.72e-09 pb. Now submitting iteration #2. 
+INFO:  Idle: 12,  Running: 16,  Completed: 50 [  3m 1s  ] 
+INFO: P0_gg_xdxdxh1/G2.8 is at 3.52e-07 +- 1.32e-07 pb. Now submitting iteration #2. 
+INFO:  Idle: 21,  Running: 16,  Completed: 53 [  3m 5s  ] 
+INFO: P0_gg_xdxdxh1/G4.5 is at 0.00128 +- 0.000107 pb. Now submitting iteration #2. 
+INFO: P0_gg_xdxdxh1/G4.7 is at 0.000769 +- 7.07e-05 pb. Now submitting iteration #2. 
+INFO:  Idle: 26,  Running: 16,  Completed: 58 [  3m 8s  ] 
+INFO:  Idle: 25,  Running: 16,  Completed: 59 [  3m 47s  ] 
+INFO:  Idle: 24,  Running: 16,  Completed: 60 [  3m 51s  ] 
+INFO:  Idle: 22,  Running: 16,  Completed: 62 [  3m 54s  ] 
+INFO:  Idle: 20,  Running: 16,  Completed: 65 [  3m 57s  ] 
+INFO:  Idle: 19,  Running: 16,  Completed: 66 [  4m 2s  ] 
+INFO:  Idle: 16,  Running: 16,  Completed: 70 [  4m 8s  ] 
+INFO:  Idle: 15,  Running: 16,  Completed: 72 [  4m 12s  ] 
+INFO:  Idle: 13,  Running: 16,  Completed: 75 [  4m 39s  ] 
+INFO:  Idle: 12,  Running: 16,  Completed: 76 [  4m 49s  ] 
+INFO:  Idle: 10,  Running: 16,  Completed: 79 [  4m 58s  ] 
+INFO: P0_gg_xdxdxh1/G4.4 is at 6.98e-09 +- 1.99e-09 pb. Now submitting iteration #2. 
+INFO:  Idle: 8,  Running: 16,  Completed: 86 [  5m 1s  ] 
+INFO:  Idle: 7,  Running: 16,  Completed: 88 [  5m 5s  ] 
+INFO: P0_gg_xdxdxh1/G1.4 is at 4.65e-06 +- 1.33e-07 pb. Now submitting iteration #3. 
+INFO: P0_gg_xdxdxh1/G4.8 is at 2.71e-05 +- 1.02e-05 pb. Now submitting iteration #2. 
+INFO:  Idle: 9,  Running: 16,  Completed: 90 [  5m 8s  ] 
+INFO: P0_gg_xdxdxh1/G1.5 is at 1.03e-06 +- 3.43e-08 pb. Now submitting iteration #3. 
+INFO: P0_gg_xdxdxh1/G1.7 is at 2.14e-07 +- 2.69e-09 pb. Now submitting iteration #3. 
+INFO:  Idle: 15,  Running: 16,  Completed: 92 [  5m 12s  ] 
+INFO:  Idle: 17,  Running: 16,  Completed: 94 [  5m 16s  ] 
+INFO: P0_gg_xdxdxh1/G2.5 is at 1.52e-05 +- 4.19e-07 pb. Now submitting iteration #3. 
+INFO: P0_gg_xdxdxh1/G1.8 is at 3.73e-08 +- 1.66e-09 pb. Now submitting iteration #3. 
+INFO:  Idle: 20,  Running: 16,  Completed: 96 [  5m 26s  ] 
+INFO:  Idle: 22,  Running: 16,  Completed: 98 [  5m 54s  ] 
+INFO: P0_gg_xdxdxh1/G3 is at 0.01318 +- 6.62e-05 pb. Now submitting iteration #3. 
+INFO: P0_gg_xdxdxh1/G2.7 is at 7.89e-08 +- 8.21e-09 pb. Now submitting iteration #3. 
+INFO:  Idle: 20,  Running: 16,  Completed: 100 [  5m 58s  ] 
+INFO:  Idle: 22,  Running: 16,  Completed: 108 [  6m 59s  ] 
+INFO:  Idle: 19,  Running: 16,  Completed: 112 [  7m 3s  ] 
+INFO: P0_gg_xdxdxh1/G2.8 is at 4.78e-07 +- 4.5e-08 pb. Now submitting iteration #3. 
+INFO:  Idle: 22,  Running: 16,  Completed: 113 [  7m 6s  ] 
+INFO:  Idle: 20,  Running: 16,  Completed: 115 [  7m 18s  ] 
+INFO:  Idle: 19,  Running: 16,  Completed: 116 [  7m 24s  ] 
+INFO:  Idle: 18,  Running: 16,  Completed: 117 [  7m 30s  ] 
+INFO:  Idle: 17,  Running: 16,  Completed: 118 [  7m 37s  ] 
+INFO:  Idle: 16,  Running: 16,  Completed: 119 [  7m 43s  ] 
+INFO:  Idle: 15,  Running: 16,  Completed: 121 [  7m 52s  ] 
+INFO:  Idle: 14,  Running: 16,  Completed: 123 [  8m 0s  ] 
+INFO: P0_gg_xdxdxh1/G4.5 is at 0.001297 +- 4.27e-06 pb. Now submitting iteration #3. 
+INFO:  Idle: 17,  Running: 16,  Completed: 125 [  8m 24s  ] 
+INFO:  Idle: 16,  Running: 16,  Completed: 126 [  8m 44s  ] 
+INFO:  Idle: 14,  Running: 16,  Completed: 128 [  8m 55s  ] 
+INFO: P0_gg_xdxdxh1/G4.7 is at 0.000728 +- 1.1e-05 pb. Now submitting iteration #3. 
+INFO:  Idle: 12,  Running: 16,  Completed: 131 [  8m 59s  ] 
+INFO: P0_gg_xdxdxh1/G4.8 is at 4.4e-05 +- 5.22e-06 pb. Now submitting iteration #3. 
+INFO:  Idle: 17,  Running: 16,  Completed: 135 [  9m 9s  ] 
+INFO:  Idle: 16,  Running: 16,  Completed: 136 [  9m 19s  ] 
+INFO: Survey finished for P0_gg_xdxdxh1/G1.4 at 4.667e-06 +- 4.06e-08 pb 
+INFO: P0_gg_xdxdxh1/G1.5 is at 1.04e-06 +- 2.46e-08 pb. Now submitting iteration #4. 
+INFO:  Idle: 17,  Running: 16,  Completed: 139 [  9m 24s  ] 
+INFO:  Idle: 16,  Running: 16,  Completed: 140 [  9m 36s  ] 
+INFO:  Idle: 15,  Running: 16,  Completed: 142 [  9m 39s  ] 
+INFO:  Idle: 13,  Running: 16,  Completed: 144 [  9m 48s  ] 
+INFO: Survey finished for P0_gg_xdxdxh1/G4.4 at 4.64e-09 +- 1.83e-09 pb 
+INFO:  Idle: 12,  Running: 16,  Completed: 145 [  9m 54s  ] 
+INFO: Survey finished for P0_gg_xdxdxh1/G1.7 at 2.191e-07 +- 1.83e-09 pb 
+INFO:  Idle: 11,  Running: 16,  Completed: 146 [  9m 58s  ] 
+INFO:  Idle: 10,  Running: 16,  Completed: 148 [  10m 31s  ] 
+INFO:  Idle: 8,  Running: 16,  Completed: 150 [  10m 38s  ] 
+INFO:  Idle: 7,  Running: 16,  Completed: 151 [  10m 45s  ] 
+INFO:  Idle: 7,  Running: 16,  Completed: 152 [  10m 50s  ] 
+INFO:  Idle: 5,  Running: 16,  Completed: 154 [  10m 57s  ] 
+INFO: Survey finished for P0_gg_xdxdxh1/G2.5 at 1.543e-05 +- 1.33e-07 pb 
+INFO:  Idle: 4,  Running: 16,  Completed: 156 [  11m 1s  ] 
+INFO: Survey finished for P0_gg_xdxdxh1/G3 at 0.0137 +- 0.000206 pb 
+INFO: Survey finished for P0_gg_xdxdxh1/G1.8 at 5.13e-08 +- 3.54e-09 pb 
+INFO:  Idle: 1,  Running: 16,  Completed: 159 [  11m 5s  ] 
+INFO:  Idle: 0,  Running: 15,  Completed: 161 [  11m 9s  ] 
+INFO: Survey finished for P0_gg_xdxdxh1/G2.7 at 8.02e-08 +- 4.08e-09 pb 
+INFO: P0_gg_xdxdxh1/G2.8 is at 5.76e-07 +- 6.66e-08 pb. Now submitting iteration #4. 
+INFO:  Idle: 1,  Running: 16,  Completed: 164 [  11m 23s  ] 
+INFO:  Idle: 0,  Running: 16,  Completed: 165 [  11m 26s  ] 
+INFO:  Idle: 0,  Running: 14,  Completed: 167 [  11m 42s  ] 
+INFO: Survey finished for P0_gg_xdxdxh1/G4.5 at 0.001299 +- 1.31e-06 pb 
+INFO:  Idle: 1,  Running: 13,  Completed: 168 [  11m 47s  ] 
+INFO: Survey finished for P0_gg_xdxdxh1/G4.7 at 0.0007243 +- 3.39e-06 pb 
+INFO:  Idle: 0,  Running: 12,  Completed: 170 [  11m 58s  ] 
+INFO:  Idle: 0,  Running: 11,  Completed: 171 [  12m 4s  ] 
+INFO:  Idle: 0,  Running: 10,  Completed: 172 [  12m 9s  ] 
+INFO:  Idle: 1,  Running: 8,  Completed: 174 [  12m 12s  ] 
+INFO: P0_gg_xdxdxh1/G4.8 is at 4.94e-05 +- 1.79e-06 pb. Now submitting iteration #4. 
+INFO:  Idle: 0,  Running: 12,  Completed: 175 [  12m 16s  ] 
+INFO:  Idle: 0,  Running: 11,  Completed: 176 [  13m 49s  ] 
+INFO:  Idle: 0,  Running: 10,  Completed: 177 [  14m 1s  ] 
+INFO:  Idle: 0,  Running: 7,  Completed: 180 [  14m 6s  ] 
+INFO:  Idle: 1,  Running: 6,  Completed: 181 [  14m 12s  ] 
+INFO: P0_gg_xdxdxh1/G1.5 is at 1.06e-06 +- 8.39e-08 pb. Now submitting iteration #5. 
+INFO:  Idle: 1,  Running: 8,  Completed: 183 [  14m 16s  ] 
+INFO:  Idle: 1,  Running: 8,  Completed: 184 [  14m 25s  ] 
+INFO: P0_gg_xdxdxh1/G2.8 is at 6.06e-07 +- 7.58e-08 pb. Now submitting iteration #5. 
+INFO:  Idle: 0,  Running: 12,  Completed: 185 [  14m 42s  ] 
+INFO:  Idle: 0,  Running: 11,  Completed: 186 [  14m 51s  ] 
+INFO:  Idle: 0,  Running: 10,  Completed: 187 [  15m 2s  ] 
+INFO: P0_gg_xdxdxh1/G4.8 is at 5.01e-05 +- 2.06e-06 pb. Now submitting iteration #5. 
+INFO:  Idle: 1,  Running: 11,  Completed: 190 [  15m 7s  ] 
+INFO:  Idle: 0,  Running: 11,  Completed: 191 [  19m 51s  ] 
+INFO:  Idle: 0,  Running: 9,  Completed: 193 [  19m 56s  ] 
+INFO: Survey finished for P0_gg_xdxdxh1/G1.5 at 1.13e-06 +- 6.67e-08 pb 
+INFO:  Idle: 0,  Running: 8,  Completed: 195 [  20m 1s  ] 
+INFO:  Idle: 0,  Running: 7,  Completed: 196 [  20m 9s  ] 
+INFO:  Idle: 0,  Running: 5,  Completed: 198 [  20m 16s  ] 
+INFO:  Idle: 0,  Running: 4,  Completed: 199 [  20m 20s  ] 
+INFO:  Idle: 1,  Running: 3,  Completed: 200 [  20m 28s  ] 
+INFO:  Idle: 0,  Running: 3,  Completed: 201 [  20m 32s  ] 
+INFO: Survey finished for P0_gg_xdxdxh1/G2.8 at 6.93e-07 +- 5.43e-08 pb 
+INFO:  Idle: 0,  Running: 1,  Completed: 203 [  20m 48s  ] 
+INFO: Survey finished for P0_gg_xdxdxh1/G4.8 at 5.11e-05 +- 4.87e-07 pb 
+INFO:  Idle: 0,  Running: 0,  Completed: 205 [  20m 51s  ] 
+INFO:  Idle: 0,  Running: 0,  Completed: 205 [  20m 51s  ] 
+INFO: End survey 
+refine 20000
+Creating Jobs
+INFO: Refine results to 20000 
+INFO: Generating 20000.0 unweigthed events. 
+INFO: Effective Luminosity 1460289.08063 pb^-1 
+INFO: need to improve 3 channels 
+Current estimate of cross-section: 0.0157503060901 +- 0.000205792796861
+INFO:  Idle: 1,  Running: 16,  Completed: 0 [ current time: 20h27 ] 
+INFO:  Idle: 0,  Running: 16,  Completed: 1 [  2m 18s  ] 
+INFO:  Idle: 0,  Running: 15,  Completed: 2 [  2m 23s  ] 
+INFO:  Idle: 0,  Running: 13,  Completed: 4 [  2m 29s  ] 
+INFO:  Idle: 0,  Running: 11,  Completed: 6 [  2m 33s  ] 
+INFO:  Idle: 0,  Running: 6,  Completed: 11 [  2m 39s  ] 
+INFO: found enough event for P0_gg_xdxdxh1/G4.8 
+INFO:  Idle: 1,  Running: 2,  Completed: 16 [  2m 44s  ] 
+INFO: found enough event for P0_gg_xdxdxh1/G1.5 
+INFO:  Idle: 1,  Running: 0,  Completed: 19 [  3m 59s  ] 
+INFO: P0_gg_xdxdxh1/G3 is at 5109/19944 (26%) event. Resubmit 9 job at iteration 1. 
+INFO:  Idle: 0,  Running: 9,  Completed: 20 [  4m 3s  ] 
+INFO:  Idle: 0,  Running: 8,  Completed: 21 [  5m 58s  ] 
+INFO:  Idle: 0,  Running: 5,  Completed: 24 [  6m 1s  ] 
+INFO:  Idle: 0,  Running: 4,  Completed: 25 [  6m 5s  ] 
+INFO:  Idle: 0,  Running: 3,  Completed: 26 [  6m 10s  ] 
+INFO: P0_gg_xdxdxh1/G3 is at 10044/19938 (50%) event. Resubmit 18 job at iteration 2. 
+INFO:  Idle: 5,  Running: 13,  Completed: 30 [  6m 17s  ] 
+INFO:  Idle: 1,  Running: 16,  Completed: 31 [  8m 36s  ] 
+INFO:  Idle: 0,  Running: 15,  Completed: 33 [  8m 48s  ] 
+INFO:  Idle: 0,  Running: 12,  Completed: 36 [  8m 53s  ] 
+INFO:  Idle: 0,  Running: 10,  Completed: 38 [  8m 57s  ] 
+INFO:  Idle: 0,  Running: 2,  Completed: 46 [  9m 4s  ] 
+INFO:  Idle: 0,  Running: 1,  Completed: 47 [  9m 47s  ] 
+INFO:  Idle: 1,  Running: 0,  Completed: 48 [  10m 10s  ] 
+INFO: found enough event for P0_gg_xdxdxh1/G3 
+INFO:  Idle: 0,  Running: 0,  Completed: 49 [  10m 18s  ] 
+INFO:  Idle: 0,  Running: 0,  Completed: 49 [  10m 18s  ] 
+INFO: Combining runs 
+INFO: finish refine 
+refine 20000
+Creating Jobs
+INFO: Refine results to 20000 
+INFO: Generating 20000.0 unweigthed events. 
+INFO: Effective Luminosity 1458197.34414 pb^-1 
+INFO: need to improve 0 channels 
+Current estimate of cross-section: 0.0157728993901 +- 1.7610909614e-05
+INFO:  Idle: 0,  Running: 0,  Completed: 0 [ current time: 20h37 ] 
+INFO: Combining runs 
+INFO: finish refine 
+INFO: Combining Events 
+ 
+ 
+ 
+  === Results Summary for run: run_01 tag: tag_1 ===
+
+     Cumulative sequential time for this run: 3h50m06s
+     Cross-section :   0.01577 +- 1.761e-05 pb
+     Nb of events :  20000
+ 
+store_events
+INFO: Storing parton level results 
+INFO: End Parton 
+reweight -from_cards
+decay_events -from_cards
+INFO: storing files of previous run 
+INFO: Done 
+quit
+INFO:  
+ 
+INFO:  
+ 
+quit
+ 
+
+ 
+
+
+Job finished at Fri Jul 21 20:38:22 CEST 2017 on node 
+ under linux version Scientific Linux CERN SLC release 6.9 (Carbon)
+
+CERN statistics: This process used approximately : 11:05:09 KSI2K hours (39909 KSI2K seconds)
+                 This process corresponds to     : 43:14:08 HS06  hours (155648 HS06  seconds)
