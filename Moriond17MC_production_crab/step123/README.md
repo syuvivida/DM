@@ -48,6 +48,7 @@ copy the file step1_inputdataset.txt to the directory CMSSW_8_0_21/src/
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 voms-proxy-init --voms cms
+cmsenv
 python MultiCrab_step1.py submit
 ```
 
@@ -58,7 +59,7 @@ Prepare your own "step1_inputdataset.txt". The first column should be the datase
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 voms-proxy-init --voms cms
-
+cmsenv
 python MultiCrab_step1.py submit official
 ```
 
@@ -67,6 +68,7 @@ python MultiCrab_step1.py submit official
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 voms-proxy-init --voms cms
+cmsenv
 python MultiCrab_step1.py status crab_projects_MonoHStep1
 ```
 
@@ -77,6 +79,7 @@ The "step1_inputdataset.txt" below is the text file from the "prepare" step of s
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 voms-proxy-init --voms cms
+cmsenv
 python MultiCrab_step2.py prepare step1_inputdataset.txt
 ```
 A text file "step2_inputdataset.txt" will be created. 
@@ -86,6 +89,7 @@ The first column lists the input dataset names and the second column lists the c
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 voms-proxy-init --voms cms
+cmsenv
 python MultiCrab_step2.py submit
 ``` 
 
@@ -93,6 +97,7 @@ python MultiCrab_step2.py submit
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 voms-proxy-init --voms cms
+cmsenv
 python MultiCrab_step2.py status crab_projects_MonoHStep2
 ```
 
@@ -103,6 +108,7 @@ The "step2_inputdataset.txt" below is the text file from the "prepare" step of s
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 voms-proxy-init --voms cms
+cmsenv
 python MultiCrab_step3.py prepare step2_inputdataset.txt
 ```
 A text file "step3_inputdataset.txt" will be created. 
@@ -112,6 +118,7 @@ The first column lists the input dataset names and the second column lists the c
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 voms-proxy-init --voms cms
+cmsenv
 python MultiCrab_step3.py submit
 ``` 
 
@@ -119,5 +126,6 @@ python MultiCrab_step3.py submit
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 voms-proxy-init --voms cms
+cmsenv
 python MultiCrab_step3.py status crab_projects_MonoHStep3
 ```

@@ -42,6 +42,7 @@ If you do not want to submit jobs for all the gridpacks listed in dataset.txt, y
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 voms-proxy-init --voms cms
+cmsenv
 python MultiCrab_stepLHE.py submit
 ```
 
@@ -49,6 +50,7 @@ python MultiCrab_stepLHE.py submit
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 voms-proxy-init --voms cms
+cmsenv
 python MultiCrab_stepLHE.py status crab_projects_MonoHStepLHE
 ```
 
@@ -59,6 +61,7 @@ The "dataset.txt" below is the text file from the "prepare" step of stepLHE:
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 voms-proxy-init --voms cms
+cmsenv
 python MultiCrab_step0.py prepare dataset.txt
 ```
 A text file "step0_inputdataset.txt" will be created. 
@@ -68,6 +71,7 @@ The first column lists the input dataset names and the second column lists the c
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 voms-proxy-init --voms cms
+cmsenv
 python MultiCrab_step0.py submit
 ``` 
 
@@ -75,5 +79,6 @@ python MultiCrab_step0.py submit
 ```
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 voms-proxy-init --voms cms
+cmsenv
 python MultiCrab_step0.py status crab_projects_MonoHStep0
 ```
