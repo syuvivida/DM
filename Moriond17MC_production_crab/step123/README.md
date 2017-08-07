@@ -1,5 +1,8 @@
 # Recipe to produce Moriond17 MC samples
 
+## Note if a large fraction of your CRAB jobs fail, please check CRAB job exit code or crab log files (use crab getlog) to find out the reason. You could add extra settings in the crab configuration files to run on machines with larger memory etc. Check this twiki page for more details:
+https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3ConfigurationFile
+
 ## Check the status of step0 production and prepare input for step1
 
 Go to your work directory for stepLHE and step0 (created following the instruction at https://github.com/syuvivida/DM/tree/2016ana/Moriond17MC_production_crab/stepLHE_step0)
