@@ -30,8 +30,7 @@ process.maxEvents = cms.untracked.PSet(
 # Input source
 process.source = cms.Source("PoolSource",
     dropDescendantsOfDroppedBranches = cms.untracked.bool(False),
-    fileNames = cms.untracked.vstring('file:monoHiggs_step0_13.root'),
-    #fileNames = cms.untracked.vstring('/store/mc/RunIISummer15wmLHEGS/MonoHaa_ZpBaryonic_MZp-500_MChi-1_13TeV-madgraph/GEN-SIM/MCRUN2_71_V1-v1/00000/20EC0E09-6C50-E611-B004-0025905B858C.root'),
+    fileNames = cms.untracked.vstring('/store/mc/RunIISummer15wmLHEGS/MonoHaa_ZpBaryonic_MZp-500_MChi-1_13TeV-madgraph/GEN-SIM/MCRUN2_71_V1-v1/00000/20EC0E09-6C50-E611-B004-0025905B858C.root'),
     inputCommands = cms.untracked.vstring('keep *', 
         'drop *_genParticles_*_*', 
         'drop *_genParticlesForJets_*_*', 
@@ -71,7 +70,7 @@ process.RAWSIMoutput = cms.OutputModule("PoolOutputModule",
         filterName = cms.untracked.string('')
     ),
     eventAutoFlushCompressedSize = cms.untracked.int32(5242880),
-    fileName = cms.untracked.string('file:monoHiggs_step1_19_local.root'),
+    fileName = cms.untracked.string('file:monoHiggs_step1.root'),
     outputCommands = process.RAWSIMEventContent.outputCommands,
     splitLevel = cms.untracked.int32(0)
 )
