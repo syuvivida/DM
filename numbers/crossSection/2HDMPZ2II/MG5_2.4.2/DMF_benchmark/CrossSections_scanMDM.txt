@@ -1,0 +1,25 @@
+#############################################################################################################################################################################
+# UFO : https://gitlab.cern.ch/lhc-dmwg-material/model-repository/tree/master/models/Pseudoscalar_2HDM (v1)
+# run_card: https://github.com/syuvivida/DM/blob/2016ana/madgraph_cards/scripts/2HDM%2Ba/scan_mdm/ggProduction/ggProduction_run_card.dat
+# customize_card: https://github.com/syuvivida/DM/blob/2016ana/madgraph_cards/scripts/2HDM%2Ba/scan_mdm/ggProduction/ggProduction_customizecards.dat
+# proc_card: https://github.com/syuvivida/DM/blob/2016ana/madgraph_cards/scripts/2HDM%2Ba/scan_mdm/ggProduction/ggProduction_proc_card.dat
+# command to produce cards: ./produceScanMDMCards.sh scan_mass scan_dm ggProduction
+# MadGraph Version = MG5_v2_4_2
+# mh3       mh4       mh2       mhc            sinp       tanbeta   lap1      lap2      lam3     sinbma          gpxd mxd                      XSECUP     XERRUP             
+# m_A [GeV] m_a [GeV] m_H [GeV] m_{H^+-} [GeV] sin(theta) tan(beta) lambda_P1 lambda_P2 lambda_3 sin(beta-alpha) y_DM m_DM [GeV] initial state x-sec [nb] stat. uncert. [nb] 
+
+#############################################################################################################################################################################
+mh3  mh4  mh2  mhc  sinp  tanbeta  lap1  lap2  lam3  sinbma  gpxd  mxd  initial_state  XSECUP             XERRUP
+600  200  600  600  0.35  1.0      3.0   3.0   3.0   1.0     1.0   10   gg             0.23748225333E+00  0.23481312715E-03
+600  200  600  600  0.35  1.0      3.0   3.0   3.0   1.0     1.0   50   gg             0.23598834184E+00  0.41321705630E-03
+600  200  600  600  0.35  1.0      3.0   3.0   3.0   1.0     1.0   100  gg             0.12974613086E+01  0.22236336894E-02
+600  200  600  600  0.35  1.0      3.0   3.0   3.0   1.0     1.0   125  gg             0.14148158582E-02  0.25164503418E-05
+600  200  600  600  0.35  1.0      3.0   3.0   3.0   1.0     1.0   150  gg             0.46326758528E-03  0.69216239729E-06
+600  200  600  600  0.35  1.0      3.0   3.0   3.0   1.0     1.0   200  gg             0.19441673855E-03  0.29048194979E-06
+600  200  600  600  0.35  1.0      3.0   3.0   3.0   1.0     1.0   500  gg             0.71733329020E-08  0.10894049968E-10
+600  250  600  600  0.35  1.0      3.0   3.0   3.0   1.0     1.0   10   gg             0.16952197715E+00  0.16884241018E-03
+600  250  600  600  0.35  1.0      3.0   3.0   3.0   1.0     1.0   50   gg             0.16682651399E+00  0.15631114594E-03
+600  250  600  600  0.35  1.0      3.0   3.0   3.0   1.0     1.0   100  gg             0.16483398006E+00  0.14407607206E-03
+600  250  600  600  0.35  1.0      3.0   3.0   3.0   1.0     1.0   125  gg             0.85726424095E+00  0.14952678586E-02
+600  250  600  600  0.35  1.0      3.0   3.0   3.0   1.0     1.0   150  gg             0.86338011582E-03  0.11343899291E-05
+600  250  600  600  0.35  1.0      3.0   3.0   3.0   1.0     1.0   500  gg             0.64547502214E-08  0.11003688420E-10
