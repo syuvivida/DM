@@ -11,7 +11,7 @@ Make sure your step0 jobs are 100% finished before you move on to step1
 
 ```
 source /afs/cern.ch/cms/cmsset_default.csh (bash: source /afs/cern.ch/cms/cmsset_default.sh)
-cd CMSSW_7_1_20/src
+cd CMSSW_7_1_25_patch3/src
 cmsenv
 source /cvmfs/cms.cern.ch/crab3/crab_standalone.csh (bash: source /cvmfs/cms.cern.ch/crab3/crab_standalone.sh)
 curl https://raw.githubusercontent.com/syuvivida/DM/2016ana/Moriond17MC_production_crab/step123/MultiCrab_step1.py -o MultiCrab_step1.py
