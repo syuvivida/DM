@@ -19,8 +19,8 @@ config.section_("Data")
 config.Data.outputPrimaryDataset = 'MonoH_2HDM_Zprime_A0hbb_MZp1000_MA0300'
 config.Data.splitting = 'EventBased'
 ## Note, the number of events here need to match the variable NEventsPerJob in stepLHE.py
-config.Data.unitsPerJob = 100
-NJOBS = 2
+config.Data.unitsPerJob = 200
+NJOBS = 5
 config.Data.totalUnits = config.Data.unitsPerJob * NJOBS
 config.Data.publication = True
 config.Data.outputDatasetTag  = 'LHE'
@@ -28,4 +28,5 @@ config.Data.outputDatasetTag  = 'LHE'
 
 
 config.section_("Site")
-config.Site.storageSite = "T3_TW_NCU"
+# stepLHE to step1 must be run at T2_CH_CERN
+config.Site.storageSite = "T2_CH_CERN"

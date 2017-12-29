@@ -5,7 +5,7 @@
 # with command line options: Configuration/GenProduction/python/EXO-RunIIWinter15wmLHE-00266-fragment.py --fileout file:EXO-RunIIWinter15wmLHE-00266.root --mc --eventcontent LHE --datatier LHE --conditions MCRUN2_71_V1::All --step LHE --python_filename /afs/cern.ch/cms/PPD/PdmV/work/McM/submit/EXO-RunIIWinter15wmLHE-00266/EXO-RunIIWinter15wmLHE-00266_1_cfg.py --no_exec --customise Configuration/DataProcessing/Utils.addMonitoring -n 10000
 import FWCore.ParameterSet.Config as cms
 
-NEventsPerJob=100
+NEventsPerJob=200
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
 options.register ('tarball',

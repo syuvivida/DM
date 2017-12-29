@@ -21,10 +21,10 @@ config.Data.splitting = 'FileBased'
 config.Data.unitsPerJob = 1
 config.Data.totalUnits  = -1
 config.Data.publication = True
-config.Data.outputDatasetTag  = 'RAWSIM'
+config.Data.outputDatasetTag  = 'cernT2-RAWSIM'
 
 
 
 config.section_("Site")
-#config.Site.storageSite = "T3_TW_NCU"
-config.Site.storageSite = "T2_TW_NCHC"
+# stepLHE to step1 must be run at T2_CH_CERN
+config.Site.storageSite = "T2_CH_CERN"
