@@ -21,10 +21,10 @@ config.Data.splitting = 'FileBased'
 config.Data.unitsPerJob = 1
 config.Data.totalUnits  = -1
 config.Data.publication = True
-config.Data.outputDatasetTag  = 'cernT2-GEN-SIM'
+config.Data.outputDatasetTag  = 'ncuT3-GEN-SIM'
 
 
 
 config.section_("Site")
 # stepLHE to step1 must be run at T2_CH_CERN
-config.Site.storageSite = "T2_CH_CERN"
+config.Site.storageSite = "T3_TW_NCU"

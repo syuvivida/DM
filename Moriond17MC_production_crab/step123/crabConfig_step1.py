@@ -12,7 +12,7 @@ config.General.transferLogs = True
 config.section_("JobType")
 config.JobType.pluginName = 'Analysis'
 config.JobType.psetName = 'step1.py'
-config.JobType.inputFiles = ['pu_files.py']
+#config.JobType.inputFiles = ['pu_files.py']
 
 config.section_("Data")
 config.Data.inputDataset = '/MonoH_2HDM_Zprime_A0hbb_MZp1000_MA0300/syu-GEN-SIM-f1e2824a9e11b7b9d6a221661f489786/USER'
@@ -21,10 +21,9 @@ config.Data.splitting = 'FileBased'
 config.Data.unitsPerJob = 1
 config.Data.totalUnits  = -1
 config.Data.publication = True
-config.Data.outputDatasetTag  = 'cernT2-RAWSIM'
+config.Data.outputDatasetTag  = 'ncuT3-RAWSIM'
 
 
 
 config.section_("Site")
-# stepLHE to step1 must be run at T2_CH_CERN
-config.Site.storageSite = "T2_CH_CERN"
+config.Site.storageSite = "T3_TW_NCU"
