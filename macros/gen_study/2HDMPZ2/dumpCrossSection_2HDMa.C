@@ -65,7 +65,7 @@ void dumpCrossSection_2HDMa::Loop()
       // central 0
       // scale 1,2,3,4,6,8
       // 306000: central 9
-      //         error 10-111
+      //         error 10-109
       // 263000: central 838
       //         error   839-938
 

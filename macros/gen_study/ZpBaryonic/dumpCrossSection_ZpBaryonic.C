@@ -1,5 +1,6 @@
 #define dumpCrossSection_ZpBaryonic_cxx
 #include "dumpCrossSection_ZpBaryonic.h"
+#include <TH1F.h>
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -8,7 +9,7 @@
 
 const int nScales=6; 
 const int nPDFs=100;
-
+const double beamEnergy=6500;
 
 void vector_compute(const std::vector<double>& ref, double& avg, double& RMS)
 {
@@ -47,6 +48,16 @@ void dumpCrossSection_ZpBaryonic::Loop()
    Double_t totalXs_central_263400=0;
    Double_t totalXs_central_320900=0;
 
+   TH1F* hx1=new TH1F("hx1","x_{1}",100,0,1);
+   hx1->SetXTitle("Momentum fraction x_{1}");
+   TH1F* hx2=new TH1F("hx2","x_{2}",100,0,1);
+   hx2->SetXTitle("Momentum fraction x_{2}");
+   TH1F* hscale=new TH1F("hscale","scale",100,0,4500);
+   hscale->SetXTitle("PDF scale [GeV]");
+   TH2F* hpid=new TH2F("hpid","parton flavor",27,-5.5,21.5,27,-5.5,21.5);
+   hpid->SetXTitle("Particle ID 1");
+   hpid->SetYTitle("Particle ID 2");
+
    std::vector<double> scaleWeights;
    for(int i=0; i<nScales; i++) scaleWeights.push_back(0.0);
 
@@ -61,6 +72,12 @@ void dumpCrossSection_ZpBaryonic::Loop()
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       // if (Cut(ientry) < 0) continue;
+
+      hx1->Fill(Particle_E[0]/beamEnergy);
+      hx2->Fill(Particle_E[1]/beamEnergy);
+      hscale->Fill(Event_ScalePDF[0]);
+      hpid->Fill(Particle_PID[0],Particle_PID[1]);
+
       // central 0
       // scale 1,2,3,4,6,8
       // 320900: central 161
@@ -115,5 +132,14 @@ void dumpCrossSection_ZpBaryonic::Loop()
    cout << "263400 central cross section 2 = " << avg_263400 << "+-" << RMS_263400 << " pb" << endl;
    cout << "320900 central cross section = " << totalXs_central_320900 << " pb" << endl;
    cout << "320900 central cross section 2 = " << avg_320900 << "+-" << RMS_320900 << " pb" << endl;
+
+   TFile* outFile = new TFile(Form("histo_%s",_inputFile.data()),"recreate");
+   hx1->Write();
+   hx2->Write();
+   hscale->Write();
+   hpid->Write();
+   outFile->Close();
+
+
 
 }
