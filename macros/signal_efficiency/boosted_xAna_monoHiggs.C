@@ -199,7 +199,7 @@ void boosted_xAna_monoHiggs(std::string inputFile){
     TClonesArray* thinjetP4 = (TClonesArray*) data.GetPtrTObject("THINjetP4");
     float* thinJetCSV =  data.GetPtrFloat("THINjetCISVV2");
     vector<bool>& passThinJetLooseID = *((vector<bool>*) data.GetPtr("THINjetPassIDLoose"));
-    vector<bool>& passThinJetPUID = *((vector<bool>*) data.GetPtr("THINisPUJetID"));    
+    vector<bool>& passThinJetPUID = *((vector<bool>*) data.GetPtr("THINisPUJetIDTight"));    
     
     unsigned int nGoodTHINBJets=0;
     unsigned int nGoodTHINJets=0;

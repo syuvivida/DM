@@ -170,7 +170,7 @@ void resolved_xAna_monoHiggs(std::string inputFile){
     TClonesArray* thinjetP4 = (TClonesArray*) data.GetPtrTObject("THINjetP4");
     float* thinJetCSV =  data.GetPtrFloat("THINjetCISVV2");
     vector<bool>& passThinJetLooseID = *((vector<bool>*) data.GetPtr("THINjetPassIDLoose"));
-    vector<bool>& passThinJetPUID = *((vector<bool>*) data.GetPtr("THINisPUJetID"));    
+    vector<bool>& passThinJetPUID = *((vector<bool>*) data.GetPtr("THINisPUJetIDTight"));    
     
     float maxHpt=-999;
     int Hindex[2]={-1,-1};
