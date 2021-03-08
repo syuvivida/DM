@@ -1,0 +1,16 @@
+JetHT-Run2017B: 4.793 /fb
+JetHT-Run2017C: 9.756 /fb
+JetHT-Run2017D: 4.320 /fb
+JetHT-Run2017E: 9.423 /fb
+JetHT-Run2017F: 13.560 /fb (not finished 0.0026 /fb)
+
+Dataset processed (Prompt Reco)
+/JetHT/Run2017B-31Mar2018-v1/MINIAOD
+/JetHT/Run2017C-31Mar2018-v1/MINIAOD
+/JetHT/Run2017D-31Mar2018-v1/MINIAOD
+/JetHT/Run2017E-31Mar2018-v1/MINIAOD
+/JetHT/Run2017F-31Mar2018-v1/MINIAOD
+
+
+JSON file Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt
+Total: 41.860/fb (If including the non-processed data)
