@@ -5924,6 +5924,7 @@ root://se01.grid.nchc.org.tw//dpm/grid.nchc.org.tw/home/cms/store/user/syu/JetHT
 root://se01.grid.nchc.org.tw//dpm/grid.nchc.org.tw/home/cms/store/user/syu/JetHT/JetHT-Run2017F-31Mar2018-v1/210225_084835/0005/ExoPieElementTuples_5924.root
 root://se01.grid.nchc.org.tw//dpm/grid.nchc.org.tw/home/cms/store/user/syu/JetHT/JetHT-Run2017F-31Mar2018-v1/210225_084835/0005/ExoPieElementTuples_5925.root
 root://se01.grid.nchc.org.tw//dpm/grid.nchc.org.tw/home/cms/store/user/syu/JetHT/JetHT-Run2017F-31Mar2018-v1/210225_084835/0005/ExoPieElementTuples_5926.root
+root://se01.grid.nchc.org.tw//dpm/grid.nchc.org.tw/home/cms/store/user/syu/JetHT/JetHT-Run2017F-31Mar2018-v1/210225_084835/0005/ExoPieElementTuples_5927.root
 root://se01.grid.nchc.org.tw//dpm/grid.nchc.org.tw/home/cms/store/user/syu/JetHT/JetHT-Run2017F-31Mar2018-v1/210225_084835/0005/ExoPieElementTuples_5928.root
 root://se01.grid.nchc.org.tw//dpm/grid.nchc.org.tw/home/cms/store/user/syu/JetHT/JetHT-Run2017F-31Mar2018-v1/210225_084835/0005/ExoPieElementTuples_5929.root
 root://se01.grid.nchc.org.tw//dpm/grid.nchc.org.tw/home/cms/store/user/syu/JetHT/JetHT-Run2017F-31Mar2018-v1/210225_084835/0005/ExoPieElementTuples_5930.root
