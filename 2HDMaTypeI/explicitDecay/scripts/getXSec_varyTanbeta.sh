@@ -2,17 +2,17 @@
 xsecDataFile=test.dat
 
 
-lambda3=(0.1 0.5 1 2 3 3.6 3.8 4 5 6)
+tanbeta=(1.1 1.25 1.5 2 3 4 5 6)
 
-echo "lambda3" "WH" "WH/MH" "WA" "WA/MA" "Wa" "WHc" "Xsec" "Xsec*3000/fb" >> $xsecDataFile
-for l3 in "${lambda3[@]}"
+echo "tanbeta" "WH" "WH/MH" "WA" "WA/MA" "Wa" "WHc" "Xsec" "Xsec*3000/fb" >> $xsecDataFile
+for l3 in "${tanbeta[@]}"
 do
     setl3=$l3
     echo $setl3
 	
     cp -p Cards/param_card_paper.dat Cards/param_card.dat
     file=Cards/param_card.dat
-    sed -i "" -e "s/LAM3/"$setl3"/g" $file
+    sed -i "" -e "s/TANBETA/"$setl3"/g" $file
     ./bin/generate_events -f
     banner=`ls -lrt Events | tail -1 | awk '{print "ls -lrt Events/"$9"/"$9"_tag_1_banner.txt"}' | bash | awk '{print $9}'`
     dir=`ls -lrt Events | tail -1 | awk '{print $9}'` 
@@ -27,7 +27,7 @@ do
     decayHc=`grep -a "DECAY  37" $banner | awk '{print $3}'`
     neve=`awk -v a=$xsec -v b=3000000 'BEGIN{print (a*b)}'`
     echo $setl3 $decayH $fracH $decayA $fracA $decaya $decayHc $xsec $neve >> $xsecDataFile
-    newdir=run_13p6TeV_tanbeta5_lambda3_${setl3}
+    newdir=run_13p6TeV_tanbeta_${setl3}_lambda3_6
     echo $dir $newdir
     mv Events/$dir Events/$newdir
 done
