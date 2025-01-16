@@ -1,0 +1,21 @@
+<library file="DummyLHEAnalyzer.cc">
+  <use   name="root"/> 
+  <use   name="rootrflx"/>
+  <use   name="rootcore"/>
+  <use   name="CommonTools/UtilAlgos"/>
+  <use   name="FWCore/Framework"/>
+  <use   name="FWCore/PluginManager"/>
+  <use   name="FWCore/ServiceRegistry"/>
+  <use name="SimDataFormats/GeneratorProducts"/>
+  <flags EDM_PLUGIN="1"/>
+</library>
+
+<test name="TestGeneratorInterfaceLHEInterfaceFileReading" command="testMerging.sh"/>
+
+<bin file="test_catch2_*.cc" name="testGeneratorInterfaceLHEInterface_TP">
+  <use name="FWCore/TestProcessor"/>
+  <use name="SimDataFormats/GeneratorProducts"/>
+  <use name="catch2"/>
+</bin>
+
+<test name="test_cmsLHEtoEOSManager" command="test_cmsLHEtoEOSManager.sh"/>
