@@ -32,8 +32,8 @@
 #*********************************************************************
      1        = lpp1    ! beam 1 type 
      1        = lpp2    ! beam 2 type
-     6800.0     = ebeam1  ! beam 1 total energy in GeV
-     6800.0     = ebeam2  ! beam 2 total energy in GeV
+     6500.0     = ebeam1  ! beam 1 total energy in GeV
+     6500.0     = ebeam2  ! beam 2 total energy in GeV
 # To see polarised beam options: type "update beam_pol"
 
 #*********************************************************************
@@ -65,7 +65,7 @@
 #*********************************************************************
 # Phase-Space Optimization strategy (basic options)
 #*********************************************************************
-   0  = nhel          ! using helicities importance sampling or not.
+   1  = nhel          ! using helicities importance sampling or not.
                              ! 0: sum over helicity, 1: importance sampling
    1  = sde_strategy  ! default integration strategy (hep-ph/2021.00773)
                              ! 1 is old strategy (using amp square)
@@ -87,11 +87,6 @@
 # BW cutoff (M+/-bwcutoff*Gamma) ! Define on/off-shell for "$" and decay  
 #*********************************************************************
   15.0  = bwcutoff      ! (M+/-bwcutoff*Gamma)
- #*********************************************************************
- # Apply pt/E/eta/dr/mij/kt_durham cuts on decay products or not
- # (note that etmiss/ptll/ptheavy/ht/sorted cuts always apply)
- #*********************************************************************
-   False  = cut_decays    ! Cut decay products 
 #*********************************************************************
 # Standard Cuts                                                      *
 #*********************************************************************
@@ -124,7 +119,7 @@
 # maximal pdg code for quark to be considered as a light jet         *
 # (otherwise b cuts are applied)                                     *
 #*********************************************************************
- 5 = maxjetflavor    ! Maximum jet pdg code
+ 4 = maxjetflavor    ! Maximum jet pdg code
 #*********************************************************************
 #
 #*********************************************************************

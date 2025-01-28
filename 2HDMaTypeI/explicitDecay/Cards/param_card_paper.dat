@@ -18,13 +18,13 @@ Block dminputs
 ## INFORMATION FOR FRBLOCK
 ###################################
 Block frblock 
-    2 5.000000e+00 # tanbeta 
+    2 5.0 # tanbeta 
 
 ###################################
 ## INFORMATION FOR HIGGS
 ###################################
 Block higgs 
-    1 LAM3 # lam3 
+    1 2.0 # lam3 
     2 0.000000e+00 # laP1 
     3 0.000000e+00 # laP2 
     5 0.2 # sinp 
@@ -38,9 +38,9 @@ Block mass
    15 1.777000e+00 # MTA 
    23 9.118760e+01 # MZ 
    25 1.250000e+02 # mh1 
-   35 5.000000e+02 # mh2 
+   35 MH2 # mh2 
    36 2.300000e+02 # mh3 
-   37 5.000000e+02 # mhc 
+   37 MH2 # mhc 
    52 1.000000e+01 # MXd 
    55 1.000000e+02 # mh4 
 ## Dependent parameters, given by model restrictions.

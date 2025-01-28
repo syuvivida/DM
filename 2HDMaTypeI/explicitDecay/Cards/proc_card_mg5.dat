@@ -39,7 +39,5 @@ define l- = e- mu-
 define vl = ve vm vt
 define vl~ = ve~ vm~ vt~
 import model Pseudoscalar_2HDMI-aligned
-define j = g u c d s u~ c~ d~ s~ b b~
-define p = g u c d s u~ c~ d~ s~ b b~
-generate p p > h2 > h3 h3, (h3 > h4 h1, h4 > xd~ xd)
-output Ulrich
+generate g g > h2 [noborn=QCD]
+output simpleTest
