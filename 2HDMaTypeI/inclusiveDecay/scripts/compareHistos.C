@@ -53,8 +53,8 @@ void compareHistos(string inputData){
   }
 
   gStyle->SetOptStat(0);
-  TLegend* leg = new TLegend(0.45702,0.475789,0.899713,0.88);
-  leg->SetHeader("gg#rightarrow hh+#chi#chi, #sqrt{s}=13.6 TeV");
+  TLegend* leg = new TLegend(0.404,0.472,0.845,0.886);
+  leg->SetHeader("gg#rightarrow hh+#chi#chi, #sqrt{s}=13.6 TeV, M_{A,a}=230,100 GeV");
   leg->SetFillColor(0);
   leg->SetFillStyle(0);
   leg->SetTextSize(0.04);
