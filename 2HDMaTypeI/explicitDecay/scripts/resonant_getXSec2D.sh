@@ -1,24 +1,25 @@
 #!/bin/bash
 xsecDataFile=test.dat
 
-#mh2=(470 500 550 600 650 700 750 800)                                                                                     
-mh2=(470)
-#mh3=(230 300 400 500 600 700)                                                                                             
-mh3=(230)
+mh2=(470 500 550 600 650 700 750 800)                                                                                     
+mh3=(230 250 300 350 400 450 500 550 600 650 700)                                                                                             
+
 
 workdir=/afs/cern.ch/work/s/syu/HHMET_study/MG5_aMC_v3_5_7/simpleTest
 cd $workdir
 
-echo "MH" "MA""B R(H->AA)" "BR(A->ah)" "BR(a->chi chi)" "Xsec" "effective Xsec (Xsec*BR)" >> $xsecDataFile
+echo "MH" "MA" "BR(H->AA)" "BR(A->ah)" "BR(a->chi+chi)" "Xsec" "effective Xsec (Xsec*BR)" >> $xsecDataFile
 for h2 in "${mh2[@]}"
 do
     seth2=$h2
-    echo $seth2
     for h3 in "${mh3[@]}"
     do
         seth3=$h3
-        echo $seth3
-
+	if ((h3>=h2/2))
+	then
+	    break
+	fi
+	echo $seth2, $seth3
         cp -p Cards/param_card_paper.dat Cards/param_card.dat
         file=Cards/param_card.dat
         sed -i "" -e "s/MH2/"$seth2"/g" $file
@@ -43,9 +44,12 @@ do
 	echo $olddir $newdir
 	mv Events/$olddir Events/$newdir
 	olddir=${dir}
-	newdir=run_13p6TeV_MA_${seth3}_MH2_${seth2}_tanbeta5_lambda3_2
-	gzip Events/${olddir}/unweighted_events.lhe
-	mv Events/$olddir Events/newdir
+#	gzip Events/${olddir}/unweighted_events.lhe
+	mv Events/${olddir}/*txt Events/$newdir/.
+#	newdir=run_13p6TeV_MA_${seth3}_MH2_${seth2}_tanbeta5_lambda3_2
+	#	mv Events/$olddir Events/$newdir
+	rm -rf Events/${olddir}
+	
     done
 done
 updateFile=updated_${xsecDataFile}
