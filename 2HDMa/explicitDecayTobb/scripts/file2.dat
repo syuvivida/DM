@@ -1,0 +1,9 @@
+MX300_MY60.root M_{H_{3}}=300,M_{H_{2}}=60
+2HDMa_type2_MA300_Ma60_mDM100.root M_{A}=300,M_{a}=60
+ZpBaryonic_MZp60_MDM100.root M_{Z'}=60
+MX650_MY90.root M_{H_{3}}=650,M_{H_{2}}=90
+2HDMa_type2_MA650_Ma90_mDM100.root M_{A}=650,M_{a}=90
+ZpBaryonic_MZp90_MDM100.root M_{Z'}=90
+MX1000_MY300.root M_{H_{3}}=1000,M_{H_{2}}=300
+2HDMa_type2_MA1000_Ma300_mDM200.root M_{A}=1000,M_{a}=300
+ZpBaryonic_MZp300_MDM200.root M_{Z'}=300
