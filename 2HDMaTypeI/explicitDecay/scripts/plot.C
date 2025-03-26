@@ -16,8 +16,8 @@ void plot()
   hxSec->GetYaxis()->SetTitleSize(0.05);
   hxSec->SetTitleOffset(1,"Y");
   hxSec->SetTitleOffset(0.9,"X");
-  hxSec->SetXTitle("M_{a} [GeV]");
-  hxSec->SetYTitle("M_{A} [GeV]");
+  hxSec->SetXTitle("M_{A} [GeV]");
+  hxSec->SetYTitle("M_{H} [GeV]");
   TH2F* hCol= (TH2F*)hxSec->Clone("hCol");
   for(int i=0; i< 4; i++)
     hCol->GetXaxis()->SetBinLabel(i+1,std::to_string(xLabel[i]).data());
