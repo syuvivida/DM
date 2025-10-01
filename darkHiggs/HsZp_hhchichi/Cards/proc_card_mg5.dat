@@ -1,0 +1,5 @@
+import model ZpHiggs_UFO
+define l+ = l+ ta+
+define l- = l- ta-
+generate p p > zp > dm dm hs, (hs > h h)
+output DarkHiggs_hh
