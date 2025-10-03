@@ -69,7 +69,7 @@ void plotXSec(bool debug=false)
     if(nXLabels<1)break;
     
     hXSec[nHistoCount] = new TH2F(Form("hXSec_mHs%d",itr->first),
-				  Form("Dark Higgs hh+#chi#chi cross sections @ #sqrt{s}=13.6 TeV [pb], M_{Hs}=%d GeV",itr->first),
+				  Form("Dark Higgs hh+#chi#chi cross sections @ #sqrt{s}=13.6 TeV [pb], M_{H_{D}}=%d GeV",itr->first),
 				  nXLabels, 0.5, nXLabels+0.5, nYLabels, 0.5, nYLabels+0.5);
     hXSec[nHistoCount]->GetXaxis()->SetLabelSize(0.055);
     hXSec[nHistoCount]->GetYaxis()->SetLabelSize(0.055);
