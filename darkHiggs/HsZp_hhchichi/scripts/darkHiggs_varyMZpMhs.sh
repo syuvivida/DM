@@ -2,15 +2,15 @@
 xsecDataFile=test.dat
 
 
-#mhs=(270 300 400 500 600 700 800 900 1000)
-#mdm=(150 200 300 400 500 600 700 800 900 1000)
-#mzp=(500 600 700 800 900 1000 1250 1500 1750 2000 2500 3000 3500 4000 4500 5000)
-mhs=(270)
-mdm=(150)
-mzp=(500)
+mhs=(270 300 400 500 600 700 800 900 1000)
+mdm=(150 200 300 400 500 600 700 800 900 1000)
+mzp=(500 600 700 800 900 1000 1250 1500 1750 2000 2500 3000 3500 4000 4500 5000)
+#mhs=(270)
+#mdm=(150 200)
+#mzp=(500)
 
-#workdir=/afs/cern.ch/work/s/syu/HHMET_study/MG5_aMC_v3_5_7/type1_visible_h3
-workdir=$PWD
+workdir=/afs/cern.ch/work/s/syu/HHMET_study/MG5_aMC_v3_5_7/DarkHiggs_hh
+#workdir=$PWD
 cd $workdir
 
 echo "MHs" "MDM" "MZp" "BR(Hs->hh)" "Xsec" >> $xsecDataFile
@@ -33,7 +33,7 @@ do
             then
                 continue
             fi
-	    echo $seths $setdm $setzp >> $xsecDataFile
+	    echo $seths $setdm $setzp 
 	    
             cp -p Cards/param_card_default.dat Cards/param_card.dat
             file=Cards/param_card.dat
