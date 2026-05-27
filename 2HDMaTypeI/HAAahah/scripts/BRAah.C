@@ -12,7 +12,7 @@ const int mchi=10;
 const Double_t mtau=1.777;
 const Double_t mb=4.7;
 const Double_t mt=172;
-const int tanbeta=2;
+const int tanbeta=3;
   
 
 Double_t gAah_value(Double_t sint, Double_t lam3)

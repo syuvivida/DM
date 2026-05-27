@@ -13,7 +13,7 @@ const int mchi=10;
 const Double_t mtau=1.777;
 const Double_t mb=4.7;
 const Double_t mt=172;
-const int tanbeta=2;
+const int tanbeta=3;
   
 
 Double_t cot2beta(Double_t tb)
@@ -154,6 +154,16 @@ Double_t varylam3function_width(Double_t *x, Double_t *par)
    Double_t tb   =par[1];
    return width_H(sint,lam3,tb)/mH;
 }
+
+Double_t varytanbfunction_width(Double_t *x, Double_t *par)
+{
+   Double_t tb =x[0];
+   Double_t lam3 =par[0];
+   Double_t sint   =par[1];
+   return width_H(sint,lam3,tb)/mH;
+}
+
+
 
 Double_t BR2D_lam3_sint(Double_t* x, Double_t* par)
 {
@@ -333,6 +343,28 @@ void myfunc()
   f12->Draw("surf1");
   c1->Print(Form("FracWH_surf1_sin%.1f_MH%d_MA%d.gif",sint_1,mH,mA));
 
+  auto f13 = new TF1("f13",varytanbfunction_width,1,10,2);
+  f13->SetParameter(0,lam3_1);
+  f13->SetParameter(1,sint_1);
+  f13->SetTitle(Form("#Gamma_{H}/M_{H}, #lambda_{3}=%d, sin#theta=%.1f",lam3_1,sint_1));
+  f13->GetXaxis()->SetTitle("tan#beta");
+  f13->Draw();
+  TLatex *lar3 = new TLatex(0.12, 0.8, Form("M_{H}=%d GeV, M_{A}=%d GeV, M_{a}=%d GeV, M_{#chi}=%d GeV",
+					    mH,mA,ma,mchi));
+  lar3->SetNDC(kTRUE);
+  lar3->SetTextSize(0.045);
+  lar3->Draw();
+  lar3->Draw();
+  c1->Print(Form("FracWH_lam3_%d_sint%.1f_varytanb_MH%d_MA%d.gif",lam3_1,sint_1,mH,mA));
+
+  auto f14 = new TF1("f14",varytanbfunction_width,1,10,2);
+  f14->SetParameter(0,lam3_2);
+  f14->SetParameter(1,sint_1);
+  f14->SetTitle(Form("#Gamma_{H}/M_{H}, #lambda_{3}=%d, sin#theta=%.1f",lam3_2,sint_1));
+  f14->GetXaxis()->SetTitle("tan#beta");
+  f14->Draw();
+  lar3->Draw();
+  c1->Print(Form("FracWH_lam3_%d_sint%.1f_varytanb_MH%d_MA%d.gif",lam3_2,sint_1,mH,mA));
 
   
   
