@@ -24,7 +24,7 @@ Double_t gAah_value(Double_t sint, Double_t lam3)
 
 Double_t beta(Double_t m1, Double_t m2)
 {
-  return m1<2*m2? 99999: sqrt(1-4*m2*m2/m1/m1);
+  return m1<2*m2? 0: sqrt(1-4*m2*m2/m1/m1);
 }
 
 Double_t lambda(Double_t m1, Double_t m2, Double_t m3)
@@ -43,7 +43,8 @@ Double_t width_Achichi(Double_t sint)
 Double_t width_Aff(Double_t sint, Double_t mf, Double_t tb)
 {
   Double_t cost = sqrt(1-sint*sint);
-  Double_t value = mA>2*mf? 1.0/tb/tb/TMath::Pi()/8.0*mf*mf/vev/vev*mA*beta(mA,mf)*cost*cost : 0;
+  Double_t Nc = mf>2.0? 3.0: 1.0;
+  Double_t value = Nc/tb/tb/TMath::Pi()/8.0*mf*mf/vev/vev*mA*beta(mA,mf)*cost*cost;
   return value;
 }
 
