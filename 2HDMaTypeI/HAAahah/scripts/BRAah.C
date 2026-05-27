@@ -1,4 +1,5 @@
 #include <TF1.h>
+#include <TF2.h>
 #include <TMath.h>
 
 const Double_t mh=125;
@@ -105,13 +106,27 @@ Double_t varylam3function_width(Double_t *x, Double_t *par)
    return width_A(sint,lam3)/mA;
 }
 
+Double_t BR2D(Double_t* x, Double_t* par)
+{
+  Double_t lam3 =x[0];
+  Double_t sint =x[1];
+  return BRAtoah(sint,lam3);
+}
+
+Double_t width2D(Double_t* x, Double_t* par)
+{
+  Double_t lam3 =x[0];
+  Double_t sint =x[1];
+  return width_A(sint,lam3)/mA;  
+}
+
 
 
 void myfunc()
 {
   gStyle->SetFuncWidth(8);
   gStyle->SetTitleSize(0.06, "XYZ");
-  gStyle->SetTitleOffset(0.7, "X");
+  gStyle->SetTitleOffset(0.7, "XY");
   gStyle->SetLabelSize(0.05, "XYZ");
   gStyle->SetStripDecimals(kFALSE);
   TCanvas* c1 = new TCanvas("c1");
@@ -185,6 +200,35 @@ void myfunc()
   f8->Draw();
   lar2->Draw();
   c1->Print("FracWA_sin0p7_varylam3_tanbeta2_MH500_MA230.gif");
+
+
+  auto f9 = new TF2("f9",BR2D,1,10,0,sqrt(2)/2.0);
+  f9->SetTitle("BR(A#rightarrow ah), tan#beta=2, M_{H}=500 GeV, M_{A}=230 GeV, M_{a}=100 GeV, M_{#chi}=10 GeV");
+  f9->GetXaxis()->SetTitle("#lambda_{3}");
+  f9->GetYaxis()->SetTitle("sin#theta");
+  //  f9->Draw();
+  //  lar->Draw();
+  //  c1->Print("BRAah_2D_tanbeta2_MH500_MA230.gif");
+
+  auto f10 = new TF2("f10",width2D,1,10,0,sqrt(2)/2.0);
+  f10->SetTitle("#Gamma_{A}/M_{A}, tan#beta=2, M_{H}=500 GeV, M_{A}=230 GeV, M_{a}=100 GeV, M_{#chi}=10 GeV");
+  f10->GetXaxis()->SetTitle("#lambda_{3}");
+  f10->GetYaxis()->SetTitle("sin#theta");
+  //  f10->Draw();
+  //  lar->Draw();
+  //  c1->Print("FracWA_2D_tanbeta2_MH500_MA230.gif");
+
+  f9->GetXaxis()->SetTitleOffset(1.5);
+  f9->GetYaxis()->SetTitleOffset(1.5);
+  f9->Draw("surf1");
+  c1->Print("BRAah_surf1_tanbeta2_MH500_MA230.gif");
+  f10->GetXaxis()->SetTitleOffset(1.5);
+  f10->GetYaxis()->SetTitleOffset(1.5);
+  f10->Draw("surf1");
+  c1->Print("FracWA_surf1_tanbeta2_MH500_MA230.gif");
+
+ 
+  
   
 }
 
