@@ -112,62 +112,79 @@ void myfunc()
   gStyle->SetFuncWidth(8);
   gStyle->SetTitleSize(0.06, "XYZ");
   gStyle->SetTitleOffset(0.7, "X");
+  gStyle->SetLabelSize(0.05, "XYZ");
+  gStyle->SetStripDecimals(kFALSE);
   TCanvas* c1 = new TCanvas("c1");
   auto f1 = new TF1("f1",varysintfunction,0,sqrt(2)/2.0,1);
   f1->SetParameter(0,2);
   f1->SetTitle("BR(A#rightarrow ah), #lambda_{3}=2");
   f1->GetXaxis()->SetTitle("sin#theta");
   f1->Draw();
-  c1->Print("BRAah_lam3_2_varysint.gif");
+  TLatex *lar = new TLatex(0.12, 0.17, "tan#beta=2, M_{H}=500 GeV, M_{A}=230 GeV, M_{a}=100 GeV, M_{#chi}=10 GeV");
+  lar->SetNDC(kTRUE);
+  lar->SetTextSize(0.045);
+  lar->Draw();
+  c1->Print("BRAah_lam3_2_varysint_tanbeta2_MH500_MA230.gif");
 
   auto f2 = new TF1("f2",varysintfunction_width,0,sqrt(2)/2.0,1);
   f2->SetParameter(0,2);
   f2->SetTitle("#Gamma_{A}/M_{A}, #lambda_{3}=2");
   f2->GetXaxis()->SetTitle("sin#theta");
   f2->Draw();
-  c1->Print("FracWA_lam3_2_varysint.gif");
+  TLatex *lar2 = new TLatex(0.12, 0.8, "tan#beta=2, M_{H}=500 GeV, M_{A}=230 GeV, M_{a}=100 GeV, M_{#chi}=10 GeV");
+  lar2->SetNDC(kTRUE);
+  lar2->SetTextSize(0.045);
+  lar2->Draw();
+  lar2->Draw();
+  c1->Print("FracWA_lam3_2_varysint_tanbeta2_MH500_MA230.gif");
 
   auto f3 = new TF1("f3",varysintfunction,0,sqrt(2)/2.0,1);
   f3->SetParameter(0,8);
   f3->SetTitle("BR(A#rightarrow ah), #lambda_{3}=8");
   f3->GetXaxis()->SetTitle("sin#theta");
   f3->Draw();
-  c1->Print("BRAah_lam3_8_varysint.gif");
+  lar->Draw();
+  c1->Print("BRAah_lam3_8_varysint_tanbeta2_MH500_MA230.gif");
 
   auto f4 = new TF1("f4",varysintfunction_width,0,sqrt(2)/2.0,1);
   f4->SetParameter(0,8);
   f4->SetTitle("#Gamma_{A}/M_{A}, #lambda_{3}=8");
   f4->GetXaxis()->SetTitle("sin#theta");
   f4->Draw();
-  c1->Print("FracWA_lam3_2_varysint.gif");
+  lar2->Draw();
+  c1->Print("FracWA_lam3_8_varysint_tanbeta2_MH500_MA230.gif");
   
   auto f5 = new TF1("f5",varylam3function,1,10,1);
   f5->SetParameter(0,0.1);
   f5->SetTitle("BR(A#rightarrow ah), sin#theta=0.1");
   f5->GetXaxis()->SetTitle("#lambda_{3}");
   f5->Draw();
-  c1->Print("BRAah_lam3_2_varylam3.gif");
+  lar->Draw();
+  c1->Print("BRAah_sin0p1_varylam3_tanbeta2_MH500_MA230.gif");
 
   auto f6 = new TF1("f6",varylam3function_width,1,10,1);
   f6->SetParameter(0,0.1);
   f6->SetTitle("#Gamma_{A}/M_{A}, sin#theta=0.1");
   f6->GetXaxis()->SetTitle("#lambda_{3}");
   f6->Draw();
-  c1->Print("FracWA_lam3_2_varylam3.gif");
+  lar2->Draw();
+  c1->Print("FracWA_sin0p1_varylam3_tanbeta2_MH500_MA230.gif");
 
   auto f7 = new TF1("f7",varylam3function,1,10,1);
   f7->SetParameter(0,sqrt(2)/2.0);
   f7->SetTitle("BR(A#rightarrow ah), sin#theta=#sqrt{2}/2");
   f7->GetXaxis()->SetTitle("#lambda_{3}");
   f7->Draw();
-  c1->Print("BRAah_lam3_8_varylam3.gif");
+  lar->Draw();
+  c1->Print("BRAah_sin0p7_varylam3_tanbeta2_MH500_MA230.gif");
 
   auto f8 = new TF1("f8",varylam3function_width,1,10,1);
   f8->SetParameter(0,sqrt(2)/2.0);
   f8->SetTitle("#Gamma_{A}/M_{A}, sin#theta=#sqrt{2}/2");
   f8->GetXaxis()->SetTitle("#lambda_{3}");
   f8->Draw();
-  c1->Print("FracWA_lam3_2_varylam3.gif");
+  lar2->Draw();
+  c1->Print("FracWA_sin0p7_varylam3_tanbeta2_MH500_MA230.gif");
   
 }
 
