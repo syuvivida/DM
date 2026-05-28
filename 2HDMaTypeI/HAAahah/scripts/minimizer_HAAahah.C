@@ -10,14 +10,15 @@ const Double_t mh=125;
 const Double_t vev=246;
 const Double_t mZ=91.1876;
 const int mA=230;
-const int mH=500;
+const int mH=700;
 const int mHc=mH;
 const int ma=100;
 const int mchi=10;
 const Double_t mtau=1.777;
 const Double_t mb=4.7;
 const Double_t mt=172;
-const Double_t penaltyFactor=1;
+const Double_t penaltyFactor=1e3;
+const Double_t fracWH_upper=0.05;
 
 
 Double_t cot2beta(Double_t tb)
@@ -182,20 +183,21 @@ Double_t functionForMinimize(const Double_t *par)
    Double_t lam3 =par[1];
    Double_t tb   =par[2];
    Double_t value = - effXSec(sint,lam3,tb);
-   Double_t constraint = penaltyFactor*(width_H(sint,lam3,tb)/mH-0.1);
-   return (value+constraint);
    /*
-   Double_t constraint = (width_H(sint,lam3,tb)/mH-0.1);
-   std::cout << "widthH/mH = " << width_H(sint,lam3,tb)/mH << std::endl;
+   Double_t constraint = penaltyFactor*(width_H(sint,lam3,tb)/mH-fracWH_upper);
+   return (value+constraint);
+   */
+   Double_t constraint = (width_H(sint,lam3,tb)/mH-fracWH_upper);
+   //   std::cout << "widthH/mH = " << width_H(sint,lam3,tb)/mH << std::endl;
    if (constraint > 0) {
         // Apply a severe, continuous penalty if the constraint is violated.
         // Squaring the violation helps the minimizer calculate a gradient back to the valid region.
-     std::cout << "Applying constraint " << std::endl;
+     //     std::cout << "Applying constraint " << std::endl;
      double penalty = penaltyFactor * std::pow(constraint, 2);
      return value + penalty;
     }
    return (value);
-   */
+
 }
 
 
@@ -226,9 +228,9 @@ void minimize_3d()
   //    minimizer->SetVariable(2, "tb", 1.0, 0.1);
 
     // Optional: If you want to set boundaries, use SetLimitedVariable instead:
-  minimizer->SetLimitedVariable(0, "sint", 0.0, 0.05, 0.0, sqrt(2)/2.0);
-  minimizer->SetLimitedVariable(1, "lam3", 1.0, 0.05, 1.0, 10.0);
-  minimizer->SetLimitedVariable(2, "tb", 1.0, 0.05, 1.0, 10.0);
+  minimizer->SetLimitedVariable(0, "sint", 0.064, 0.01, 0.0, sqrt(2)/2.0);
+  minimizer->SetLimitedVariable(1, "lam3", 1.0, 0.01, 1.0, 10.0);
+  minimizer->SetLimitedVariable(2, "tb", 1.5, 0.01, 1.0, 10.0);
   // 6. Run the minimization
   minimizer->Minimize();
 
@@ -239,6 +241,7 @@ void minimize_3d()
   std::cout << "\n=== Minimization Results ===" << std::endl;
   std::cout << "Minimum value found: " << minimizer->MinValue() << std::endl;
   std::cout << "Effective cross section: " << effXSec(xs[0],xs[1],xs[2]) << std::endl;
+  std::cout << "Fractional width: " << width_H(xs[0],xs[1],xs[2])/mH << std::endl;
   std::cout << "sint = " << xs[0] << " +/- " << errors[0] << std::endl;
   std::cout << "lam3 = " << xs[1] << " +/- " << errors[1] << std::endl;
   std::cout << "tb = " << xs[2] << " +/- " << errors[2] << std::endl;
