@@ -11,6 +11,7 @@ const Double_t mh=125;
 const Double_t vev=246;
 const Double_t mZ=91.1876;
 const int mchi=10;
+const Double_t ychi=1;
 const Double_t mtau=1.777;
 const Double_t mb=4.7;
 const Double_t mt=172;
@@ -55,7 +56,7 @@ Double_t width_Achichi(Double_t sint, Int_t mA)
   return value;
 }
 
-Double_t width_Aff(Double_t sint, Double_t mf, Double_t tb, Int_t mA)
+Double_t width_Aff(Double_t sint, Double_t tb, Double_t mf, Int_t mA)
 {
   Double_t cost = sqrt(1-sint*sint);
   Double_t Nc = mf>2.0? 3.0: 1.0;
@@ -74,9 +75,9 @@ Double_t width_A(Double_t sint, Double_t lam3, Double_t tb, Int_t mH, Int_t mHc,
 {
   Double_t value = width_Aah(sint,lam3,mH,mHc,mA,ma)
     + width_Achichi(sint,mA)
-    + width_Aff(sint,mtau,tb,mA)
-    + width_Aff(sint,mb,tb,mA)
-    + width_Aff(sint,mt,tb,mA);
+    + width_Aff(sint,tb,mtau,mA)
+    + width_Aff(sint,tb,mb,mA)
+    + width_Aff(sint,tb,mt,mA);
   return value;
 }
 
@@ -115,7 +116,7 @@ Double_t gHaa_value(Double_t sint, Double_t lam3, Double_t tb, Int_t mH, Int_t m
 }
 
 
-Double_t width_Hff(Double_t mf, Double_t tb, Int_t mH)
+Double_t width_Hff(Double_t tb, Double_t mf, Int_t mH)
 {
   Double_t Nc = mf>2.0? 3.0:1.0;
   Double_t value = Nc/tb/tb/TMath::Pi()/8.0*mf*mf/vev/vev*mH*pow(beta(mH,mf),3);
@@ -157,9 +158,9 @@ Double_t width_Haa(Double_t sint, Double_t lam3, Double_t tb, Int_t mH, Int_t mH
 
 Double_t width_H(Double_t sint, Double_t lam3, Double_t tb, Int_t mH, Int_t mHc, Int_t mA, Int_t ma)
 {
-  Double_t value = width_Hff(mtau,tb,mH)
-    + width_Hff(mb,tb,mH)
-    + width_Hff(mt,tb,mH)
+  Double_t value = width_Hff(tb,mtau,mH)
+    + width_Hff(tb,mb,mH)
+    + width_Hff(tb,mt,mH)
     + width_HZA(sint,mH,mA)
     + width_HZa(sint,mH,ma)
     + width_HAA(sint,lam3,tb,mH,mHc,mA)
@@ -178,9 +179,40 @@ Double_t BRHtoAA(Double_t sint, Double_t lam3, Double_t tb, Int_t mH, Int_t mHc,
 }
 
 
+Double_t width_achichi(Double_t sint, Double_t tb, Int_t ma)
+{
+  Double_t value = ychi*ychi/8.0/TMath::Pi()*ma*beta(ma,mchi)*(1-sint*sint);
+  return value;
+}
+
+Double_t width_aff(Double_t sint, Double_t tb, Double_t mf, Int_t ma)
+{
+  Double_t cost = sqrt(1-sint*sint);
+  Double_t Nc = mf>2.0? 3.0: 1.0;
+  Double_t value = Nc/tb/tb/TMath::Pi()/8.0*mf*mf/vev/vev*ma*beta(ma,mf)*sint*sint;
+  return value;
+}
+
+Double_t width_a(Double_t sint, Double_t tb, Int_t ma)
+{
+  Double_t value = width_achichi(sint,tb,ma)+
+    width_aff(sint,tb,mtau,ma)+
+    width_aff(sint,tb,mb,ma)+
+    width_aff(sint,tb,mt,ma);
+  return value;
+}
+
+Double_t BRatochichi(Double_t sint, Double_t tb, Int_t ma)
+{
+  Double_t w1 = width_achichi(sint,tb,ma);
+  Double_t value = w1/width_a(sint,tb,ma);
+  return value;
+}
+
+
 Double_t effXSec(Double_t sint, Double_t lam3, Double_t tb, Int_t mH, Int_t mHc, Int_t mA, Int_t ma)
 {
-  return 1.0/tb/tb*BRHtoAA(sint,lam3,tb,mH,mHc,mA,ma)*pow(BRAtoah(sint,lam3,tb,mH,mHc,mA,ma),2);
+  return 1.0/tb/tb*BRHtoAA(sint,lam3,tb,mH,mHc,mA,ma)*pow(BRAtoah(sint,lam3,tb,mH,mHc,mA,ma),2)*pow(BRatochichi(sint,tb,ma),2);
 }
 
 
@@ -241,10 +273,15 @@ void minimize_3d(const int mH, const int mA)
   //    minimizer->SetVariable(2, "tb", 1.0, 0.1);
 
     // Optional: If you want to set boundaries, use SetLimitedVariable instead:
+  /*
+  minimizer->SetLimitedVariable(0, "sint", 0.0665, 0.01, 0.0, sqrt(2)/2.0);
+  minimizer->SetLimitedVariable(1, "lam3", 1.72098, 0.01, 1.0, 10.0);
+  minimizer->SetLimitedVariable(2, "tb", 1.918, 0.01, 1.0, 10.0);
+  */
   minimizer->SetLimitedVariable(0, "sint", 0.064, 0.01, 0.0, sqrt(2)/2.0);
   minimizer->SetLimitedVariable(1, "lam3", 1.0, 0.01, 1.0, 10.0);
   minimizer->SetLimitedVariable(2, "tb", 1.5, 0.01, 1.0, 10.0);
-
+ 
   minimizer->SetVariable(3, "mH",  mH,0.01);
   minimizer->SetVariable(4, "mHc", mHc,0.01);
   minimizer->SetVariable(5, "mA",  mA,0.01);

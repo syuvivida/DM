@@ -70,5 +70,5 @@ void plot_sint_mHmA()
   pt->SetTextSize(0.05); 
   c1->Modified(); 
   c1->Print("2HDMaI_explictHAAahah_bestsint_constraint.pdf");
-  c1->Print("2HDMaI_explictHAAahah_bestsint_constraint.gif");
+  c1->Print("2HDMaI_explictHAAahah_bestsint_constraint.png");
 }

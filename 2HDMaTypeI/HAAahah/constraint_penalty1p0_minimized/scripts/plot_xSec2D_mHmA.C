@@ -71,5 +71,5 @@ void plot_xSec2D_mHmA()
   pt->SetTextSize(0.05); 
   c1->Modified(); 
   c1->Print("2HDMaI_explictHAAahah_constraint.pdf");
-  c1->Print("2HDMaI_explictHAAahah_constraint.gif");
+  c1->Print("2HDMaI_explictHAAahah_constraint.png");
 }
