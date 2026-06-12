@@ -1,5 +1,6 @@
 #!/bin/bash
 xsecDataFile=test.dat
+widthDataFile=width.dat
 lam3dat=/Users/yush/no_constraint/updated_lam3.dat
 sintdat=/Users/yush/no_constraint/updated_sint.dat
 tanbdat=/Users/yush/no_constraint/updated_tb.dat
@@ -13,6 +14,8 @@ workdir=/Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_HAAahah
 cd $workdir
 
 echo "MH" "MA" "BR(H->AA)" "BR(A->ah)" "BR(a->chi+chi)" "Xsec" "effective Xsec (Xsec*BR)" >> $xsecDataFile
+
+echo "widthH" "MH" "widthA" "MA" "FracWH" "FracWA" >> $widthDataFile
 
 paste $lam3dat $sintdat $tanbdat | while read -r seth2 seth3 lam3 lam3err seth2_dummy seth3_dummy sint sinterr seth2_dummy1 seth3_dummy2 tb tberr; do 
     
@@ -39,6 +42,16 @@ paste $lam3dat $sintdat $tanbdat | while read -r seth2 seth3 lam3 lam3err seth2_
     finalXSec=`awk -v a=$xsec -v b=$decayH -v c=$decayA -v d=$decaya 'BEGIN{print (a*b*c*c*d*d)}'`
     echo $finalXSec
     echo $seth2 $seth3 $decayH $decayA $decaya $xsec $finalXSec >> $xsecDataFile
+
+    #get width
+    massH=`grep -A 10 "BLOCK MASS" $banner | grep -a 35  | awk '{print $2}'`
+    massA=`grep -A 10 "BLOCK MASS" $banner | grep -a 36  | awk '{print $2}'`
+    widthH=`grep "DECAY  35" $banner | awk '{print $3}'`
+    widthA=`grep "DECAY  36" $banner | awk '{print $3}'`
+    FracWH=`awk -v a=$massH -v b=$widthH 'BEGIN{print (b/a)}'`
+    FracWA=`awk -v a=$massA -v b=$widthA 'BEGIN{print (b/a)}'`
+    echo $widthH $massH $widthA $massA $FracWH $FracWA >> $widthDataFile
+	
     olddir=`ls -lrt Events | tail -1 | awk '{print $9}'`
     newdir=resonant_HAAah_13p6TeV_MA_${seth3}_MH_${seth2}_tanbeta${tb}_lambda3_${lam3}_sint${sint}
 	echo $olddir $newdir
@@ -48,5 +61,9 @@ paste $lam3dat $sintdat $tanbdat | while read -r seth2 seth3 lam3 lam3err seth2_
 	rm -rf Events/${olddir}
 	
 done
+
 updateFile=updated_${xsecDataFile}
 column -t $xsecDataFile > $updateFile
+
+updateFile=updated_${widthDataFile}
+column -t $widthDataFile > $updateFile
