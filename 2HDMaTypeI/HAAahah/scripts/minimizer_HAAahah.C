@@ -293,6 +293,7 @@ void minimize_3d(const int mH, const int mA)
   
   // 6. Run the minimization
   // fix sinTheta first
+  //  minimizer->FixVariable(1);
   minimizer->FixVariable(0);
   minimizer->Minimize();
   minimizer->ReleaseVariable(0);

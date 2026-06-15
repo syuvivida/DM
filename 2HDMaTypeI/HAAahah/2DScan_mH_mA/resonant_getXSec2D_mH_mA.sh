@@ -1,16 +1,17 @@
 #!/bin/bash
 xsecDataFile=test.dat
-
+widthDataFile=width.dat
 mh2=(470 500 550 600 650 700 750 800)
 mh3=(230 250 300 325 350 400)                                                                                             
 #mh2=(500)                                                                                     
-#mh3=(230 250)
+#mh3=(230)
 
 
 workdir=/Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_HAAahah
 cd $workdir
 
 echo "MH" "MA" "BR(H->AA)" "BR(A->ah)" "BR(a->chi+chi)" "Xsec" "effective Xsec (Xsec*BR)" >> $xsecDataFile
+echo "MH" "MA" "widthH" "widthA" "FracWH" "FracWA" >> $widthDataFile
 for h2 in "${mh2[@]}"
 do
     seth2=$h2
@@ -40,8 +41,18 @@ do
 	finalXSec=`awk -v a=$xsec -v b=$decayH -v c=$decayA -v d=$decaya 'BEGIN{print (a*b*c*c*d*d)}'`
 	echo $finalXSec
 	echo $seth2 $seth3 $decayH $decayA $decaya $xsec $finalXSec >> $xsecDataFile
+
+	#get width
+	massH=`grep -A 10 "BLOCK MASS" $banner | grep -a 35  | awk '{print $2}'`
+	massA=`grep -A 10 "BLOCK MASS" $banner | grep -a 36  | awk '{print $2}'`
+	widthH=`grep "DECAY  35" $banner | awk '{print $3}'`
+	widthA=`grep "DECAY  36" $banner | awk '{print $3}'`
+	FracWH=`awk -v a=$massH -v b=$widthH 'BEGIN{print (b/a)}'`
+	FracWA=`awk -v a=$massA -v b=$widthA 'BEGIN{print (b/a)}'`
+	echo $seth2 $seth3 $widthH $widthA $FracWH $FracWA >> $widthDataFile
+	
 	olddir=`ls -lrt Events | tail -1 | awk '{print $9}'`
-	newdir=resonant_HAAah_13p6TeV_MA_${seth3}_MH_${seth2}_tanbeta2_lambda3_2_sint0p1
+	newdir=resonant_HAAah_13p6TeV_MA_${seth3}_MH_${seth2}_tanbeta2p35_lambda3_2_sint0p05
 	echo $olddir $newdir
 	mv Events/$olddir Events/$newdir
 	olddir=`ls -lrt Events | grep -a run | tail -1 | awk '{print $9}'`
@@ -52,3 +63,7 @@ do
 done
 updateFile=updated_${xsecDataFile}
 column -t $xsecDataFile > $updateFile
+
+
+updateFile=updated_${widthDataFile}
+column -t $widthDataFile > $updateFile
