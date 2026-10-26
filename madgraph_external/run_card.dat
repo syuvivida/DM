@@ -47,8 +47,8 @@
 #          chff=ChFF in gamma-UPC            [eq.(13) in 2207.03012] *
 #          none=No PDF, same as lhapdf with lppx=0                   *
 #*********************************************************************
-     nn23lo1    = pdlabel     ! PDF set 
-     303600     = lhapdf     ! if pdlabel=lhapdf, this is the lhapdf number
+     lhapdf    = pdlabel     ! PDF set 
+     303600     = lhaid     ! if pdlabel=lhapdf, this is the lhapdf number
 # To see heavy ion options: type "update ion_pdf"
 #*********************************************************************
 # Renormalization and factorization scales                           *
