@@ -1,0 +1,9 @@
+{
+  "custodial": "A",
+  "tb_min":    2.0,
+  "cba_max":   0.15,
+  "mhc_min":   200.0,
+  "monoh":     20.0,
+  "hh":        1,
+  "unit":      1
+}

@@ -1,0 +1,185 @@
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA410_mH255
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA410_mH255.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA410_mH260
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA410_mH260.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA450_mH260
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA450_mH260.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA500_mH260
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA500_mH260.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA550_mH260
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA550_mH260.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA600_mH260
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA600_mH260.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA500_mH310
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA500_mH310.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA650_mH260
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA650_mH260.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA550_mH310
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA550_mH310.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA700_mH260
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA700_mH260.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA600_mH310
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA600_mH310.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA750_mH260
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA750_mH260.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA650_mH310
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA650_mH310.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA550_mH360
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA550_mH360.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA600_mH360
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA600_mH360.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA800_mH260
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA800_mH260.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA700_mH310
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA700_mH310.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA600_mH410
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA600_mH410.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA750_mH310
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA750_mH310.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA650_mH410
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA650_mH410.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA650_mH460
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA650_mH460.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA650_mH360
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA650_mH360.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA700_mH460
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA700_mH460.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA700_mH510
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA700_mH510.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA700_mH410
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA700_mH410.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA750_mH510
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA750_mH510.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA750_mH560
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA750_mH560.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA750_mH460
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA750_mH460.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA700_mH360
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA700_mH360.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA800_mH560
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA800_mH560.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA800_mH510
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA800_mH510.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA750_mH410
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA750_mH410.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA750_mH360
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA750_mH360.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA800_mH460
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA800_mH460.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA800_mH410
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA800_mH410.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA800_mH360
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA800_mH360.dat
+set nevents 10000
+0
+launch /Users/yush/2HDMa/MG5_aMC_v3_5_7/workdir_AHhha -n mA800_mH310
+0
+/Users/yush/2HDMa/claude_scripts/scan2hdma/cards/param_card_mA800_mH310.dat
+set nevents 10000
+0

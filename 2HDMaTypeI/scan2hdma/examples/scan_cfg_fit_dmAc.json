@@ -1,0 +1,17 @@
+{
+  "mA":  [350, 800, 50],
+  "mH":  [260, 560, 50],
+  "ma":  140,
+  "fit_dmAc": 1,
+  "dmAc_range": [-100, 400],
+  "tb_min": 2.0,
+  "cba_max": 0.15,
+  "mhc_min": 150,
+  "monoh": 20,
+  "hh": 1,
+  "unit": 1,
+  "T_max": 0.2,
+  "n_iter": 1000,
+  "n_start": 3,
+  "out": "scan_mA_mH_fit_dmAc"
+}
