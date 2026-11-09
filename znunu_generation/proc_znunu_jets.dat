@@ -1,0 +1,12 @@
+# Z -> nu nu~ + 0,1,2 jets, 5-flavour scheme (massless b, b in p and j), MLM matching.
+# Gives Z + light jets, Z + c, and the g -> b b~ part through the shower/matrix element; Z + b b~ with hard,
+# well-separated b jets is taken from the dedicated 4-flavour sample (proc_znunu_bb.dat), see README.
+import model sm-no_b_mass
+define p = g u c d s u~ c~ d~ s~ b b~
+define j = p
+define vl = ve vm vt
+define vl~ = ve~ vm~ vt~
+generate p p > z, z > vl vl~ @0
+add process p p > z j, z > vl vl~ @1
+add process p p > z j j, z > vl vl~ @2
+output ZNuNu_jets_MET

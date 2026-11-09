@@ -1,0 +1,10 @@
+# Z -> nu nu~ + b b~ (+ 0,1 extra light jet), 4-flavour scheme (massive b, no b in the proton), MLM matching
+# of the extra light jet.  The main Z(nu nu) background with 2 real b jets.
+import model sm
+define p = g u c d s u~ c~ d~ s~
+define j = p
+define vl = ve vm vt
+define vl~ = ve~ vm~ vt~
+generate p p > z b b~, z > vl vl~ @0
+add process p p > z b b~ j, z > vl vl~ @1
+output ZNuNu_bb4F_MET
