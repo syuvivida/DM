@@ -1,0 +1,36 @@
+! Pythia8 settings for W(l nu) + b b~ + 0,1 jet, 4-flavour, MLM on the light jet (copy into Cards/pythia8_card.dat)
+! The shower uses the 5-flavour CP5 PDF, as in CMS 4-flavour samples; the matrix element uses the nf_4 PDF (run_card lhaid)
+! CMS CP5 tune (note the "=" signs)
+Tune:pp = 14
+Tune:ee = 7
+MultipartonInteractions:ecmPow = 0.03344
+MultipartonInteractions:bProfile = 2
+MultipartonInteractions:pT0Ref = 1.41
+MultipartonInteractions:coreRadius = 0.7634
+MultipartonInteractions:coreFraction = 0.63
+ColourReconnection:range = 5.176
+SigmaTotal:zeroAXB = off
+SpaceShower:alphaSorder = 2
+SpaceShower:alphaSvalue = 0.118
+SigmaProcess:alphaSvalue = 0.118
+SigmaProcess:alphaSorder = 2
+MultipartonInteractions:alphaSvalue = 0.118
+MultipartonInteractions:alphaSorder = 2
+TimeShower:alphaSorder = 2
+TimeShower:alphaSvalue = 0.118
+SigmaTotal:mode = 0
+SigmaTotal:sigmaEl = 21.89
+SigmaTotal:sigmaTot = 100.309
+PDF:pSet = LHAPDF6:NNPDF31_nnlo_as_0118
+! MLM matching (MadGraph sets JetMatching:merge = on when ickkw = 1)
+JetMatching:setMad = off
+JetMatching:scheme = 1
+JetMatching:merge = on
+JetMatching:jetAlgorithm = 2
+JetMatching:etaJetMax = 5.
+JetMatching:coneRadius = 1.
+JetMatching:slowJetPower = 1
+JetMatching:qCut = 30.
+JetMatching:nQmatch = 4
+JetMatching:nJetMax = 1
+JetMatching:doShowerKt = off

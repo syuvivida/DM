@@ -1,0 +1,15 @@
+# W(-> l nu) + b b~ (+ 0,1 extra light jet), 4-flavour scheme (massive b, no b in the proton), MLM matching of the
+# light jet.  l = e, mu, tau: the "lost lepton" background of the 4b + MET search (lepton out of acceptance,
+# not isolated, or a hadronic tau).  No lepton cuts at generation; the lepton veto is applied in the analysis.
+import model sm
+define p = g u c d s u~ c~ d~ s~
+define j = p
+define l+ = e+ mu+ ta+
+define l- = e- mu- ta-
+define vl = ve vm vt
+define vl~ = ve~ vm~ vt~
+generate p p > w+ b b~, w+ > l+ vl @0
+add process p p > w- b b~, w- > l- vl~ @0
+add process p p > w+ b b~ j, w+ > l+ vl @1
+add process p p > w- b b~ j, w- > l- vl~ @1
+output WLNu_bb4F_MET
