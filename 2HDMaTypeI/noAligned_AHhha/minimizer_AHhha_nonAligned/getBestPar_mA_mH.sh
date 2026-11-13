@@ -4,12 +4,12 @@
 out=${1:-bestPar_nonAligned_AHhha.dat}
 shift
 opts="$@"
-ma=100                                   # must match --ma (default 100)
+ma=140                                   # must match --ma (default 140)
 
 mA_list=(410 460 510 560 610 660 700 750 800)
 mH_list=(255 260 300 350 400 450 500 550 600 650 700)
 
-echo "mA mH ma mHc sinp sinbma tanb lam3 laP1 laP2 xsecBR_pb sigma_ggA_pb BR_AHa BR_Hhh BR_achichi GammaA_over_mA GammaH_over_mH drho maxLambda allowed" > $out
+echo "mA mH ma mHc sinp sinbma tanb lam3 laP1 laP2 xsecBR_pb sigma_ggA_pb BR_AHa BR_Hhh BR_achichi GammaA_over_mA GammaH_over_mH drho maxLambda allowed unit_over_8pi bounded_margin" > $out
 for mA in "${mA_list[@]}"; do
   for mH in "${mH_list[@]}"; do
     if (( mA < mH + ma + 10 )); then continue; fi   # A -> H a needs mA > mH + ma
