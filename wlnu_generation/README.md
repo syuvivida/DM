@@ -1,71 +1,71 @@
-# MET-biased W → ℓν + b-jet ("lost lepton") backgrounds for the 4b + MET search (MadGraph5_aMC@NLO 3.5.7 + Pythia8)
+# W(→ ℓν) + jets / + b b̄ ("lost lepton") gridpack production on lxplus + HTCondor
 
-| File | What it is |
+These scripts go in the same folder as the existing `wlnu_cards` files (process cards, Pythia8 cards,
+`set_run_card.py`, `delphes_card.dat`). They mirror the Z → νν̄ and tt̄ gridpack scripts.
+
+| File | What it does |
 |---|---|
-| `proc_wlnu_bb.dat` | W±(→ ℓν) + b b̄ + 0, 1 light jet, ℓ = e, μ, τ. 4-flavour scheme (massive b), MLM matching on the light jet. **The main W background with two real b jets.** |
-| `proc_wlnu_jets.dat` | W±(→ ℓν) + 0, 1, 2 jets. 5-flavour scheme (b in p and j), MLM matching. Covers W + light/charm jets (mistags) and soft g → b b̄. |
-| `pythia8_card_wlnu_bb4F.dat` | CP5 tune + MLM settings for the 4F sample (qCut = 30 GeV, nQmatch = 4, nJetMax = 1) |
-| `pythia8_card_wlnu_jets.dat` | CP5 tune + MLM settings for the 5F sample (qCut = 30 GeV, nQmatch = 5, nJetMax = 2) |
-| `set_run_card.py` | Sets run_card values without the interactive card editor |
-| `make_wlnu_samples.sh` | Builds the process folder, sets the cards and generates the MET slices |
+| `make_wlnu_gridpacks.sh` | Builds one gridpack per MET slice, plus the Pythia8 command file MadGraph writes for these cards |
+| `gridpack_wlnu.sub` | Runs `make_wlnu_gridpacks.sh` on HTCondor: one job for `jets`, one for `bb` |
+| `run_wlnu_job.sh` | One production job: gridpack → LHE → Pythia8 (MLM) → Delphes → EOS |
+| `submit_wlnu.sh` | Writes the job list and the submit file for production, and submits |
 
-## Why it is set up this way
+The generator settings in `make_wlnu_gridpacks.sh` are the same as in `make_wlnu_samples.sh`:
+- `jets`: W± + 0, 1, 2 jets, 5-flavour; `bb`: W± + b b̄ + 0, 1 jet, 4-flavour. ℓ = e, μ, τ.
+- No lepton cuts at generation (`ptl = 0`, `etal = -1`, `drjl = drll = 0`): the lepton veto is applied in the analysis.
+- xqcut = 15 GeV, qCut = 30 GeV.
+- MET slices 50–150, 150–250, > 250 GeV (parton-level MET = pT of the W's neutrino).
 
-* **The lepton is not "lost" at generation.**
-  - All W → ℓν events are generated, with **no lepton cuts** (`ptl = 0`, `etal = -1`, `drjl = drll = 0`).
-  - The analysis then applies its isolated-e/μ veto (at generator level, or in Delphes).
-  - The events that survive are the "lost-lepton" background: an e/μ outside the acceptance, below the pT
-    threshold, or not isolated (often inside a b jet); and above all **W → τν with a hadronic τ**, which passes
-    any e/μ veto.
+If you change a setting, change it in both scripts.
 
-  Cutting on the lepton at generation would remove exactly these events. That's why τ is included in ℓ.
-* **Decays inside the hard process** (`w+ > l+ vl`) and `cut_decays = True`, so the parton-level MET cut
-  (`misset`) acts on the neutrino.
-* **The slices start lower than for Z → νν̄** (default `50:150 150:250 250:-1` GeV).
-  - At parton level, `misset` is the pT of the W's neutrino only.
-  - In the detector, a lost e/μ adds to the MET, and in W → τν the MET also includes the τ's neutrino(s). So
-    events with parton-level MET below the analysis cut (150–200 GeV) can still pass it.
-  - **Check once:** generate a `0:50` slice and confirm it contributes ≲ 1–2% after your full selection. If it
-    contributes more, lower the first edge.
-* **Both charges** (W⁺ and W⁻) are in the same sample.
-* **Two samples** (as for Z → νν̄):
-  - the 4F W + b b̄ sample for hard, separated b jets;
-  - the 5F W + jets sample for mistags.
-
-  **Overlap removal is required.** Keep W + b b̄ only from the 4F sample: drop events from the 5F sample that
-  have ≥ 1 b hadron not coming from the W decay.
-* **4-flavour PDF:** `LHAID4F` (default 320900, NNPDF31_nnlo_as_0118_nf_4). This set is already installed in
-  your `withPythia8D` MadGraph, with its `.info` file fixed. If MadGraph has to copy it into a new process folder
-  and complains about `AlphaS_FlavorScheme`, copy the fixed `.info` from
-  `HEPTools/lhapdf6_py3/share/LHAPDF/NNPDF31_nnlo_as_0118_nf_4/` into `<process>/lib/PDFsets/NNPDF31_nnlo_as_0118_nf_4/`.
-
-## Running
+## 1. Once, on lxplus
 
 ```bash
-cd /path/to/wlnu_cards
-export MG=/Users/yush/2HDMa/withPythia8D/MG5_aMC_v3_5_7
-
-bash make_wlnu_samples.sh bb   50000 4      # W(l nu) + b b~ 4F: 4 runs x 50k events per MET slice
-bash make_wlnu_samples.sh jets 50000 4      # W(l nu) + jets 5F
-SLICES="0:-1" bash make_wlnu_samples.sh jets 5000   # inclusive run: K-factor normalization
-SLICES="0:50" bash make_wlnu_samples.sh bb   10000  # low-MET check (see above)
+source /cvmfs/sft.cern.ch/lcg/views/LCG_110a/x86_64-el9-gcc14-opt/setup.sh
+export MG=/eos/user/s/syu/MG5_aMC_v3_5_7
+lhapdf list --installed | grep NNPDF31_nnlo_as_0118_nf_4     # the 4F PDF of the bb sample must be listed
 ```
-* **Output:** events go to `$MG/WLNu_bb4F_MET/Events/wlnu_bb_MET<lo>to<hi>_r<i>/` (and likewise for `jets`).
-* **Adding runs:** pass a 4th argument, the first run number, e.g. `... bb 50000 4 5` for runs r5–r8 with new
-  seeds. Existing runs are skipped.
-* **Delphes:** copy `Delphes/cards/delphes_card_CMS.dat` to `Cards/delphes_card.dat` in the process folder,
-  and Delphes then runs after Pythia8.
+Copy the whole `wlnu_cards` folder (cards + these scripts) to `$MG/wlnu_cards`. Pythia8 and Delphes in `$MG`
+are the ones you already built for tt̄.
 
-## Normalization
+## 2. Build the gridpacks
 
-1. **Per slice:** weight each event by `σ_slice / N_slice`. Use the **matched** cross section from the Pythia8
-   log (`tag_1_merged_xsecs.txt`), and N after matching.
-2. **W + jets:** scale to NNLO with the inclusive run, K = σ_NNLO(pp → W → ℓν) / σ_LO,matched(inclusive).
-   - Use σ_NNLO at 13.6 TeV from the CMS/LHC SM tables, for W⁺ + W⁻ and three lepton flavours. Typically K ≈ 1.1–1.3.
-3. **W + b b̄:** the NLO/LO K-factor is large (≈ 2 for W b b̄, because new qg channels open at NLO).
-   - Assign a 30–40% normalization uncertainty, or constrain it with a 1-lepton + 2b control region (the same
-     selection with the lepton veto inverted).
-   - That control region is also the standard way to measure the lost-lepton background in data.
+On the batch system (both samples):
+```bash
+cd $MG/wlnu_cards
+mkdir -p output error log
+condor_submit gridpack_wlnu.sub
+```
+or interactively, one sample at a time:
+```bash
+bash make_wlnu_gridpacks.sh bb
+bash make_wlnu_gridpacks.sh jets
+```
+Result: `gridpacks/wlnu_{bb,jets}_MET{50to150,150to250,250toinf}_gridpack.tar.gz` and `_pythia8.cmd`.
+A job that was cut off can be submitted again: finished slices are skipped (`FORCE=1` rebuilds them).
 
-## Related backgrounds with a W and b jets (generate separately if they matter)
-tt̄ (done; the dominant lost-lepton source), single top (tW and t-channel), and tt̄W.
+- If the process folders `WLNu_jets_MET` and `WLNu_bb4F_MET` do not exist in `$MG` yet, the script creates them.
+  Do not copy them from the Mac: they hold code compiled for macOS.
+- If the `bb` build stops with an `AlphaS_FlavorScheme` error from the 4F PDF, apply the same `.info` fix as on the
+  Mac (see `README_wlnu.md`), in `WLNu_bb4F_MET/lib/PDFsets/NNPDF31_nnlo_as_0118_nf_4/`, and resubmit.
+
+## 3. Test one job, then submit production
+
+```bash
+export DELPHES=$MG/Delphes
+bash run_wlnu_job.sh gridpacks/wlnu_bb_MET250toinf_gridpack.tar.gz gridpacks/wlnu_bb_MET250toinf_pythia8.cmd \
+     delphes_card.dat 200 1 /tmp/wlnu_test WLNu_bb4F_MET
+# time it, then choose the events per job so that a job takes 2-6 h
+bash submit_wlnu.sh bb   40 10000 1000     # 40 jobs x 10k events per MET slice, seeds 1000-1039
+bash submit_wlnu.sh jets 40 10000 1000
+```
+- **Output:** `$OUT/WLNu_bb4F_MET/Events/wlnu_bb_MET250toinf_r<seed>/` (and `WLNu_jets_MET/...`). `OUT` defaults
+  to `root://eosuser.cern.ch//eos/user/s/syu/wlnu`. The layout is the MadGraph one.
+- **Normalisation:** each job's banner has the gridpack cross section and the matched cross section of that job,
+  σ_LHE × N(after matching) / N(LHE).
+- **Adding jobs later:** use a new first seed (e.g. 2000), so run names and seeds do not repeat.
+- **Options:** `FLAVOUR=longlunch|workday|tomorrow`, `SLICES="250:-1"` for one slice only, `DRYRUN=1` to write the
+  job list and submit file without submitting.
+- **Low-MET check:** `SLICES="0:50" bash make_wlnu_gridpacks.sh bb` builds the extra 0–50 GeV slice, to confirm it
+  contributes ≲ 1–2% after the full selection (pass the same `SLICES` to `submit_wlnu.sh`).
+- **Overlap removal still applies:** keep W + b b̄ only from the 4F sample (see `README_wlnu.md`).

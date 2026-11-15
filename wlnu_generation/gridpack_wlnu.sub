@@ -1,0 +1,18 @@
+# Builds the W(l nu) gridpacks on the batch system: one job per sample (jets, bb), three MET slices each.
+# Submit from the wlnu_cards directory after:  mkdir -p output error log
+# Edit the two paths below if your MadGraph is somewhere else.
+MGDIR                   = /eos/user/s/syu/MG5_aMC_v3_5_7
+CARDS                   = $(MGDIR)/wlnu_cards
+
+executable              = $(CARDS)/make_wlnu_gridpacks.sh
+arguments               = "$(sample)"
+# HERE: where the cards and set_run_card.py are (condor runs a copy of the script in a scratch dir)
+environment             = "MG=$(MGDIR) HERE=$(CARDS) NCORE=4"
+getenv                  = False
+output                  = output/gridpack_wlnu_$(sample).$(ClusterId).out
+error                   = error/gridpack_wlnu_$(sample).$(ClusterId).err
+log                     = log/gridpack_wlnu.$(ClusterId).log
++JobFlavour             = "tomorrow"
+request_cpus            = 4
+request_memory          = 8000
+queue sample in (jets bb)
