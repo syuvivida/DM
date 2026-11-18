@@ -1,0 +1,11 @@
+# tt~ H (LO, 5-flavour).  Top and Higgs are left undecayed: Pythia8 decays the tops (all modes) and forces
+# H -> b b~ (pythia8_hbb.dat).  The job multiplies the cross section by BR(H -> b b~) = 0.5824.
+import model sm-no_b_mass
+define p = g u c d s u~ c~ d~ s~ b b~
+define j = p
+define l+ = e+ mu+ ta+
+define l- = e- mu- ta-
+define vl = ve vm vt
+define vl~ = ve~ vm~ vt~
+generate p p > t t~ h @0
+output TTH_bb_MET

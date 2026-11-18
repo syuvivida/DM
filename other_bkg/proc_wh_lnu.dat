@@ -1,0 +1,14 @@
+# W H with W -> l nu (l = e, mu, tau), + 0,1 jet (MLM, 5-flavour).  H is left undecayed: Pythia8 forces H -> b b~,
+# and the job multiplies the cross section by BR(H -> b b~) = 0.5824.
+import model sm-no_b_mass
+define p = g u c d s u~ c~ d~ s~ b b~
+define j = p
+define l+ = e+ mu+ ta+
+define l- = e- mu- ta-
+define vl = ve vm vt
+define vl~ = ve~ vm~ vt~
+generate p p > w+ h, w+ > l+ vl @0
+add process p p > w- h, w- > l- vl~ @0
+add process p p > w+ h j, w+ > l+ vl @1
+add process p p > w- h j, w- > l- vl~ @1
+output WH_lnubb_MET

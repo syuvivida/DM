@@ -1,0 +1,18 @@
+# Single top, tW channel (5-flavour, LO, no extra jets), with at least one leptonic W (l = e, mu, tau).
+# Decays inside the hard process, so the parton-level MET cut (misset) acts on the neutrino(s).
+# No extra-jet matching: tW + 1 jet contains tt~ diagrams (g g > t W- b~), which would double count the tt~ samples.
+import model sm-no_b_mass
+define p = g u c d s u~ c~ d~ s~ b b~
+define j = p
+define l+ = e+ mu+ ta+
+define l- = e- mu- ta-
+define vl = ve vm vt
+define vl~ = ve~ vm~ vt~
+define wq = u c d s u~ c~ d~ s~
+generate p p > t w-, (t > b w+, w+ > l+ vl), w- > wq wq @0
+add process p p > t w-, (t > b w+, w+ > wq wq), w- > l- vl~ @0
+add process p p > t w-, (t > b w+, w+ > l+ vl), w- > l- vl~ @0
+add process p p > t~ w+, (t~ > b~ w-, w- > l- vl~), w+ > wq wq @0
+add process p p > t~ w+, (t~ > b~ w-, w- > wq wq), w+ > l+ vl @0
+add process p p > t~ w+, (t~ > b~ w-, w- > l- vl~), w+ > l+ vl @0
+output ST_tW_MET

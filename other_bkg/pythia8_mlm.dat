@@ -1,0 +1,12 @@
+! MLM matching for the + 0,1 jet samples (zh, wh, zz, wz): added to the card when the sample is matched
+JetMatching:setMad = off
+JetMatching:scheme = 1
+JetMatching:merge = on
+JetMatching:jetAlgorithm = 2
+JetMatching:etaJetMax = 5.
+JetMatching:coneRadius = 1.
+JetMatching:slowJetPower = 1
+JetMatching:qCut = 30.
+JetMatching:nQmatch = 5
+JetMatching:nJetMax = 1
+JetMatching:doShowerKt = off

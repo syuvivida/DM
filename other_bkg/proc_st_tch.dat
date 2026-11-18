@@ -1,0 +1,12 @@
+# Single top, t-channel (5-flavour, LO), leptonic top decay (l = e, mu, tau).
+# "$$ w+ w-" removes the s-channel W diagrams (s-channel single top is a separate, much smaller process).
+import model sm-no_b_mass
+define p = g u c d s u~ c~ d~ s~ b b~
+define j = p
+define l+ = e+ mu+ ta+
+define l- = e- mu- ta-
+define vl = ve vm vt
+define vl~ = ve~ vm~ vt~
+generate p p > t j $$ w+ w-, (t > b w+, w+ > l+ vl) @0
+add process p p > t~ j $$ w+ w-, (t~ > b~ w-, w- > l- vl~) @0
+output ST_tch_MET

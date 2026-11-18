@@ -1,0 +1,13 @@
+# W Z -> (l nu)(b b~), l = e, mu, tau, + 0,1 jet (MLM, 5-flavour).  Lost-lepton version of Z Z -> nu nu b b.
+import model sm-no_b_mass
+define p = g u c d s u~ c~ d~ s~ b b~
+define j = p
+define l+ = e+ mu+ ta+
+define l- = e- mu- ta-
+define vl = ve vm vt
+define vl~ = ve~ vm~ vt~
+generate p p > w+ z, w+ > l+ vl, z > b b~ @0
+add process p p > w- z, w- > l- vl~, z > b b~ @0
+add process p p > w+ z j, w+ > l+ vl, z > b b~ @1
+add process p p > w- z j, w- > l- vl~, z > b b~ @1
+output WZ_lnubb_MET

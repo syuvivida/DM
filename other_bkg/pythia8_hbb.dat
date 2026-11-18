@@ -1,0 +1,5 @@
+! Force H -> b b~ (tth, zh, wh): added to the card for samples with an undecayed Higgs.
+! Pythia8 does not rescale the cross section: run_bkg_job.sh multiplies it by BR(H -> b b~) = 0.5824.
+25:m0 = 125
+25:onMode = off
+25:onIfMatch = 5 -5

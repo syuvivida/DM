@@ -1,0 +1,10 @@
+# tt~ Z with Z -> nu nu~ (LO, 5-flavour).  The tops are left undecayed: Pythia8 decays them (all decay modes).
+import model sm-no_b_mass
+define p = g u c d s u~ c~ d~ s~ b b~
+define j = p
+define l+ = e+ mu+ ta+
+define l- = e- mu- ta-
+define vl = ve vm vt
+define vl~ = ve~ vm~ vt~
+generate p p > t t~ z, z > vl vl~ @0
+output TTZ_nunu_MET

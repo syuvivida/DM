@@ -1,0 +1,18 @@
+# Builds the gridpacks of the smaller backgrounds on the batch system: one job per sample.
+# Submit from the other_bkg_cards directory after:  mkdir -p output error log
+# Edit the two paths below if your MadGraph is somewhere else. To build only some samples, edit the last line.
+MGDIR                   = /eos/user/s/syu/MG5_aMC_v3_5_7
+CARDS                   = $(MGDIR)/other_bkg_cards
+
+executable              = $(CARDS)/make_bkg_gridpacks.sh
+arguments               = "$(sample)"
+# HERE: where the cards, samples.sh and set_run_card.py are (condor runs a copy of the script in a scratch dir)
+environment             = "MG=$(MGDIR) HERE=$(CARDS) NCORE=4"
+getenv                  = False
+output                  = output/gridpack_$(sample).$(ClusterId).out
+error                   = error/gridpack_$(sample).$(ClusterId).err
+log                     = log/gridpack_bkg.$(ClusterId).log
++JobFlavour             = "tomorrow"
+request_cpus            = 4
+request_memory          = 8000
+queue sample in (st_tw st_tch ttz tth zh wh zz wz)
