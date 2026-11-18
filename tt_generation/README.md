@@ -14,6 +14,9 @@
 * **Decays are inside the hard process** (`t > b w+, w+ > l+ vl`), not in MadSpin. The parton-level MET cut
   (`misset`, the vector sum of the neutrino pT) can only act on neutrinos that exist when the events are
   generated, and MadSpin decays the tops afterwards. `cut_decays = True` makes the cuts act on the decay products.
+* **No jet or b-quark cuts either** (`ptj = ptb = 0`, no ΔR or η cuts). With `cut_decays = True` these cuts would
+  also act on the b quarks and W-decay quarks from the top decays. Extra jets are regulated by the MLM kt cut
+  (`xqcut`), which leaves decay products alone. See "Change of 16 Nov 2026" below.
 * **No lepton cuts** (`ptl = 0`, `etal = -1`, `drll = drjl = mmll = 0`). Our search vetoes leptons, so the
   dangerous tt̄ events are those where the lepton is lost (soft, forward, non-isolated) or is a hadronic τ.
   Default lepton cuts would remove exactly those events.
@@ -26,9 +29,29 @@
 * **tt̄ + 0, 1, 2 jets, MLM** (`xqcut = 30`, Pythia `qCut = 70`): extra hard radiation (and g → bb̄) gives the
   additional b jets the 4b selection needs. Check the matching with the differential jet rate plots
   (`Events/<run>/*djrs*`): they should be smooth around qCut.
-* **tt̄bb̄ in the 4-flavour scheme** (`ptb > 20`, `drbb > 0.3` on the extra b pair): describes the hard extra b jets
-  better than the shower does. **Overlap:** remove events with ≥ 3 b hadrons at generator level from the tt̄ + jets
-  samples (or the extra-b category from tt̄bb̄), so the two samples are not double counted.
+* **tt̄bb̄ in the 4-flavour scheme, without cuts on the b quarks**: describes the extra b jets better than the
+  shower does. The b mass keeps the cross section finite, so no cut on the extra b b̄ pair is needed. The sample
+  then also contains tt̄ + one extra b jet (the other b soft, forward, or merged into the same jet).
+  **Overlap:** remove events with ≥ 3 b-flavoured jets from the tt̄ + jets samples and keep only those from tt̄bb̄
+  (`hhmet_sensitivity.py --hf-mode hf-split` does this), so the two samples are not double counted.
+
+## Change of 16 Nov 2026: parton cuts on decay products removed
+
+Samples and gridpacks made before this date had:
+- `semilep`, `dilep`: `ptj = 20`, which with `cut_decays = True` also required pT > 20 GeV for the b quarks and
+  W-decay quarks from the top decays;
+- `ttbb`: `ptb = 20`, `etab = 3`, `drbb = 0.3` and `ptj = 20`, applied to all four b quarks and the W-decay quarks.
+  Besides cutting on the top-decay b quarks, this removed tt̄ + one extra b jet, which the ≥ 3 b-jet category needs.
+
+Both scripts now set all these cuts to zero. What to redo:
+- **Gridpacks:** `make_ttbar_gridpacks.sh` rebuilds old gridpacks by itself and keeps them in
+  `gridpacks/old_settings/`.
+- **Production output:** do not mix old and new runs of a sample in one folder, because the analysis averages all
+  runs of a MET slice. Move the old output away first (for example `ttbar` → `ttbar_oldcuts` on EOS, and the
+  `Events` folders of `TT_semilep_MET`, `TT_dilep_MET`, `TTbb_lep_MET` on the Mac).
+- **tt̄bb̄ statistics:** without the b cuts the cross section is several times larger and most events have soft
+  extra b quarks, so generate several times more events than before.
+- **K-factors:** recompute them from new inclusive runs.
 
 ## Running
 
@@ -67,3 +90,59 @@ LHAPDF Python-module problem does not stop them. Each run gets its own seed, and
 * Reapply the real MET cut on the particle-level (or Delphes) MET. The generator slices only make the generation efficient.
 * Veto isolated e/μ the same way in signal and background. τ_h events pass the veto, as they should.
 * Compare the MET distributions of adjacent slices at the slice boundaries. They should join smoothly after weighting.
+
+## Gridpack production on the CERN batch system (lxplus + HTCondor)
+
+| File | What it is |
+|---|---|
+| `make_ttbar_gridpacks.sh` | Builds one gridpack per MET slice, plus the Pythia8 command file MadGraph writes for these cards |
+| `run_ttbar_job.sh` | One batch job: gridpack → LHE → Pythia8 (MadGraph's `MG5aMC_PY8_interface`, MLM) → Delphes → EOS |
+| `submit_ttbar.sh` | Writes the job list and the HTCondor submit file (`+JobFlavour`), and submits |
+
+The generator settings in `make_ttbar_gridpacks.sh` are the same as in `make_ttbar_samples.sh`, so the batch events
+are equivalent to the interactive ones. If you change a setting, change it in both scripts.
+
+### Once, on lxplus
+
+A gridpack contains compiled code: **build it on lxplus (EL9)**, not on the Mac.
+```bash
+source /cvmfs/sft.cern.ch/lcg/views/LCG_110a/x86_64-el9-gcc14-opt/setup.sh
+export MG=/afs/cern.ch/user/s/syu/.../MG5_aMC_v3_5_7       # MadGraph on lxplus
+cd $MG && ./bin/mg5_aMC  ->  install pythia8                # if HEPTools/MG5aMC_PY8_interface is missing
+cd $MG/Delphes && make distclean && ./configure && make -j8  # Delphes built with the same LCG view
+```
+Use the same LCG view everywhere: when building, in the gridpack, and in the jobs. Otherwise you get the
+`libtbb.so.12` / `libtbb.so.2` mismatch again.
+
+### Build the gridpacks (interactively, about an hour per sample)
+```bash
+cd ttBar
+bash make_ttbar_gridpacks.sh semilep        # -> gridpacks/semilep_MET{100to200,200to300,300toinf}_gridpack.tar.gz + _pythia8.cmd
+bash make_ttbar_gridpacks.sh dilep
+bash make_ttbar_gridpacks.sh ttbb
+```
+For each slice the script does two things:
+1. It runs MadGraph with `gridpack = True` and no shower.
+2. It makes a 100-event normal run with Pythia8, only to keep the `pythia8.cmd` file that MadGraph writes
+   (CP5 tune, MLM qCut and nJetMax, and so on).
+
+The jobs reuse that file, changing only the input and output file names and the random seed.
+
+### Test one job interactively (about 200 events), then submit
+```bash
+export DELPHES=$MG/Delphes
+bash run_ttbar_job.sh gridpacks/semilep_MET300toinf_gridpack.tar.gz gridpacks/semilep_MET300toinf_pythia8.cmd \
+     delphes_card.dat 200 1 /tmp/ttbar_test TT_semilep_MET
+# time it, then choose the events per job so that a job takes 2-6 h
+bash submit_ttbar.sh semilep 40 10000 1000     # 40 jobs x 10k events per slice, seeds 1000-1039, flavour "workday"
+condor_q
+```
+- **Output:** `$OUT/TT_semilep_MET/Events/semilep_MET300toinf_r<seed>/`, where `OUT` defaults to
+  `root://eosuser.cern.ch//eos/user/s/syu/ttbar`. The layout is the MadGraph one, so `hhmet_sensitivity.py skim --mg <OUT>`
+  reads it directly.
+- **Normalisation:** each job's banner has the gridpack cross section and the matched cross section of that job:
+  σ_LHE × N(after matching) / N(LHE).
+- **Adding jobs later:** use a new first seed (e.g. 2000), so the run names and seeds do not repeat.
+- **Job flavour:** set it with `FLAVOUR=longlunch` (2 h), `workday` (8 h, the default) or `tomorrow` (1 day).
+  `espresso` (20 min) is the default if you set nothing, and is too short.
+- **Delphes card:** use the slim card (`slim_delphes_card.py`) to keep the files about 10× smaller.

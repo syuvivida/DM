@@ -32,14 +32,20 @@ if [ ! -d "$DIR" ]; then
 fi
 cd "$DIR"
 
-# --- run card: 13.6 TeV, NNPDF3.1 NNLO, no lepton/b cuts (keeps lost-lepton events), cuts on decay products ON
+# --- run card: 13.6 TeV, NNPDF3.1 NNLO, MET cut on the decay neutrinos (cut_decays = True).
+# All standard parton cuts are off: with cut_decays = True any lepton, jet or b cut would also act on the top-decay
+# products (lost leptons, b quarks, W-decay quarks).  Same settings as make_ttbar_gridpacks.sh.
+#   semilep, dilep: extra jets are regulated by the MLM kt cut (xqcut), which does not touch decay products.
+#   ttbb (4-flavour): the b mass regulates the extra b b~ pair, so no cut is needed.
+# (Runs made before 16 Nov 2026 used ptj = 20, and for ttbb ptb = 20, etab = 3, drbb = 0.3: do not mix them.)
 COMMON="ebeam1=6800 ebeam2=6800 pdlabel=lhapdf lhaid=303600 use_syst=False systematics_program=none
-        cut_decays=True ptl=0 etal=-1 drll=0 drjl=0 drbl=0 mmll=0 ptb=0 etab=-1 drbj=0 nevents=$NEV"
+        cut_decays=True auto_ptj_mjj=False ptl=0 etal=-1 drll=0 drjl=0 drbl=0 mmll=0
+        ptj=0 etaj=-1 drjj=0 mmjj=0 ptb=0 etab=-1 drbb=0 drbj=0 mmbb=0 nevents=$NEV"
 if [ "$MLM" = 1 ]; then
-  RUN="$COMMON ickkw=1 xqcut=30 maxjetflavor=5 ptj=20 etaj=-1 drjj=0 drbb=0 auto_ptj_mjj=False"
+  RUN="$COMMON ickkw=1 xqcut=30 maxjetflavor=5"
   cp "$HERE/pythia8_card_MLM.dat" Cards/pythia8_card.dat
-else      # tt~bb~, 4-flavour, no matching: regulate the extra b pair
-  RUN="$COMMON ickkw=0 maxjetflavor=4 ptj=20 etaj=-1 drjj=0 ptb=20 etab=3.0 drbb=0.3 drbj=0"
+else      # tt~bb~, 4-flavour, no matching
+  RUN="$COMMON ickkw=0 xqcut=0 maxjetflavor=4"
   grep -v "^JetMatching" "$HERE/pythia8_card_MLM.dat" > Cards/pythia8_card.dat
 fi
 # with -f, MadGraph switches on the steps whose cards exist: Pythia8 (pythia8_card.dat) yes, MadSpin no
