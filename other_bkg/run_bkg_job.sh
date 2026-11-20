@@ -31,7 +31,7 @@ NEV=$4; SEED=$5; OUT=$6; PROCDIR=$7
 LCGVIEW=${LCGVIEW:-/cvmfs/sft.cern.ch/lcg/views/LCG_110a/x86_64-el9-gcc14-opt/setup.sh}
 # shellcheck disable=SC1090
 source "$LCGVIEW"
-MG=${MG:?set MG}; DELPHES=${DELPHES:-$MG/Delphes}
+MG=${MG:?set MG}; DELPHES=$MG/Delphes
 PY8=$MG/HEPTools/MG5aMC_PY8_interface/MG5aMC_PY8_interface
 [ -x "$PY8" ] || { echo "ERROR: $PY8 not found (install pythia8 in MadGraph on lxplus)"; exit 1; }
 [ -x "$DELPHES/DelphesHepMC2" ] || { echo "ERROR: $DELPHES/DelphesHepMC2 not found"; exit 1; }
